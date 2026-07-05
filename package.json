@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "test:coverage": "echo 'test:coverage: not configured yet'",
-        "lint": "echo 'lint: not configured yet'",
+        "lint": "pnpm -r run lint",
         "qa:verify": "node scripts/qa-verify.mjs",
         "check:eval": "node scripts/check-eval-ratchet.mjs",
         "check:recordings": "node scripts/check-recordings.mjs",

@@ -45,7 +45,7 @@ for (const file of staged) {
 // 2 — lint staged sources
 const lintable = staged.filter((f) => /\.(ts|tsx|js|jsx|mjs)$/.test(f));
 if (lintable.length) {
-  run(`npx eslint --no-warn-ignored ${lintable.map((f) => `"${f}"`).join(" ")}`);
+  run(`npx oxlint ${lintable.map((f) => `"${f}"`).join(" ")}`);
 }
 
 // 3 — typecheck
