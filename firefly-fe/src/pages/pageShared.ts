@@ -63,12 +63,18 @@ export function getLostTypeLabel(value: string) {
 
 export function getErrorMessage(error: unknown, fallback = 'Не вдалося виконати дію. Спробуйте ще раз.') {
   if (axios.isAxiosError(error)) {
+    const responseData = error.response?.data;
     const responseMessage =
-      typeof error.response?.data === 'object' &&
-      error.response?.data &&
-      'message' in error.response.data &&
-      typeof error.response.data.message === 'string'
-        ? error.response.data.message
+      typeof responseData === 'object' &&
+      responseData &&
+      'message' in responseData &&
+      typeof responseData.message === 'string'
+        ? responseData.message
+        : typeof responseData === 'object' &&
+            responseData &&
+            'error' in responseData &&
+            typeof responseData.error === 'string'
+          ? responseData.error
         : undefined;
 
     return responseMessage ?? error.message ?? fallback;

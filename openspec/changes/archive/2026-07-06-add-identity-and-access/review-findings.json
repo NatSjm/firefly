@@ -1,0 +1,14 @@
+{
+  "reviewer": "inline-review",
+  "scope": "add-identity-and-access",
+  "confirmed_issues": [
+    {
+      "id": "cors-credentials-wildcard",
+      "severity": "medium",
+      "status": "fixed",
+      "summary": "SecurityConfig allowed wildcard origins together with credentialed CORS.",
+      "fix": "Disabled credentialed CORS for the stateless JWT API."
+    }
+  ],
+  "advisories": []
+}

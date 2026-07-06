@@ -1,11 +1,15 @@
 import client from './client';
 
+export interface AuthUser {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+}
+
 export interface AuthResponse {
   token: string;
-  userId: number;
-  name: string;
-  email: string;
-  role: string;
+  user: AuthUser;
 }
 
 export interface UserProfile {

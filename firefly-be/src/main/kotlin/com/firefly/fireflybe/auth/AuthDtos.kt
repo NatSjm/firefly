@@ -23,10 +23,14 @@ data class LoginRequest(
     val password: String
 )
 
+data class AuthUserDto(
+    val id: Long,
+    val email: String,
+    val name: String,
+    val role: String
+)
+
 data class AuthResponse(
     val token: String,
-    val userId: Long,
-    val name: String,
-    val email: String,
-    val role: String
+    val user: AuthUserDto
 )

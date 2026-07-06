@@ -21,12 +21,28 @@ export function LoginPage() {
     location.state.from &&
     'pathname' in location.state.from &&
     typeof location.state.from.pathname === 'string'
-      ? location.state.from.pathname
+      ? {
+          pathname: location.state.from.pathname,
+          search:
+            'search' in location.state.from && typeof location.state.from.search === 'string'
+              ? location.state.from.search
+              : '',
+          hash:
+            'hash' in location.state.from && typeof location.state.from.hash === 'string'
+              ? location.state.from.hash
+              : '',
+        }
       : '/dashboard';
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError('');
+
+    if (!email.trim() || !password.trim()) {
+      setError('Вкажіть email і пароль.');
+      return;
+    }
+
     setSubmitting(true);
 
     try {
@@ -43,7 +59,7 @@ export function LoginPage() {
     <div style={PAGE_WRAPPER_STYLE}>
       <div style={{ ...SURFACE_STYLE, maxWidth: '560px', margin: '0 auto' }}>
         <h1 style={PAGE_HEADING_STYLE}>Вхід</h1>
-        <form style={FORM_STYLE} onSubmit={handleSubmit}>
+        <form style={FORM_STYLE} onSubmit={handleSubmit} noValidate>
           {error ? <Message tone="error">{error}</Message> : null}
           <Field label="Email" required>
             <TextInput
@@ -51,6 +67,7 @@ export function LoginPage() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
+              required
               disabled={submitting}
             />
           </Field>
@@ -60,6 +77,7 @@ export function LoginPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Ваш пароль"
+              required
               disabled={submitting}
             />
           </Field>
@@ -86,4 +104,3 @@ export function LoginPage() {
     </div>
   );
 }
-

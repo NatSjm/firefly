@@ -8,6 +8,7 @@ import com.firefly.fireflybe.users.toDto
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.core.Authentication
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,17 +29,21 @@ class AuthController(
     fun register(@Valid @RequestBody req: RegisterRequest): ResponseEntity<Any> {
         val normalizedEmail = req.email.trim().lowercase()
         if (userRepository.existsByEmail(normalizedEmail)) {
-            return ResponseEntity.badRequest().body(mapOf("error" to "Email вже зареєстровано"))
+            return duplicateEmailResponse()
         }
         val user = User(
             email = normalizedEmail,
             passwordHash = passwordEncoder.encode(req.password)!!,
             name = req.name.trim()
         )
-        val saved = userRepository.save(user)
+        val saved = try {
+            userRepository.save(user)
+        } catch (_: DataIntegrityViolationException) {
+            return duplicateEmailResponse()
+        }
         val token = jwtService.generateToken(saved.id, saved.email)
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            AuthResponse(token, saved.id, saved.name, saved.email, saved.role)
+            AuthResponse(token, saved.toAuthUserDto())
         )
     }
 
@@ -56,7 +61,7 @@ class AuthController(
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(mapOf("error" to "Акаунт заблоковано"))
         }
         val token = jwtService.generateToken(user.id, user.email)
-        return ResponseEntity.ok(AuthResponse(token, user.id, user.name, user.email, user.role))
+        return ResponseEntity.ok(AuthResponse(token, user.toAuthUserDto()))
     }
 
     @GetMapping("/me")
@@ -64,4 +69,14 @@ class AuthController(
         val user = authentication.principal as User
         return ResponseEntity.ok(user.toDto())
     }
+
+    private fun duplicateEmailResponse(): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.CONFLICT).body(mapOf("error" to "Email вже зареєстровано"))
 }
+
+private fun User.toAuthUserDto() = AuthUserDto(
+    id = id,
+    email = email,
+    name = name,
+    role = role
+)

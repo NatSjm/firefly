@@ -45,6 +45,7 @@ export function RegisterPage() {
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder="Як до вас звертатися"
+              required
               disabled={submitting}
             />
           </Field>
@@ -54,6 +55,7 @@ export function RegisterPage() {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="you@example.com"
+              required
               disabled={submitting}
             />
           </Field>
@@ -63,6 +65,8 @@ export function RegisterPage() {
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="Створіть пароль"
+              required
+              minLength={8}
               disabled={submitting}
             />
           </Field>

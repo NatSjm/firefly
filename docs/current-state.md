@@ -6,11 +6,11 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-06 13:03:00 (UTC+02:00)
-- **Current phase:** **Post-onboard — ready for gated new work**
-- **Active change:** none (all 6 MVP slices retrofitted and baseline signed off)
-- **Progress:** `/project-factory:onboard` completed. All 6 MVP capability slices are implemented, documented, and retrofitted into the spec chain. Baseline requirements + specs approved by user. Local dev workflow validated: `docker compose up -d postgres` → IntelliJ BE → `pnpm run dev` FE at http://localhost:5173.
-- **Next task:** Any NEW capability or bugfix slice runs the full gated loop: spec → tests(red) → implement(green) → review-gate → archive → commit with `Slice:` / `Refs:` trailers.
+- **Date and time:** 2026-07-06 13:48:00 (UTC+02:00)
+- **Current phase:** **Phase 4 — slice 1 complete, proceeding to slice 2**
+- **Active change:** none (slice `add-identity-and-access` archived)
+- **Progress:** Phase 4 retrofit evidence for slice 1 is in place: OpenSpec change docs, backend unit tests for JWT/validation/entity defaults, frontend page render tests for `/login` and `/register`, and inline auth review evidence. Frontend battery passes locally. Backend Maven validation remains blocked in this environment by Maven Central PKIX certificate resolution before Spring or PostgreSQL startup.
+- **Next task:** Continue Phase 4 with slice 2 `add-personal-archive`, carrying forward the same review → validation → archive flow.
 
 ## Source Of Truth
 
@@ -30,16 +30,26 @@ npx openspec validate --all --strict   # expected: all pass
 npx openspec list                      # expected: No active changes (between slices)
 ```
 
-Archived changes: {{list as they accumulate}}
+Archived changes:
+
+- `2026-07-06-add-identity-and-access` — Phase 4 retrofit validation completed and archived.
 
 ## Completed Changes
 
-### {{n}}. `add-<capability>`
+### 1. `add-identity-and-access`
 
-Status: {{planned / in progress / implemented / validated / archived}}.
-Implemented: {{bullets}}.
-Smoke test: {{what was exercised on a real DB}}.
-Latest checks: {{battery results}}.
+Status: archived.
+Implemented:
+- Existing auth slice documented in OpenSpec for FR-AUTH-01–05 and FR-SHELL-01–04.
+- Backend unit coverage added for JWT generation/expiry, registration DTO validation, and user entity defaults.
+- Frontend render coverage added for `/login` and `/register`.
+- Inline review completed; permissive CORS credentials setting removed from the backend security config.
+Smoke test:
+- Frontend validation battery passed locally.
+- Backend Maven test execution is blocked here by PKIX dependency-resolution failures against Maven Central, so real-DB smoke must run in a repaired Java/Maven environment or Docker image with trusted certificates.
+Latest checks:
+- `firefly-fe`: lint passed with 1 existing warning, tests passed (2 files / 5 tests), build passed.
+- `firefly-be`: `.\mvnw.cmd test` and targeted unit-test execution both blocked by PKIX certificate validation before dependency download.
 
 ## Validation Commands
 
@@ -52,7 +62,7 @@ npm run build
 npx openspec validate --all --strict
 ```
 
-Current test expectation: `firefly-be` has no committed tests yet; compile/test validation is pending environment repair.
+Current test expectation: `firefly-fe` test/lint/build are green locally. `firefly-be` now has committed auth unit tests, but Maven execution remains blocked in this environment until certificate trust is repaired.
 
 ## Environment / Deployment
 
@@ -64,6 +74,6 @@ Current test expectation: `firefly-be` has no committed tests yet; compile/test 
 
 - `firefly-be` targets Spring Boot 4.1.0, Kotlin 2.3.21, Java 25, and Jakarta namespaces (`jakarta.*` only).
 - Maven dependency resolution currently fails with `PKIX path building failed` against Maven Central in this environment.
-- The local runtime also reports Java 8-era class support during test startup, which is below project requirements.
+- Backend validation therefore cannot yet reach Spring context startup or PostgreSQL-dependent tests from this shell.
 - {{OS/shell quirks}}
 - Do not archive OpenSpec changes before implementation and smoke test.
