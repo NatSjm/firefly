@@ -28,7 +28,9 @@ class FeedService(
         size: Int,
         currentUser: User?
     ): FeedResponse {
-        val pageable = PageRequest.of(page, size)
+        val safePage = page.coerceAtLeast(0)
+        val safeSize = size.coerceIn(1, 100)
+        val pageable = PageRequest.of(safePage, safeSize)
         val cityFilter = city?.trim()?.takeIf { it.isNotBlank() }
         val topicFilter = topic?.trim()?.takeIf { it.isNotBlank() }
 

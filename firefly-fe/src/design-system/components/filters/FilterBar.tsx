@@ -38,6 +38,7 @@ export function FilterBar({
           onChange={onCityChange}
           placeholder="Усі міста"
           options={cities.map((c) => ({ value: c, label: c }))}
+          aria-label="Місто"
         />
       </div>
       <div style={{ minWidth: 200 }}>
@@ -46,6 +47,7 @@ export function FilterBar({
           onChange={onTopicChange}
           placeholder="Усі теми"
           options={topics.map((t) => ({ value: t, label: t }))}
+          aria-label="Тема"
         />
       </div>
       {showSort && (

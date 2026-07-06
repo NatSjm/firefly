@@ -6,12 +6,12 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-06 19:40:00 (UTC+02:00)
-- **Current phase:** **Phase 4 — slice 2 complete, proceeding to slice 3**
-- **Active change:** none (slice `add-personal-archive` archived)
-- **Progress:** Backend integration test layer added: 35 MockMvc tests in `firefly-be/src/test/kotlin/com/firefly/fireflybe/integration/` boot the full app (security chain, Flyway, JPA) against a Testcontainers PostgreSQL 16 container (`IntegrationTestBase`). Adding them exposed and fixed three production bugs: (1) Boot 4 needs `spring-boot-starter-flyway` instead of raw `flyway-core` — migrations silently never ran; (2) `AppProperties` was registered twice (`@Component` + `@EnableConfigurationProperties`) — the app could not boot; (3) admin delete endpoints returned 500 because the derived report delete query ran without a transaction (`@Transactional` added). Full backend suite: 71 tests green via `mvnw test` (requires Docker + a modern JDK, e.g. `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`). Note: the local dev database has schema drift (missing `comments` table) because Flyway never ran; drop/recreate the `firefly` DB before local boot.
-- **Progress (cont.):** Backend refactored to a service layer: every domain now has a `@Service` owning business logic and `@Transactional` boundaries (`AuthService`, `UserService`, `MemoryService`, `FeedService`, `LikeService`, `CommentService`, `LostService`, `ReportService`, `AdminService`); controllers are thin request/response adapters. New `common` package: `ApiException(status, message)` + `GlobalExceptionHandler` (`@RestControllerAdvice`) — all error responses now share one shape `{"error": "...", "details": {field: msg}?}` with Ukrainian messages (frontend `getErrorMessage` already reads the `error` key). Duplicated authorization inlines replaced by shared `User.isAdmin` + `MemoryService.ensureViewAllowed`/`findOrThrow`. Admin memory deletion now also removes uploaded photo files. Suite still 71 green.
-- **Next task:** Continue Phase 4 with slice 3 `add-public-feed-and-social`, carrying forward the same review → validation → archive flow. Remaining backend backlog from 2026-07-06 review: enum-typed roles/types, feed enrichment N+1 fix (batch count queries), LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, contactEmail exposure on public lost-requests list, pagination caps.
+- **Date and time:** 2026-07-06 21:14:00 (UTC+02:00)
+- **Current phase:** **Phase 4 — slice 3 complete, proceeding to slice 4**
+- **Active change:** none (slice `add-public-feed-and-social` archived)
+- **Progress:** Slice 3 `add-public-feed-and-social` completed the Phase 4 loop. New backend unit coverage landed for `FeedService` (6 tests), `LikeService` (3 tests), and `CommentService` (5 tests); new frontend render coverage landed for `/feed` (5 tests) and `/memories/:id` social behavior (5 tests). Review findings were recorded inline, `FeedService` now clamps feed page size to `1..100`, and the shared filter selects now expose accessible names for city and topic.
+- **Progress (cont.):** Validation is fully green in this environment when the backend uses the modern local JDK (`JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`). Latest successful checks: `firefly-fe` lint passed with 1 pre-existing warning, tests passed (7 files / 30 tests), build passed; `firefly-be` `mvnw test` passed with 85 tests green; `npx openspec validate --all --strict` passed with the archived slice 3 change and accepted `public-feed-and-social` spec.
+- **Next task:** Continue Phase 4 with slice 4 `add-lost-fireflies`. Remaining backend backlog from 2026-07-06 review: enum-typed roles/types, feed enrichment N+1 fix (batch count queries), LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, contactEmail exposure on public lost-requests list.
 
 ## Source Of Truth
 
@@ -35,6 +35,7 @@ Archived changes:
 
 - `2026-07-06-add-identity-and-access` — Phase 4 retrofit validation completed and archived.
 - `2026-07-06-add-personal-archive` — Phase 4 retrofit validation completed and archived.
+- `2026-07-06-add-public-feed-and-social` — Phase 4 retrofit validation completed and archived.
 
 ## Completed Changes
 
@@ -68,6 +69,21 @@ Latest checks:
 - `firefly-fe`: lint passed with 1 existing warning, tests passed (5 files / 20 tests), build passed.
 - `firefly-be`: `.\mvnw.cmd test "-Dtest=Memory*Test"` blocked by PKIX certificate validation before dependency download.
 
+### 3. `add-public-feed-and-social`
+
+Status: archived.
+Implemented:
+- Existing public-feed slice documented in OpenSpec for FR-FEED-01–07, FR-LIKE-01–02, FR-COMMENT-01–02, and FR-CITY-02 (new `public-feed-and-social` accepted spec).
+- Backend unit coverage added for feed filtering/sort routing, like toggling/counts, and comment listing/creation/deletion ownership checks.
+- Frontend render coverage added for `/feed` and `/memories/:id` social features, including signed-out behavior.
+- Inline review fixed two findings: uncapped feed page size is now clamped to `1..100`, and the feed filter selects now have accessible names.
+Smoke test:
+- Frontend validation battery passed locally.
+- Backend Maven suite passed locally after setting `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1` so Surefire runs on a modern JDK.
+Latest checks:
+- `firefly-fe`: lint passed with 1 existing warning, tests passed (7 files / 30 tests), build passed.
+- `firefly-be`: `.\mvnw.cmd test` passed (85 tests green) with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`.
+
 ## Validation Commands
 
 ```bash
@@ -79,7 +95,7 @@ npm run build
 npx openspec validate --all --strict
 ```
 
-Current test expectation: `firefly-fe` test/lint/build are green locally. `firefly-be` now has committed auth unit tests, but Maven execution remains blocked in this environment until certificate trust is repaired.
+Current test expectation: `firefly-fe` test/lint/build are green locally. `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
 
 ## Environment / Deployment
 
@@ -90,7 +106,7 @@ Current test expectation: `firefly-fe` test/lint/build are green locally. `firef
 ## Agent Rules / Gotchas
 
 - `firefly-be` targets Spring Boot 4.1.0, Kotlin 2.3.21, Java 25, and Jakarta namespaces (`jakarta.*` only).
-- Maven dependency resolution currently fails with `PKIX path building failed` against Maven Central in this environment.
-- Backend validation therefore cannot yet reach Spring context startup or PostgreSQL-dependent tests from this shell.
+- The shell default Java runtime is too old for the current JUnit Platform/Surefire stack (`UnsupportedClassVersionError` on class file version 61). Set `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1` before running backend Maven commands from this shell.
+- With the modern JDK and Docker available, backend validation reaches full Spring context startup and PostgreSQL-backed integration tests successfully.
 - {{OS/shell quirks}}
 - Do not archive OpenSpec changes before implementation and smoke test.
