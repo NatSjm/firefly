@@ -1,13 +1,10 @@
-# {{PROJECT_NAME}} — Agent Rules
+# Firefly (Світлячок) — Agent Rules
 
-> Fill the {{placeholders}}, delete this line, and keep this file at the repo
-> root. `CLAUDE.md` should contain a single line: `@AGENTS.md`.
+# This may NOT be the React / Vite you know
 
-# This may NOT be the {{FRAMEWORK}} you know
-
-The installed version ({{FRAMEWORK_VERSION}}) may differ from training data.
-Read the relevant guide in `node_modules/{{FRAMEWORK_PKG}}/dist/docs/` (or the
-package's bundled docs) before writing any code. Heed deprecation notices.
+The installed versions (React 19, Vite 8, TypeScript 6, oxlint) may differ from
+training data. Read the relevant guide in `node_modules/<pkg>/` before writing
+any code. Heed deprecation notices.
 
 Use `docs/requirements.md` to understand the requirements for the project.
 
@@ -52,6 +49,28 @@ durable cross-cutting rules. Per-domain detail, procedures, and large references
 are **dynamic**: loaded on demand from the code, the spec, an on-demand skill, or
 the framework's bundled docs. See `docs/context-architecture.md` for the split,
 the token budget, and what to demote when this file grows past it.
+
+## Design system (Svitlyachok)
+
+The project has a first-party design system. Before writing any UI, read
+`DESIGN.md`. Key rules enforced by the brief:
+
+- **Always use design tokens** — never hard-code hex colors, pixel values for
+  spacing/radii, or font names. Reference `--token-name` CSS custom properties.
+- **Glow effect is sacred** (`--shadow-glow-sm/md`) — reserved exclusively for
+  the Warmth (Тепло) badge/button and the brand mark. Never use it decoratively.
+- **No exclamation marks** anywhere in Ukrainian UI copy (`BC-BRAND-01`).
+- **Import path:** `import { Button, MemoryCard, ... } from '@/design-system'`
+  (or relative `'./design-system'`). CSS is wired in `main.tsx` — do not
+  re-import `styles.css` in individual components.
+- **Night theme:** toggle via `document.documentElement.setAttribute('data-theme', 'night')`.
+  All token aliases remap automatically; no separate component variants needed.
+- **Assets** are served from `public/design-system/assets/` at paths
+  `/design-system/assets/firefly-mark.svg` and
+  `/design-system/assets/placeholder-pattern.svg`.
+- **Icon system:** not yet adopted. Structural marks are CSS circles. Two emoji
+  stand-ins (💬, 🔥) are flagged placeholders — swap for Lucide/Heroicons
+  before build.
 
 ## Module conventions
 
@@ -120,7 +139,7 @@ clarity, empty-state usability, copy tone — scored 0-100 against a rubric.
 
 ## Environment notes
 
-- {{OS_AND_SHELL_NOTES}}
-- Database: {{DB_NOTES}}
+- **Windows / PowerShell** — use `\` paths, no `&&` chaining; use `;` or `if ($?) { ... }`.
+- Database: TBD — not yet wired in MVP.
 - Email: sandbox senders (e.g. `resend.dev`) deliver only to the provider
   account owner — verify a real domain before UAT.

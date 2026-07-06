@@ -1,0 +1,37 @@
+/* Svitlyachok — base resets, minimal */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: var(--weight-semibold);
+  line-height: var(--lh-heading);
+  margin: 0;
+  color: var(--text-primary);
+}
+
+p { margin: 0; }
+
+a { color: var(--text-link); }
+
+button, input, textarea, select {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+img { max-width: 100%; display: block; }

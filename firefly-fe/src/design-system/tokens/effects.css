@@ -1,0 +1,32 @@
+/* Svitlyachok — radii, borders, shadows
+   Soft, cozy corners; low, warm-tinted elevation. No hard drop shadows. */
+
+:root {
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  --border-width: 1px;
+
+  /* warm-tinted shadows — soft, diffuse, low elevation */
+  --shadow-sm: 0 1px 2px oklch(30% 0.03 60 / 6%), 0 1px 1px oklch(30% 0.03 60 / 4%);
+  --shadow-md: 0 4px 12px oklch(30% 0.03 60 / 8%), 0 1px 2px oklch(30% 0.03 60 / 6%);
+  --shadow-lg: 0 12px 32px oklch(30% 0.03 60 / 10%), 0 2px 6px oklch(30% 0.03 60 / 6%);
+
+  /* firefly glow — used sparingly on the Warmth action, focus, hero mark */
+  --shadow-glow-sm: 0 0 0 4px var(--glow-color);
+  --shadow-glow-md: 0 0 24px 2px var(--glow-color);
+
+  --ease-standard: cubic-bezier(0.3, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 360ms;
+}
+
+[data-theme="night"] {
+  --shadow-sm: 0 1px 2px oklch(0% 0 0 / 30%);
+  --shadow-md: 0 4px 16px oklch(0% 0 0 / 40%);
+  --shadow-lg: 0 16px 40px oklch(0% 0 0 / 50%);
+}

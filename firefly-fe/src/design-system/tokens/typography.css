@@ -1,0 +1,42 @@
+/* Svitlyachok — typography tokens */
+
+:root {
+  --font-serif: "Literata", ui-serif, Georgia, serif;
+  --font-sans: "Manrope", -apple-system, "Segoe UI", sans-serif;
+
+  /* families by role */
+  --font-display: var(--font-serif);
+  --font-heading: var(--font-serif);
+  --font-body: var(--font-sans);
+  --font-ui: var(--font-sans);
+
+  /* sizes — desktop; components can clamp down for mobile */
+  --text-display: 56px;
+  --text-h1: 40px;
+  --text-h2: 32px;
+  --text-h3: 24px;
+  --text-h4: 20px;
+  --text-body-lg: 18px;
+  --text-body: 16px;
+  --text-body-sm: 14px;
+  --text-caption: 13px;
+  --text-button: 16px;
+  --text-button-sm: 14px;
+
+  /* line-heights */
+  --lh-display: 1.12;
+  --lh-heading: 1.2;
+  --lh-body: 1.6;
+  --lh-tight: 1.35;
+
+  /* weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* letter-spacing */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+}
