@@ -1,7 +1,7 @@
 # Spec: Slice 1 — Base Architecture & Skeleton
 
 **Status:** retrofitted  
-**FRs covered:** FR-AUTH-01 (partial), FR-HEALTH-01  
+**FRs covered:** FR-SHELL-01, FR-SHELL-02, FR-SHELL-03, FR-SHELL-04  
 **Slice:** 1.1
 
 ## Summary
@@ -26,7 +26,8 @@ Base project skeleton: Spring Boot backend with health endpoint, React frontend 
 | `/lost` | LostPage |
 
 ## Acceptance Criteria
-- `GET /api/health` returns 200 with `{"status":"ok"}`
-- Navigating to any stub route renders the correct page without a 404
-- i18n namespace `common` loads for locale `uk`
+- FR-SHELL-01: application is reachable via browser at the root URL
+- FR-SHELL-02: navigation between all stub routes works without 404
+- FR-SHELL-03: `GET /api/health` returns 200 with `{"status":"ok"}`
+- FR-SHELL-04: i18n namespace `common` loads for locale `uk`
 - `docker compose up` brings all services healthy

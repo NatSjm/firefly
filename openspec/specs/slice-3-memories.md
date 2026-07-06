@@ -1,7 +1,7 @@
 # Spec: Slice 3 — Personal Memory Archive
 
 **Status:** retrofitted  
-**FRs covered:** FR-MEM-01, FR-MEM-02, FR-MEM-03, FR-MEM-04, FR-MEM-05, FR-MEM-06, FR-MEM-07, FR-MEM-08  
+**FRs covered:** FR-MEM-01, FR-MEM-02, FR-MEM-03, FR-MEM-04, FR-MEM-05, FR-MEM-06, FR-TOPIC-01, FR-TOPIC-02, FR-CITY-01  
 **Slice:** 1.3
 
 ## Summary

@@ -66,28 +66,36 @@
   "links": [
     {
       "id": "FR-SHELL-01",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-SHELL-02",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-SHELL-03",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-SHELL-04",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
@@ -95,7 +103,6 @@
     {
       "id": "FR-AUTH-01",
       "specs": [
-        "openspec/specs/slice-1-skeleton.md",
         "openspec/specs/slice-2-auth.md"
       ],
       "planned": true,
@@ -131,7 +138,9 @@
     },
     {
       "id": "FR-AUTH-05",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
@@ -219,56 +228,72 @@
     },
     {
       "id": "FR-FEED-04",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-FEED-05",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-FEED-06",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-FEED-07",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-TOPIC-01",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-TOPIC-02",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-CITY-01",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-CITY-02",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
@@ -311,7 +336,9 @@
     },
     {
       "id": "FR-LOST-05",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-5-lost.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
@@ -345,107 +372,42 @@
     },
     {
       "id": "FR-MOD-04",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-6-moderation.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-MOD-05",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-6-moderation.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-CONTENT-01",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-7-content-pages.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     },
     {
       "id": "FR-CONTENT-02",
-      "specs": [],
+      "specs": [
+        "openspec/specs/slice-7-content-pages.md"
+      ],
       "planned": true,
       "tests": [],
       "recordings": []
     }
   ],
-  "failures": [
-    {
-      "check": "spec-mention",
-      "msg": "FR-SHELL-01 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-SHELL-02 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-SHELL-03 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-SHELL-04 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-AUTH-05 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-FEED-04 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-FEED-05 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-FEED-06 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-FEED-07 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-TOPIC-01 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-TOPIC-02 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-CITY-01 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-CITY-02 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-LOST-05 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-MOD-04 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-MOD-05 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-CONTENT-01 is not cited by any spec under openspec/specs/"
-    },
-    {
-      "check": "spec-mention",
-      "msg": "FR-CONTENT-02 is not cited by any spec under openspec/specs/"
-    }
-  ],
+  "failures": [],
   "warnings": [
     {
       "check": "test-trace",

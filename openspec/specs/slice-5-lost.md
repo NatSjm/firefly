@@ -1,7 +1,7 @@
 # Spec: Slice 5 — Lost Fireflies (Search Requests)
 
 **Status:** retrofitted  
-**FRs covered:** FR-LOST-01, FR-LOST-02, FR-LOST-03, FR-LOST-04  
+**FRs covered:** FR-LOST-01, FR-LOST-02, FR-LOST-03, FR-LOST-04, FR-LOST-05  
 **Slice:** 1.5
 
 ## Summary

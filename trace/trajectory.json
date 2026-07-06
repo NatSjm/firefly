@@ -1,0 +1,20 @@
+{
+  "generatedBy": "scripts/check-trajectory.mjs",
+  "slices": [
+    {
+      "slice": "2026-07-06-add-identity-and-access",
+      "reviewEvidence": "unclean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    }
+  ],
+  "overlaps": [],
+  "failures": [],
+  "warnings": [
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-06-add-identity-and-access: review-findings.json is unclean (review must have run clean before archive)"
+    }
+  ]
+}

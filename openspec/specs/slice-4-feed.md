@@ -1,7 +1,7 @@
 # Spec: Slice 4 — Public Feed, Likes & Comments
 
 **Status:** retrofitted  
-**FRs covered:** FR-FEED-01, FR-FEED-02, FR-FEED-03, FR-LIKE-01, FR-LIKE-02, FR-COMMENT-01, FR-COMMENT-02  
+**FRs covered:** FR-FEED-01, FR-FEED-02, FR-FEED-03, FR-FEED-04, FR-FEED-05, FR-FEED-06, FR-FEED-07, FR-LIKE-01, FR-LIKE-02, FR-COMMENT-01, FR-COMMENT-02, FR-CITY-02  
 **Slice:** 1.4
 
 ## Summary

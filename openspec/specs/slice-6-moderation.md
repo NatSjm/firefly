@@ -1,7 +1,7 @@
 # Spec: Slice 6 — Moderation & Admin
 
 **Status:** retrofitted  
-**FRs covered:** FR-MOD-01, FR-MOD-02, FR-MOD-03, FR-ADMIN-01, FR-ADMIN-02, FR-ADMIN-03  
+**FRs covered:** FR-MOD-01, FR-MOD-02, FR-MOD-03, FR-MOD-04, FR-MOD-05, FR-ADMIN-01, FR-ADMIN-02, FR-ADMIN-03  
 **Slice:** 1.6
 
 ## Summary

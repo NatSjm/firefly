@@ -1,7 +1,7 @@
 # Spec: Slice 2 — Registration, Auth & Profile
 
 **Status:** retrofitted  
-**FRs covered:** FR-AUTH-01, FR-AUTH-02, FR-AUTH-03, FR-AUTH-04, FR-PROFILE-01, FR-PROFILE-02  
+**FRs covered:** FR-AUTH-01, FR-AUTH-02, FR-AUTH-03, FR-AUTH-04, FR-AUTH-05, FR-PROFILE-01, FR-PROFILE-02  
 **Slice:** 1.2
 
 ## Summary
@@ -54,11 +54,12 @@ CREATE TABLE users (
 - Header shows name/avatar and logout button when authenticated
 
 ## Acceptance Criteria
-- Register with new email → 201 + JWT returned
-- Register with duplicate email → 409 error shown in UI
-- Login with valid creds → JWT stored, user redirected to /dashboard
-- Login with wrong password → 401 error shown
-- `GET /api/auth/me` with valid JWT → 200
-- `GET /api/auth/me` without token → 401
-- Profile page shows current user data
-- Profile edit updates name/bio
+- FR-AUTH-01: Register with new email → 201 + JWT returned
+- FR-AUTH-01: Register with duplicate email → 409 error shown in UI
+- FR-AUTH-02: Login with valid creds → JWT stored, user redirected to /dashboard
+- FR-AUTH-02: Login with wrong password → 401 error shown
+- FR-AUTH-03: `GET /api/auth/me` with valid JWT → 200
+- FR-AUTH-03: `GET /api/auth/me` without token → 401
+- FR-AUTH-04: Profile page shows current user data
+- FR-AUTH-04: Profile edit updates name/bio
+- FR-AUTH-05: Banned user receives 403 on login
