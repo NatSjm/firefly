@@ -1,0 +1,101 @@
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router-dom';
+import { MemoryFormPage } from '@/pages/MemoryFormPage';
+import { CITIES, TOPICS } from '@/pages/pageShared';
+
+const apiMocks = vi.hoisted(() => ({
+  createMemory: vi.fn(),
+  updateMemory: vi.fn(),
+  getMemory: vi.fn(),
+}));
+
+vi.mock('@/api/memories', () => ({
+  createMemory: apiMocks.createMemory,
+  updateMemory: apiMocks.updateMemory,
+  getMemory: apiMocks.getMemory,
+}));
+
+describe('MemoryFormPage', () => {
+  beforeEach(() => {
+    apiMocks.createMemory.mockReset();
+    apiMocks.updateMemory.mockReset();
+    apiMocks.getMemory.mockReset();
+  });
+
+  // @trace FR-MEM-01, FR-MEM-02
+  it('renders the core memory fields', () => {
+    renderPage();
+
+    expect(screen.getByLabelText(/Формат/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Назва/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Текст/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Фото/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Рік від/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Рік до/)).toBeInTheDocument();
+  });
+
+  // @trace FR-TOPIC-01, FR-TOPIC-02
+  it('offers exactly the predefined topics in the topic dropdown', () => {
+    renderPage();
+
+    const topicSelect = screen.getByLabelText(/Тема/);
+    const optionLabels = within(topicSelect)
+      .getAllByRole('option')
+      .map((option) => option.textContent);
+
+    expect(optionLabels).toEqual(['Оберіть тему', ...TOPICS]);
+  });
+
+  // @trace FR-CITY-01
+  it('offers the suggested cities with an empty default', () => {
+    renderPage();
+
+    const citySelect = screen.getByLabelText(/Місто/);
+    const optionLabels = within(citySelect)
+      .getAllByRole('option')
+      .map((option) => option.textContent);
+
+    expect(optionLabels).toEqual(['Оберіть місто', ...CITIES]);
+    expect(citySelect).toHaveValue('');
+  });
+
+  // @trace FR-MEM-01
+  it('shows recipe fields only when the recipe type is selected', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    expect(screen.queryByLabelText(/Інгредієнти/)).not.toBeInTheDocument();
+
+    await user.selectOptions(screen.getByLabelText(/Формат/), 'recipe');
+
+    expect(screen.getByLabelText(/Інгредієнти/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Кроки приготування/)).toBeInTheDocument();
+  });
+
+  // @trace FR-MEM-03
+  it('lets the user choose public visibility', () => {
+    renderPage();
+
+    expect(screen.getByLabelText(/Показувати спогад у публічній стрічці/)).toBeInTheDocument();
+  });
+
+  // @trace FR-MEM-02
+  it('shows a validation message on empty submit and does not call the API', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Створити спогад' }));
+
+    expect(screen.getByText('Заповніть назву та основний текст спогаду.')).toBeInTheDocument();
+    expect(apiMocks.createMemory).not.toHaveBeenCalled();
+  });
+});
+
+function renderPage() {
+  return render(
+    <MemoryRouter>
+      <MemoryFormPage />
+    </MemoryRouter>,
+  );
+}

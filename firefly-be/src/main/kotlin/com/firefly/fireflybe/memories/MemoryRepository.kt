@@ -42,8 +42,3 @@ interface MemoryRepository : JpaRepository<Memory, Long> {
         pageable: Pageable
     ): Page<Memory>
 }
-
-interface MediaRepository : JpaRepository<Media, Long> {
-    fun findByMemoryId(memoryId: Long): List<Media>
-    fun deleteByMemoryId(memoryId: Long)
-}

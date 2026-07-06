@@ -42,10 +42,12 @@ for (const file of staged) {
   }
 }
 
-// 2 — lint staged sources
-const lintable = staged.filter((f) => /\.(ts|tsx|js|jsx|mjs)$/.test(f));
+// 2 — lint staged sources. oxlint and its config live in the firefly-fe
+// workspace package, so run it from there on that package's staged files
+// (matches CI, which lints via `pnpm --filter firefly-fe run lint`).
+const lintable = staged.filter((f) => /\.(ts|tsx|js|jsx|mjs)$/.test(f) && f.startsWith("firefly-fe/"));
 if (lintable.length) {
-  run(`npx oxlint ${lintable.map((f) => `"${f}"`).join(" ")}`);
+  run(`npx oxlint ${lintable.map((f) => `"${f.slice("firefly-fe/".length)}"`).join(" ")}`, { cwd: "firefly-fe" });
 }
 
 // 3 — typecheck

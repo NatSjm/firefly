@@ -5,6 +5,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +22,6 @@ import java.time.Instant
 @RequestMapping("/api/memories")
 class MemoryController(
     private val memoryRepository: MemoryRepository,
-    private val mediaRepository: MediaRepository,
     private val memoryService: MemoryService
 ) {
 
@@ -61,12 +61,11 @@ class MemoryController(
             yearTo = req.yearTo,
             isPublic = req.isPublic
         )
-        val saved = memoryRepository.save(memory)
         if (photo != null && !photo.isEmpty) {
-            mediaRepository.save(Media(memory = saved, url = memoryService.savePhoto(photo)))
+            memory.media.add(Media(memory = memory, url = memoryService.savePhoto(photo)))
         }
-        val fresh = memoryRepository.findById(saved.id).orElseThrow()
-        return ResponseEntity.status(HttpStatus.CREATED).body(memoryService.enrichDto(fresh, user.id))
+        val saved = memoryRepository.save(memory)
+        return ResponseEntity.status(HttpStatus.CREATED).body(memoryService.enrichDto(saved, user.id))
     }
 
     @GetMapping("/{id}")
@@ -74,13 +73,12 @@ class MemoryController(
         val memory = memoryRepository.findById(id).orElse(null)
             ?: return ResponseEntity.notFound().build()
         val currentUser = authentication?.principal as? User
-        if (!memory.isPublic && (currentUser == null || (currentUser.id != memory.user.id && currentUser.role != "admin"))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }
+        memoryService.ensureViewAllowed(memory, currentUser)
         return ResponseEntity.ok(memoryService.enrichDto(memory, currentUser?.id))
     }
 
     @PutMapping("/{id}")
+    @Transactional
     fun updateMemory(
         @PathVariable id: Long,
         @Valid @RequestPart("data") req: MemoryRequest,
@@ -107,13 +105,14 @@ class MemoryController(
         memory.updatedAt = Instant.now()
 
         if (photo != null && !photo.isEmpty) {
-            mediaRepository.deleteByMemoryId(memory.id)
-            mediaRepository.save(Media(memory = memory, url = memoryService.savePhoto(photo)))
+            val previousUrls = memory.media.map { it.url }
+            memory.media.clear()
+            memory.media.add(Media(memory = memory, url = memoryService.savePhoto(photo)))
+            memoryService.deletePhotoFiles(previousUrls)
         }
 
         val saved = memoryRepository.save(memory)
-        val fresh = memoryRepository.findById(saved.id).orElseThrow()
-        return ResponseEntity.ok(memoryService.enrichDto(fresh, user.id))
+        return ResponseEntity.ok(memoryService.enrichDto(saved, user.id))
     }
 
     @DeleteMapping("/{id}")
@@ -124,7 +123,9 @@ class MemoryController(
         if (memory.user.id != user.id && user.role != "admin") {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
         }
+        val photoUrls = memory.media.map { it.url }
         memoryRepository.delete(memory)
+        memoryService.deletePhotoFiles(photoUrls)
         return ResponseEntity.noContent().build()
     }
 }
