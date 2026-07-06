@@ -1,0 +1,12 @@
+CREATE TABLE users (
+  id BIGSERIAL PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(120) NOT NULL,
+  bio TEXT,
+  avatar_url VARCHAR(512),
+  role VARCHAR(20) NOT NULL DEFAULT 'user',
+  is_banned BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP
+);
