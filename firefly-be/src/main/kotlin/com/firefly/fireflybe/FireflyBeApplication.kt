@@ -7,8 +7,11 @@ import org.springframework.boot.runApplication
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppProperties::class)
-class FireflyBeApplication
-
-fun main(args: Array<String>) {
-    runApplication<FireflyBeApplication>(*args)
+class FireflyBeApplication {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            runApplication<FireflyBeApplication>(*args)
+        }
+    }
 }
