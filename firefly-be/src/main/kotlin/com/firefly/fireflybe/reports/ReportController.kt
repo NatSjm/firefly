@@ -15,21 +15,14 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/reports")
-class ReportController(private val reportRepository: ReportRepository) {
+class ReportController(private val reportService: ReportService) {
 
     @PostMapping
     fun createReport(
         @Valid @RequestBody req: ReportRequest,
         authentication: Authentication
     ): ResponseEntity<Map<String, String>> {
-        val user = authentication.principal as User
-        val report = Report(
-            targetType = req.targetType.trim(),
-            targetId = req.targetId,
-            reporterId = user.id,
-            reason = req.reason?.trim()?.ifBlank { null }
-        )
-        reportRepository.save(report)
+        reportService.create(authentication.principal as User, req)
         return ResponseEntity.status(HttpStatus.CREATED).body(mapOf("status" to "ok"))
     }
 }

@@ -1,5 +1,6 @@
 package com.firefly.fireflybe.auth
 
+import com.firefly.fireflybe.users.User
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -33,4 +34,11 @@ data class AuthUserDto(
 data class AuthResponse(
     val token: String,
     val user: AuthUserDto
+)
+
+fun User.toAuthUserDto() = AuthUserDto(
+    id = id,
+    email = email,
+    name = name,
+    role = role
 )

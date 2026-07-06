@@ -1,15 +1,13 @@
 package com.firefly.fireflybe.memories
 
-import com.firefly.fireflybe.comments.CommentRepository
+import com.firefly.fireflybe.common.ApiException
 import com.firefly.fireflybe.config.AppProperties
-import com.firefly.fireflybe.likes.LikeRepository
 import com.firefly.fireflybe.users.User
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 import org.springframework.http.HttpStatus
 import org.springframework.mock.web.MockMultipartFile
-import org.springframework.web.server.ResponseStatusException
 import java.lang.reflect.Proxy
 import java.nio.file.Files
 import java.nio.file.Path
@@ -25,7 +23,7 @@ class MemoryServiceTest {
     // no-op proxies keep this a pure unit test without a mocking library.
     private fun service(): MemoryService {
         val props = AppProperties().apply { uploadDir = this@MemoryServiceTest.uploadDir.toString() }
-        return MemoryService(unusedProxy(), unusedProxy(), props)
+        return MemoryService(unusedProxy(), unusedProxy(), unusedProxy(), props)
     }
 
     private inline fun <reified T> unusedProxy(): T =
@@ -61,21 +59,21 @@ class MemoryServiceTest {
     // @trace FR-MEM-03
     @Test
     fun `private memory is forbidden for another user`() {
-        val exception = assertThrows<ResponseStatusException> {
+        val exception = assertThrows<ApiException> {
             service().ensureViewAllowed(memory(User(id = 1), isPublic = false), currentUser = User(id = 2))
         }
 
-        assertEquals(HttpStatus.FORBIDDEN, exception.statusCode)
+        assertEquals(HttpStatus.FORBIDDEN, exception.status)
     }
 
     // @trace FR-MEM-03
     @Test
     fun `private memory is forbidden anonymously`() {
-        val exception = assertThrows<ResponseStatusException> {
+        val exception = assertThrows<ApiException> {
             service().ensureViewAllowed(memory(User(id = 1), isPublic = false), currentUser = null)
         }
 
-        assertEquals(HttpStatus.FORBIDDEN, exception.statusCode)
+        assertEquals(HttpStatus.FORBIDDEN, exception.status)
     }
 
     // @trace FR-MEM-02
@@ -96,11 +94,11 @@ class MemoryServiceTest {
     fun `savePhoto rejects files that are not images`() {
         val page = MockMultipartFile("photo", "attack.html", "text/html", byteArrayOf(1))
 
-        val exception = assertThrows<ResponseStatusException> {
+        val exception = assertThrows<ApiException> {
             service().savePhoto(page)
         }
 
-        assertEquals(HttpStatus.BAD_REQUEST, exception.statusCode)
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
         assertEquals(0, Files.list(uploadDir).count())
     }
 

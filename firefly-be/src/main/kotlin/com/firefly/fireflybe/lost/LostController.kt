@@ -15,41 +15,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/lost-requests")
-class LostController(private val lostRequestRepository: LostRequestRepository) {
+class LostController(private val lostService: LostService) {
 
     @GetMapping
     fun getAll(
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) type: String?
-    ): List<LostRequestDto> {
-        return lostRequestRepository.findByFilters(
-            city?.trim()?.takeIf { it.isNotBlank() },
-            type?.trim()?.takeIf { it.isNotBlank() }
-        ).map { it.toDto() }
-    }
+    ): List<LostRequestDto> = lostService.list(city, type)
 
     @PostMapping
     fun create(
         @Valid @RequestBody req: LostRequestRequest,
         authentication: Authentication
-    ): ResponseEntity<LostRequestDto> {
-        val user = authentication.principal as User
-        val lostRequest = LostRequest(
-            user = user,
-            city = req.city.trim(),
-            type = req.type.trim(),
-            years = req.years?.trim()?.ifBlank { null },
-            description = req.description.trim(),
-            contactEmail = req.contactEmail.trim()
-        )
-        val saved = lostRequestRepository.save(lostRequest)
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved.toDto())
-    }
+    ): ResponseEntity<LostRequestDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(lostService.create(authentication.principal as User, req))
 
     @GetMapping("/{id}")
-    fun getOne(@PathVariable id: Long): ResponseEntity<LostRequestDto> {
-        val lostRequest = lostRequestRepository.findById(id).orElse(null)
-            ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(lostRequest.toDto())
-    }
+    fun getOne(@PathVariable id: Long): LostRequestDto = lostService.get(id)
 }

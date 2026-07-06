@@ -42,3 +42,6 @@ class User(
     @Column(name = "updated_at")
     var updatedAt: Instant? = null
 )
+
+val User.isAdmin: Boolean
+    get() = role.equals("admin", ignoreCase = true)

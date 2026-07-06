@@ -1,7 +1,5 @@
 package com.firefly.fireflybe.comments
 
-import com.firefly.fireflybe.memories.MemoryRepository
-import com.firefly.fireflybe.memories.MemoryService
 import com.firefly.fireflybe.users.User
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -17,40 +15,22 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/memories/{memoryId}/comments")
-class CommentController(
-    private val commentRepository: CommentRepository,
-    private val memoryRepository: MemoryRepository,
-    private val memoryService: MemoryService
-) {
+class CommentController(private val commentService: CommentService) {
 
     @GetMapping
     fun getComments(
         @PathVariable memoryId: Long,
         authentication: Authentication?
-    ): ResponseEntity<List<CommentDto>> {
-        val memory = memoryRepository.findById(memoryId).orElse(null)
-            ?: return ResponseEntity.notFound().build()
-        val currentUser = authentication?.principal as? User
-        if (!memory.isPublic && (currentUser == null || (currentUser.id != memory.user.id && currentUser.role != "admin"))) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }
-        return ResponseEntity.ok(commentRepository.findByMemoryIdOrderByCreatedAtAsc(memoryId).map { it.toDto() })
-    }
+    ): List<CommentDto> = commentService.list(memoryId, authentication?.principal as? User)
 
     @PostMapping
     fun addComment(
         @PathVariable memoryId: Long,
         @Valid @RequestBody req: CommentRequest,
         authentication: Authentication
-    ): ResponseEntity<CommentDto> {
-        val user = authentication.principal as User
-        val memory = memoryRepository.findById(memoryId).orElse(null)
-            ?: return ResponseEntity.notFound().build()
-        memoryService.ensureViewAllowed(memory, user)
-        val comment = Comment(memory = memory, user = user, text = req.text.trim())
-        val saved = commentRepository.save(comment)
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved.toDto())
-    }
+    ): ResponseEntity<CommentDto> =
+        ResponseEntity.status(HttpStatus.CREATED)
+            .body(commentService.add(memoryId, authentication.principal as User, req))
 
     @DeleteMapping("/{commentId}")
     fun deleteComment(
@@ -58,16 +38,7 @@ class CommentController(
         @PathVariable commentId: Long,
         authentication: Authentication
     ): ResponseEntity<Void> {
-        val user = authentication.principal as User
-        val comment = commentRepository.findById(commentId).orElse(null)
-            ?: return ResponseEntity.notFound().build()
-        if (comment.memory.id != memoryId) {
-            return ResponseEntity.notFound().build()
-        }
-        if (comment.user.id != user.id && user.role != "admin") {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build()
-        }
-        commentRepository.delete(comment)
+        commentService.delete(memoryId, commentId, authentication.principal as User)
         return ResponseEntity.noContent().build()
     }
 }

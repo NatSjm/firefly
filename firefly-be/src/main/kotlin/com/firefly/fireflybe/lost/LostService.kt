@@ -1,0 +1,35 @@
+package com.firefly.fireflybe.lost
+
+import com.firefly.fireflybe.common.ApiException
+import com.firefly.fireflybe.users.User
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+class LostService(private val lostRequestRepository: LostRequestRepository) {
+
+    fun list(city: String?, type: String?): List<LostRequestDto> =
+        lostRequestRepository.findByFilters(
+            city?.trim()?.takeIf { it.isNotBlank() },
+            type?.trim()?.takeIf { it.isNotBlank() }
+        ).map { it.toDto() }
+
+    @Transactional
+    fun create(user: User, req: LostRequestRequest): LostRequestDto {
+        val lostRequest = LostRequest(
+            user = user,
+            city = req.city.trim(),
+            type = req.type.trim(),
+            years = req.years?.trim()?.ifBlank { null },
+            description = req.description.trim(),
+            contactEmail = req.contactEmail.trim()
+        )
+        return lostRequestRepository.save(lostRequest).toDto()
+    }
+
+    fun get(id: Long): LostRequestDto =
+        lostRequestRepository.findById(id)
+            .orElseThrow { ApiException(HttpStatus.NOT_FOUND, "Запит не знайдено") }
+            .toDto()
+}

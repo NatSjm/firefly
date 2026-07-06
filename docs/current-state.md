@@ -6,11 +6,12 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-06 19:05:00 (UTC+02:00)
+- **Date and time:** 2026-07-06 19:40:00 (UTC+02:00)
 - **Current phase:** **Phase 4 — slice 2 complete, proceeding to slice 3**
 - **Active change:** none (slice `add-personal-archive` archived)
 - **Progress:** Backend integration test layer added: 35 MockMvc tests in `firefly-be/src/test/kotlin/com/firefly/fireflybe/integration/` boot the full app (security chain, Flyway, JPA) against a Testcontainers PostgreSQL 16 container (`IntegrationTestBase`). Adding them exposed and fixed three production bugs: (1) Boot 4 needs `spring-boot-starter-flyway` instead of raw `flyway-core` — migrations silently never ran; (2) `AppProperties` was registered twice (`@Component` + `@EnableConfigurationProperties`) — the app could not boot; (3) admin delete endpoints returned 500 because the derived report delete query ran without a transaction (`@Transactional` added). Full backend suite: 71 tests green via `mvnw test` (requires Docker + a modern JDK, e.g. `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`). Note: the local dev database has schema drift (missing `comments` table) because Flyway never ran; drop/recreate the `firefly` DB before local boot.
-- **Next task:** Continue Phase 4 with slice 3 `add-public-feed-and-social`, carrying forward the same review → validation → archive flow. Consider the backend improvement backlog proposed 2026-07-06 (service-layer extraction, global exception handler, enum-typed roles/types, feed enrichment N+1 fix, CORS/JWT-secret hardening).
+- **Progress (cont.):** Backend refactored to a service layer: every domain now has a `@Service` owning business logic and `@Transactional` boundaries (`AuthService`, `UserService`, `MemoryService`, `FeedService`, `LikeService`, `CommentService`, `LostService`, `ReportService`, `AdminService`); controllers are thin request/response adapters. New `common` package: `ApiException(status, message)` + `GlobalExceptionHandler` (`@RestControllerAdvice`) — all error responses now share one shape `{"error": "...", "details": {field: msg}?}` with Ukrainian messages (frontend `getErrorMessage` already reads the `error` key). Duplicated authorization inlines replaced by shared `User.isAdmin` + `MemoryService.ensureViewAllowed`/`findOrThrow`. Admin memory deletion now also removes uploaded photo files. Suite still 71 green.
+- **Next task:** Continue Phase 4 with slice 3 `add-public-feed-and-social`, carrying forward the same review → validation → archive flow. Remaining backend backlog from 2026-07-06 review: enum-typed roles/types, feed enrichment N+1 fix (batch count queries), LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, contactEmail exposure on public lost-requests list, pagination caps.
 
 ## Source Of Truth
 
