@@ -21,12 +21,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
-          version: latest
+          # Pinned to the version used locally so lockfile resolution and
+          # supply-chain policies (minimumReleaseAge) behave identically.
+          version: 10.32.1
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
-          cache-dependency-path: firefly-fe/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
 
@@ -42,7 +44,7 @@ jobs:
       - name: Build
         run: pnpm run build
 
-  # Backend: compile + unit tests (Maven, Java 21)
+  # Backend: compile + unit tests (Maven, Java 25 — matches pom.xml java.version)
   backend:
     runs-on: ubuntu-latest
     defaults:
@@ -52,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '25'
           distribution: temurin
           cache: maven
 
@@ -60,7 +62,7 @@ jobs:
         run: ./mvnw compile --no-transfer-progress
 
       - name: Unit tests (no Spring context)
-        run: ./mvnw test -Dtest="JwtServiceTest,RegisterRequestValidationTest,UserEntityTest" --no-transfer-progress
+        run: ./mvnw test -Dtest="JwtServiceTest,RegisterRequestValidationTest,UserEntityTest,Memory*Test" --no-transfer-progress
 
       - name: Upload test report
         if: always()

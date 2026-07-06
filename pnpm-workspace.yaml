@@ -1,2 +1,6 @@
 packages:
   - "firefly-fe"
+
+# Supply-chain policy: refuse packages published less than 24h ago, so local
+# resolution can never commit a lockfile entry that CI's policy check rejects.
+minimumReleaseAge: 1440
