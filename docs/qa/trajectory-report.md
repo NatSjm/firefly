@@ -6,12 +6,12 @@ It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
 Scope: 2 archived slice(s).
-Result: PASS, 3 warning(s)
+Result: PASS, 2 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
 | 2026-07-06-add-identity-and-access | **unclean** | 1 | yes | - |
-| 2026-07-06-add-personal-archive | **unclean** | **0** | yes | - |
+| 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 
 ## Cross-slice module overlap
 
@@ -25,4 +25,3 @@ None.
 
 - **review-evidence**: 2026-07-06-add-identity-and-access: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)
-- **trailer**: 2026-07-06-add-personal-archive: no commit carries a "Slice: add-personal-archive" trailer

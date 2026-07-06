@@ -11,7 +11,7 @@
     {
       "slice": "2026-07-06-add-personal-archive",
       "reviewEvidence": "unclean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     }
@@ -26,10 +26,6 @@
     {
       "check": "review-evidence",
       "msg": "2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-06-add-personal-archive: no commit carries a \"Slice: add-personal-archive\" trailer"
     }
   ]
 }
