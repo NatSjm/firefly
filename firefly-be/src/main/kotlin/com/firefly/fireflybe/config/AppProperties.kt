@@ -1,9 +1,7 @@
 package com.firefly.fireflybe.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
 
-@Component
 @ConfigurationProperties(prefix = "app")
 class AppProperties {
     val jwt = JwtProperties()

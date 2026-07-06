@@ -6,11 +6,11 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-06 17:40:00 (UTC+02:00)
+- **Date and time:** 2026-07-06 19:05:00 (UTC+02:00)
 - **Current phase:** **Phase 4 — slice 2 complete, proceeding to slice 3**
 - **Active change:** none (slice `add-personal-archive` archived)
-- **Progress:** Phase 4 retrofit evidence for slice 2 is in place: OpenSpec change docs, backend unit tests for memory validation/entity defaults/view guard/photo storage, frontend render tests for `/dashboard`, the memory form, and the memory detail page, and inline review evidence with four fixed findings (untransacted photo replacement, unrestricted upload file types, orphaned upload files on delete, duplicated visibility guard). Frontend battery passes locally. Backend Maven validation remains blocked in this environment by Maven Central PKIX certificate resolution before Spring or PostgreSQL startup.
-- **Next task:** Continue Phase 4 with slice 3 `add-public-feed-and-social`, carrying forward the same review → validation → archive flow.
+- **Progress:** Backend integration test layer added: 35 MockMvc tests in `firefly-be/src/test/kotlin/com/firefly/fireflybe/integration/` boot the full app (security chain, Flyway, JPA) against a Testcontainers PostgreSQL 16 container (`IntegrationTestBase`). Adding them exposed and fixed three production bugs: (1) Boot 4 needs `spring-boot-starter-flyway` instead of raw `flyway-core` — migrations silently never ran; (2) `AppProperties` was registered twice (`@Component` + `@EnableConfigurationProperties`) — the app could not boot; (3) admin delete endpoints returned 500 because the derived report delete query ran without a transaction (`@Transactional` added). Full backend suite: 71 tests green via `mvnw test` (requires Docker + a modern JDK, e.g. `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`). Note: the local dev database has schema drift (missing `comments` table) because Flyway never ran; drop/recreate the `firefly` DB before local boot.
+- **Next task:** Continue Phase 4 with slice 3 `add-public-feed-and-social`, carrying forward the same review → validation → archive flow. Consider the backend improvement backlog proposed 2026-07-06 (service-layer extraction, global exception handler, enum-typed roles/types, feed enrichment N+1 fix, CORS/JWT-secret hardening).
 
 ## Source Of Truth
 

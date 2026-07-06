@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.Authentication
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -32,6 +33,7 @@ class AdminController(
     fun getReports(): List<Report> = reportRepository.findAll()
 
     @DeleteMapping("/memories/{id}")
+    @Transactional
     fun deleteMemory(@PathVariable id: Long): ResponseEntity<Void> {
         if (!memoryRepository.existsById(id)) {
             return ResponseEntity.notFound().build()
@@ -42,6 +44,7 @@ class AdminController(
     }
 
     @DeleteMapping("/comments/{id}")
+    @Transactional
     fun deleteComment(@PathVariable id: Long): ResponseEntity<Void> {
         if (!commentRepository.existsById(id)) {
             return ResponseEntity.notFound().build()
