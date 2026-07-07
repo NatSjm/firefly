@@ -2,7 +2,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { MemoryFormPage } from '@/pages/MemoryFormPage';
-import { CITIES, TOPICS } from '@/pages/pageShared';
+import { getCities, getTopics } from '@/pages/pageShared';
 
 const apiMocks = vi.hoisted(() => ({
   createMemory: vi.fn(),
@@ -44,7 +44,7 @@ describe('MemoryFormPage', () => {
       .getAllByRole('option')
       .map((option) => option.textContent);
 
-    expect(optionLabels).toEqual(['Оберіть тему', ...TOPICS]);
+    expect(optionLabels).toEqual(['Оберіть тему', ...getTopics()]);
   });
 
   // @trace FR-CITY-01
@@ -56,7 +56,7 @@ describe('MemoryFormPage', () => {
       .getAllByRole('option')
       .map((option) => option.textContent);
 
-    expect(optionLabels).toEqual(['Оберіть місто', ...CITIES]);
+    expect(optionLabels).toEqual(['Оберіть місто', ...getCities()]);
     expect(citySelect).toHaveValue('');
   });
 

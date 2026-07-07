@@ -1,4 +1,5 @@
 import { Suspense, lazy } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './i18n';
 import { Layout } from '@/components/Layout';
@@ -21,14 +22,17 @@ const ProfilePage = lazy(() => import('@/pages/ProfilePage').then((module) => ({
 const RegisterPage = lazy(() => import('@/pages/RegisterPage').then((module) => ({ default: module.RegisterPage })));
 const RulesPage = lazy(() => import('@/pages/RulesPage').then((module) => ({ default: module.RulesPage })));
 
-const pageFallback = <div style={{ padding: 'var(--space-10)', textAlign: 'center' }}>Завантаження…</div>;
+function PageFallback() {
+  const { t } = useTranslation();
+  return <div style={{ padding: 'var(--space-10)', textAlign: 'center' }}>{t('app.loading')}</div>;
+}
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Layout>
-          <Suspense fallback={pageFallback}>
+          <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />

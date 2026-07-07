@@ -1,10 +1,12 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Field, Message, TextInput } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { FORM_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, getErrorMessage } from '@/pages/pageShared';
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const navigate = useNavigate();
   const [name, setName] = useState('');
@@ -18,7 +20,7 @@ export function RegisterPage() {
     setError('');
 
     if (password.trim().length < 8) {
-      setError('Пароль має містити щонайменше 8 символів.');
+      setError(t('auth.register.passwordTooShort'));
       return;
     }
 
@@ -28,7 +30,7 @@ export function RegisterPage() {
       await register(email, password, name);
       navigate('/dashboard', { replace: true });
     } catch (submitError) {
-      setError(getErrorMessage(submitError, 'Не вдалося створити профіль. Спробуйте ще раз.'));
+      setError(getErrorMessage(submitError, t('auth.register.error')));
     } finally {
       setSubmitting(false);
     }
@@ -37,34 +39,34 @@ export function RegisterPage() {
   return (
     <div style={PAGE_WRAPPER_STYLE}>
       <div style={{ ...SURFACE_STYLE, maxWidth: '560px', margin: '0 auto' }}>
-        <h1 style={PAGE_HEADING_STYLE}>Реєстрація</h1>
+        <h1 style={PAGE_HEADING_STYLE}>{t('auth.register.title')}</h1>
         <form style={FORM_STYLE} onSubmit={handleSubmit}>
           {error ? <Message tone="error">{error}</Message> : null}
-          <Field label="Ім’я" required>
+          <Field label={t('auth.register.name')} required>
             <TextInput
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Як до вас звертатися"
+              placeholder={t('auth.register.namePlaceholder')}
               required
               disabled={submitting}
             />
           </Field>
-          <Field label="Email" required>
+          <Field label={t('auth.email')} required>
             <TextInput
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('auth.emailPlaceholder')}
               required
               disabled={submitting}
             />
           </Field>
-          <Field label="Пароль" required hint="Мінімум 8 символів">
+          <Field label={t('auth.password')} required hint={t('auth.register.passwordHint')}>
             <TextInput
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Створіть пароль"
+              placeholder={t('auth.register.passwordPlaceholder')}
               required
               minLength={8}
               disabled={submitting}
@@ -72,7 +74,7 @@ export function RegisterPage() {
           </Field>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             <Button type="submit" fullWidth disabled={submitting}>
-              {submitting ? 'Створюємо профіль…' : 'Створити профіль'}
+              {submitting ? t('auth.register.submitting') : t('auth.register.submit')}
             </Button>
             <p
               style={{
@@ -82,9 +84,9 @@ export function RegisterPage() {
                 color: 'var(--text-secondary)',
               }}
             >
-              Уже маєте профіль?{' '}
+              {t('auth.register.haveProfile')}{' '}
               <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-                Увійти
+                {t('auth.register.loginLink')}
               </Link>
             </p>
           </div>

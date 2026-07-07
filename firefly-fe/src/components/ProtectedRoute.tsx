@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -8,11 +9,12 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
+  const { t } = useTranslation();
   const { user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
-    return <div style={{ padding: 'var(--space-10)', textAlign: 'center' }}>Завантаження...</div>;
+    return <div style={{ padding: 'var(--space-10)', textAlign: 'center' }}>{t('app.loading')}</div>;
   }
 
   if (!user) {

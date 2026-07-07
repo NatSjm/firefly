@@ -1,18 +1,13 @@
+import { useTranslation } from 'react-i18next';
 import { PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE } from '@/pages/pageShared';
 
-const RULES = [
-  'Поважайте одне одного. Ніяких образ, приниження чи цькування.',
-  'Публікуйте тільки свої спогади або ті, на публікацію яких ви маєте дозвіл.',
-  'Не поширюйте особисті дані інших людей без їхньої згоди.',
-  'Ніяких політичних баталій — це місце для дитинства, не для суперечок.',
-  'Ніякого спаму, реклами та беззмістовного контенту.',
-  'Якщо бачите порушення — скористайтесь кнопкою «Поскаржитися».',
-];
-
 export function RulesPage() {
+  const { t } = useTranslation();
+  const rules = t('rules.items', { returnObjects: true }) as string[];
+
   return (
     <div style={PAGE_WRAPPER_STYLE}>
-      <h1 style={PAGE_HEADING_STYLE}>Правила спільноти</h1>
+      <h1 style={PAGE_HEADING_STYLE}>{t('rules.title')}</h1>
       <section style={SURFACE_STYLE}>
         <ol
           style={{
@@ -25,7 +20,7 @@ export function RulesPage() {
             lineHeight: 'var(--lh-body)',
           }}
         >
-          {RULES.map((rule) => (
+          {rules.map((rule) => (
             <li key={rule}>{rule}</li>
           ))}
         </ol>
@@ -33,4 +28,3 @@ export function RulesPage() {
     </div>
   );
 }
-

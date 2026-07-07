@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getMyMemories } from '@/api/memories';
 import { Button, MemoryCard, Message } from '@/design-system';
@@ -7,25 +8,22 @@ import { CARD_GRID_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE,
 
 type FilterKey = 'all' | 'public' | 'private';
 
-const FILTER_LABELS: Record<FilterKey, string> = {
-  all: 'Всі',
-  public: 'Публічні',
-  private: 'Приватні',
-};
+const FILTER_KEYS: FilterKey[] = ['all', 'public', 'private'];
 
 export function DashboardPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [filter, setFilter] = useState<FilterKey>('all');
 
   const fetchMemories = useCallback(
-    () =>
-      getMyMemories(filter === 'all' ? undefined : { isPublic: filter === 'public' }).then(
+    (signal: AbortSignal) =>
+      getMyMemories(filter === 'all' ? undefined : { isPublic: filter === 'public' }, signal).then(
         (response) => response.data,
       ),
     [filter],
   );
 
-  const { data, loading, error } = useAsyncData(fetchMemories, 'Не вдалося завантажити ваші спогади.');
+  const { data, loading, error } = useAsyncData(fetchMemories, t('dashboard.error'));
   const memories = data ?? [];
 
   return (
@@ -41,7 +39,7 @@ export function DashboardPage() {
         }}
       >
         <div>
-          <h1 style={PAGE_HEADING_STYLE}>Мої світлячки</h1>
+          <h1 style={PAGE_HEADING_STYLE}>{t('dashboard.title')}</h1>
           <p
             style={{
               margin: '-var(--space-3) 0 0',
@@ -49,14 +47,14 @@ export function DashboardPage() {
               color: 'var(--text-secondary)',
             }}
           >
-            Керуйте своїми історіями, рецептами та рівнем приватності.
+            {t('dashboard.subtitle')}
           </p>
         </div>
-        <Button onClick={() => navigate('/memories/new')}>Новий спогад</Button>
+        <Button onClick={() => navigate('/memories/new')}>{t('nav.newMemory')}</Button>
       </div>
 
       <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', marginBottom: 'var(--space-6)' }}>
-        {(Object.keys(FILTER_LABELS) as FilterKey[]).map((key) => {
+        {FILTER_KEYS.map((key) => {
           const active = filter === key;
 
           return (
@@ -75,7 +73,7 @@ export function DashboardPage() {
                 cursor: 'pointer',
               }}
             >
-              {FILTER_LABELS[key]}
+              {t(`dashboard.filters.${key}`)}
             </button>
           );
         })}
@@ -84,7 +82,7 @@ export function DashboardPage() {
       {error ? <Message tone="error">{error}</Message> : null}
 
       {loading ? (
-        <div style={SURFACE_STYLE}>Завантажуємо ваші спогади…</div>
+        <div style={SURFACE_STYLE}>{t('dashboard.loading')}</div>
       ) : memories.length ? (
         <div style={CARD_GRID_STYLE}>
           {memories.map((memory) => (
@@ -112,7 +110,7 @@ export function DashboardPage() {
               color: 'var(--text-primary)',
             }}
           >
-            Тут поки тихо
+            {t('dashboard.emptyTitle')}
           </h2>
           <p
             style={{
@@ -122,12 +120,11 @@ export function DashboardPage() {
               lineHeight: 'var(--lh-body)',
             }}
           >
-            Створіть свій перший спогад і вирішіть, чи хочете ділитися ним зі спільнотою.
+            {t('dashboard.emptyText')}
           </p>
-          <Button onClick={() => navigate('/memories/new')}>Створити перший спогад</Button>
+          <Button onClick={() => navigate('/memories/new')}>{t('dashboard.createFirst')}</Button>
         </div>
       )}
     </div>
   );
 }
-

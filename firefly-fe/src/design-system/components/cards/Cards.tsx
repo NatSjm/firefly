@@ -1,6 +1,6 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Badge } from "../badges/Badge";
-import { LOST_TYPE_LABEL } from "./lostTypeLabels";
 
 const PLACEHOLDER_PATTERN = "url('/design-system/assets/placeholder-pattern.svg')";
 
@@ -33,6 +33,7 @@ export function MemoryCard({
   privacy,
   onClick,
 }: MemoryCardProps) {
+  const { t } = useTranslation();
   const [hover, setHover] = React.useState(false);
   return (
     <article
@@ -60,7 +61,7 @@ export function MemoryCard({
           display: "flex", alignItems: "center", justifyContent: "center",
         }}>
           <span style={{ fontFamily: "ui-monospace, monospace", fontSize: 11, color: "var(--text-tertiary)", background: "var(--bg-surface)", padding: "3px 8px", borderRadius: "var(--radius-sm)" }}>
-            фото спогаду
+            {t("cards.photoPlaceholder")}
           </span>
         </div>
       )}
@@ -103,6 +104,7 @@ export interface LostRequestCardProps {
  * LostRequestCard — a request in the "Lost Fireflies" (Загублені світлячки) section.
  */
 export function LostRequestCard({ city, type = "other", years, description, author, date, onClick }: LostRequestCardProps) {
+  const { t } = useTranslation();
   const [hover, setHover] = React.useState(false);
   return (
     <article
@@ -123,7 +125,7 @@ export function LostRequestCard({ city, type = "other", years, description, auth
     >
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Badge variant="topic" tone="moss">{city}</Badge>
-        <Badge variant="topic" tone="amber">{LOST_TYPE_LABEL[type] ?? type}</Badge>
+        <Badge variant="topic" tone="amber">{t(`lost.types.${type}`, { defaultValue: type })}</Badge>
         {years && <span style={{ fontSize: 12, color: "var(--text-tertiary)", alignSelf: "center" }}>{years}</span>}
       </div>
       <p style={{ fontSize: 15, color: "var(--text-primary)", lineHeight: "var(--lh-body)", margin: 0 }}>

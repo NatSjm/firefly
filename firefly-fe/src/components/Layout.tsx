@@ -1,14 +1,13 @@
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Footer, Header, MobileMenu } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 
-const ACCOUNT_LINKS = [
-  { key: 'dashboard', label: 'Мої світлячки' },
-  { key: 'profile', label: 'Профіль' },
-] as const;
+const ACCOUNT_LINK_KEYS = ['dashboard', 'profile'] as const;
 
 export function Layout({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -74,11 +73,11 @@ export function Layout({ children }: { children: ReactNode }) {
             }}
           >
             <div style={{ display: 'flex', gap: 'var(--space-2)', flexWrap: 'wrap' }}>
-              {ACCOUNT_LINKS.map((link) => (
+              {ACCOUNT_LINK_KEYS.map((key) => (
                 <button
-                  key={link.key}
+                  key={key}
                   type="button"
-                  onClick={() => handleNavigate(link.key)}
+                  onClick={() => handleNavigate(key)}
                   style={{
                     border: '1px solid var(--border-default)',
                     borderRadius: 'var(--radius-pill)',
@@ -90,7 +89,7 @@ export function Layout({ children }: { children: ReactNode }) {
                     cursor: 'pointer',
                   }}
                 >
-                  {link.label}
+                  {t(`nav.${key}`)}
                 </button>
               ))}
               {user.role === 'admin' && (
@@ -108,7 +107,7 @@ export function Layout({ children }: { children: ReactNode }) {
                     cursor: 'pointer',
                   }}
                 >
-                  Адмін-панель
+                  {t('nav.adminPanel')}
                 </button>
               )}
             </div>
@@ -125,7 +124,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 fontWeight: 600,
               }}
             >
-              Вийти
+              {t('nav.logout')}
             </button>
           </div>
         </div>

@@ -141,6 +141,9 @@ describe('LostPage', () => {
     await user.selectOptions(screen.getByRole('combobox', { name: 'Місто' }), 'Маріуполь');
     await user.selectOptions(screen.getByRole('combobox', { name: 'Тема' }), 'Школа');
 
-    expect(mockGetLostRequests).toHaveBeenLastCalledWith({ city: 'Маріуполь', type: 'school' });
+    expect(mockGetLostRequests).toHaveBeenLastCalledWith(
+      { city: 'Маріуполь', type: 'school' },
+      expect.any(AbortSignal),
+    );
   });
 });

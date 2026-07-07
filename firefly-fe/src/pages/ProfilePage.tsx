@@ -1,10 +1,12 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { updateProfile } from '@/api/auth';
 import { Button, Field, Message, TextInput, Textarea } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { FORM_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, getErrorMessage } from '@/pages/pageShared';
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const { user, refreshUser } = useAuth();
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState('');
@@ -42,9 +44,9 @@ export function ProfilePage() {
       });
       await refreshUser();
       setEditing(false);
-      setMessage('Профіль оновлено.');
+      setMessage(t('profile.updated'));
     } catch (submitError) {
-      setError(getErrorMessage(submitError, 'Не вдалося оновити профіль.'));
+      setError(getErrorMessage(submitError, t('profile.error')));
     } finally {
       setSubmitting(false);
     }
@@ -63,8 +65,8 @@ export function ProfilePage() {
             marginBottom: 'var(--space-6)',
           }}
         >
-          <h1 style={PAGE_HEADING_STYLE}>Профіль</h1>
-          {!editing ? <Button variant="secondary" onClick={() => setEditing(true)}>Редагувати</Button> : null}
+          <h1 style={PAGE_HEADING_STYLE}>{t('profile.title')}</h1>
+          {!editing ? <Button variant="secondary" onClick={() => setEditing(true)}>{t('profile.edit')}</Button> : null}
         </div>
 
         {message ? (
@@ -119,24 +121,26 @@ export function ProfilePage() {
                 {user.name}
               </strong>
               <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>{user.email}</span>
-              <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-tertiary)' }}>Роль: {user.role}</span>
+              <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-tertiary)' }}>
+                {t('profile.role', { role: user.role })}
+              </span>
             </div>
           </div>
 
           {editing ? (
             <form style={FORM_STYLE} onSubmit={handleSubmit}>
-              <Field label="Ім’я" required>
+              <Field label={t('profile.name')} required>
                 <TextInput value={name} onChange={(event) => setName(event.target.value)} disabled={submitting} />
               </Field>
-              <Field label="Про себе">
+              <Field label={t('profile.bio')}>
                 <Textarea rows={5} value={bio} onChange={(event) => setBio(event.target.value)} disabled={submitting} />
               </Field>
-              <Field label="Посилання на аватар">
+              <Field label={t('profile.avatarUrl')}>
                 <TextInput value={avatarUrl} onChange={(event) => setAvatarUrl(event.target.value)} disabled={submitting} />
               </Field>
               <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
                 <Button type="submit" disabled={submitting}>
-                  {submitting ? 'Зберігаємо…' : 'Зберегти'}
+                  {submitting ? t('profile.saving') : t('profile.save')}
                 </Button>
                 <Button
                   type="button"
@@ -148,7 +152,7 @@ export function ProfilePage() {
                     setAvatarUrl(user.avatarUrl ?? '');
                   }}
                 >
-                  Скасувати
+                  {t('common.cancel')}
                 </Button>
               </div>
             </form>
@@ -163,10 +167,10 @@ export function ProfilePage() {
                     color: 'var(--text-primary)',
                   }}
                 >
-                  Біографія
+                  {t('profile.bioHeading')}
                 </h2>
                 <p style={{ margin: 0, fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)', lineHeight: 'var(--lh-body)' }}>
-                  {user.bio || 'Тут ще немає розповіді про вас.'}
+                  {user.bio || t('profile.emptyBio')}
                 </p>
               </div>
               <div>
@@ -178,10 +182,10 @@ export function ProfilePage() {
                     color: 'var(--text-primary)',
                   }}
                 >
-                  Аватар
+                  {t('profile.avatarHeading')}
                 </h2>
                 <p style={{ margin: 0, fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
-                  {user.avatarUrl || 'Посилання на аватар ще не додано.'}
+                  {user.avatarUrl || t('profile.emptyAvatar')}
                 </p>
               </div>
             </div>
@@ -191,4 +195,3 @@ export function ProfilePage() {
     </div>
   );
 }
-

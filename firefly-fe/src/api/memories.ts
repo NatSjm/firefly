@@ -35,10 +35,10 @@ export interface MemoryRequest {
   isPublic: boolean;
 }
 
-export const getMyMemories = (params?: { type?: string; isPublic?: boolean }) =>
-  client.get<Memory[]>('/memories', { params });
+export const getMyMemories = (params?: { type?: string; isPublic?: boolean }, signal?: AbortSignal) =>
+  client.get<Memory[]>('/memories', { params, signal });
 
-export const getMemory = (id: number) => client.get<Memory>(`/memories/${id}`);
+export const getMemory = (id: number, signal?: AbortSignal) => client.get<Memory>(`/memories/${id}`, { signal });
 
 export const createMemory = (data: MemoryRequest, photo?: File) => {
   const formData = new FormData();

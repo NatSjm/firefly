@@ -11,7 +11,7 @@ Result: PASS, 4 warning(s)
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
 | 2026-07-06-add-identity-and-access | **unclean** | 1 | yes | - |
-| 2026-07-06-add-lost-fireflies | **missing** | 1 | yes | - |
+| 2026-07-06-add-lost-fireflies | **missing** | 2 | yes | - |
 | 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
 

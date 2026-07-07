@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import { LOST_TYPE_LABEL } from '@/design-system';
+import { LOST_TYPES } from '@/design-system';
+import i18n from '@/i18n';
 
 export { getErrorMessage } from '@/lib/errors';
 
@@ -37,24 +38,33 @@ export const SURFACE_STYLE: CSSProperties = {
   padding: 'var(--space-6)',
 };
 
-export const CITIES = ['Київ', 'Львів', 'Одеса', 'Харків', 'Маріуполь', 'Дніпро', 'Запоріжжя', 'Миколаїв'];
+export interface SelectOptionItem {
+  value: string;
+  label: string;
+}
 
-export const TOPICS = ['Океан Ельзи', 'Бабусині рецепти', "Комп'ютерні ігри", 'Тамагочі', 'Дворові ігри'];
+export function getCities() {
+  return i18n.t('cities', { returnObjects: true }) as string[];
+}
 
-export const MEMORY_TOPIC_OPTIONS = TOPICS.map((topic) => ({ value: topic, label: topic }));
+export function getTopics() {
+  return i18n.t('topics', { returnObjects: true }) as string[];
+}
 
-export const LOST_TYPE_LABELS = LOST_TYPE_LABEL;
+export function getCityOptions(): SelectOptionItem[] {
+  return getCities().map((city) => ({ value: city, label: city }));
+}
 
-export const LOST_TYPE_OPTIONS = Object.entries(LOST_TYPE_LABELS).map(([value, label]) => ({ value, label }));
-
-export const LOST_TYPE_FILTER_OPTIONS = LOST_TYPE_OPTIONS.map((option) => option.label);
-
-export const LOST_TYPE_VALUE_BY_LABEL = Object.fromEntries(
-  LOST_TYPE_OPTIONS.map((option) => [option.label, option.value]),
-) as Record<string, string>;
+export function getTopicOptions(): SelectOptionItem[] {
+  return getTopics().map((topic) => ({ value: topic, label: topic }));
+}
 
 export function getLostTypeLabel(value: string) {
-  return LOST_TYPE_LABELS[value] ?? value;
+  return i18n.t(`lost.types.${value}`, { defaultValue: value });
+}
+
+export function getLostTypeOptions(): SelectOptionItem[] {
+  return LOST_TYPES.map((value) => ({ value, label: getLostTypeLabel(value) }));
 }
 
 export function formatDate(value: string) {
@@ -72,11 +82,11 @@ export function formatYears(yearFrom?: number, yearTo?: number) {
   }
 
   if (yearFrom) {
-    return `від ${yearFrom}`;
+    return i18n.t('format.yearsFrom', { year: yearFrom });
   }
 
   if (yearTo) {
-    return `до ${yearTo}`;
+    return i18n.t('format.yearsTo', { year: yearTo });
   }
 
   return '';

@@ -8,5 +8,7 @@ export interface FeedResponse {
   totalPages: number;
 }
 
-export const getFeed = (params?: { city?: string; topic?: string; sort?: string; page?: number; size?: number }) =>
-  client.get<FeedResponse>('/feed', { params });
+export const getFeed = (
+  params?: { city?: string; topic?: string; sort?: string; page?: number; size?: number },
+  signal?: AbortSignal,
+) => client.get<FeedResponse>('/feed', { params, signal });

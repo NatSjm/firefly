@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { adminDeleteComment } from '@/api/admin';
 import { deleteMemory, getMemory, type Memory } from '@/api/memories';
@@ -21,6 +22,7 @@ interface MemoryDetails {
 }
 
 export function MemoryDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -34,16 +36,22 @@ export function MemoryDetailPage() {
   const [reportOpen, setReportOpen] = useState(false);
   const memoryId = Number(id);
 
-  const fetchDetails = useCallback(async () => {
-    if (!Number.isFinite(memoryId)) {
-      throw new Error('Некоректний ідентифікатор спогаду.');
-    }
+  const fetchDetails = useCallback(
+    async (signal: AbortSignal) => {
+      if (!Number.isFinite(memoryId)) {
+        throw new Error(t('memory.invalidId'));
+      }
 
-    const [memoryResponse, commentsResponse] = await Promise.all([getMemory(memoryId), getComments(memoryId)]);
-    return { memory: memoryResponse.data, comments: commentsResponse.data };
-  }, [memoryId]);
+      const [memoryResponse, commentsResponse] = await Promise.all([
+        getMemory(memoryId, signal),
+        getComments(memoryId, signal),
+      ]);
+      return { memory: memoryResponse.data, comments: commentsResponse.data };
+    },
+    [memoryId, t],
+  );
 
-  const { data, setData, loading, error, setError } = useAsyncData(fetchDetails, 'Не вдалося завантажити спогад.');
+  const { data, setData, loading, error, setError } = useAsyncData(fetchDetails, t('memory.loadError'));
   const memory = data?.memory ?? null;
   const comments = data?.comments ?? [];
 
@@ -78,7 +86,7 @@ export function MemoryDetailPage() {
         },
       }));
     } catch (toggleError) {
-      setError(getErrorMessage(toggleError, 'Не вдалося оновити тепло.'));
+      setError(getErrorMessage(toggleError, t('memory.likeError')));
     } finally {
       setUpdatingLike(false);
     }
@@ -105,7 +113,7 @@ export function MemoryDetailPage() {
       }));
       setCommentText('');
     } catch (commentError) {
-      setError(getErrorMessage(commentError, 'Не вдалося додати коментар.'));
+      setError(getErrorMessage(commentError, t('memory.comments.addError')));
     } finally {
       setSubmittingComment(false);
     }
@@ -132,7 +140,7 @@ export function MemoryDetailPage() {
         },
       }));
     } catch (deleteError) {
-      setError(getErrorMessage(deleteError, 'Не вдалося видалити коментар.'));
+      setError(getErrorMessage(deleteError, t('memory.comments.deleteError')));
     }
   };
 
@@ -147,7 +155,7 @@ export function MemoryDetailPage() {
       await deleteMemory(memory.id);
       navigate('/dashboard', { replace: true });
     } catch (deleteError) {
-      setError(getErrorMessage(deleteError, 'Не вдалося видалити спогад.'));
+      setError(getErrorMessage(deleteError, t('memory.deleteModal.error')));
     } finally {
       setDeleting(false);
       setDeleteOpen(false);
@@ -163,14 +171,14 @@ export function MemoryDetailPage() {
       await createReport('memory', memory.id, reportReason.trim() || undefined);
       setReportReason('');
       setReportOpen(false);
-      setFeedback('Скаргу надіслано.');
+      setFeedback(t('memory.reportModal.sent'));
     } catch (reportError) {
-      setError(getErrorMessage(reportError, 'Не вдалося надіслати скаргу.'));
+      setError(getErrorMessage(reportError, t('memory.reportModal.error')));
     }
   };
 
   if (loading) {
-    return <div style={PAGE_WRAPPER_STYLE}>Завантажуємо спогад…</div>;
+    return <div style={PAGE_WRAPPER_STYLE}>{t('memory.loading')}</div>;
   }
 
   if (error && !memory) {
@@ -184,7 +192,7 @@ export function MemoryDetailPage() {
   if (!memory) {
     return (
       <div style={PAGE_WRAPPER_STYLE}>
-        <div style={SURFACE_STYLE}>Спогад не знайдено.</div>
+        <div style={SURFACE_STYLE}>{t('memory.notFound')}</div>
       </div>
     );
   }
@@ -205,7 +213,7 @@ export function MemoryDetailPage() {
           fontWeight: 600,
         }}
       >
-        ← Назад
+        {t('memory.back')}
       </button>
 
       <div style={{ ...SURFACE_STYLE, marginBottom: 'var(--space-6)' }}>
@@ -296,7 +304,7 @@ export function MemoryDetailPage() {
                 color: 'var(--text-primary)',
               }}
             >
-              Інгредієнти
+              {t('memory.ingredients')}
             </h2>
             <div style={{ whiteSpace: 'pre-wrap', color: 'var(--text-secondary)', lineHeight: 'var(--lh-body)' }}>
               {memory.ingredients}
@@ -314,7 +322,7 @@ export function MemoryDetailPage() {
                 color: 'var(--text-primary)',
               }}
             >
-              Кроки
+              {t('memory.steps')}
             </h2>
             <div style={{ whiteSpace: 'pre-wrap', color: 'var(--text-secondary)', lineHeight: 'var(--lh-body)' }}>
               {memory.steps}
@@ -348,10 +356,10 @@ export function MemoryDetailPage() {
                 cursor: user ? 'pointer' : 'not-allowed',
               }}
             >
-              🔥 Тепло · {memory.likesCount}
+              {t('memory.warmth', { total: memory.likesCount })}
             </button>
             <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
-              Коментарів: {memory.commentsCount}
+              {t('memory.commentsCount', { total: memory.commentsCount })}
             </span>
           </div>
 
@@ -359,16 +367,16 @@ export function MemoryDetailPage() {
             {isOwner ? (
               <>
                 <Button variant="secondary" onClick={() => navigate(`/memories/${memory.id}/edit`)}>
-                  Редагувати
+                  {t('memory.edit')}
                 </Button>
                 <Button variant="danger" onClick={() => setDeleteOpen(true)}>
-                  Видалити
+                  {t('memory.delete')}
                 </Button>
               </>
             ) : null}
             {!isOwner && user ? (
               <Button variant="ghost" onClick={() => setReportOpen(true)}>
-                Поскаржитися
+                {t('memory.report')}
               </Button>
             ) : null}
           </div>
@@ -384,7 +392,7 @@ export function MemoryDetailPage() {
             color: 'var(--text-primary)',
           }}
         >
-          Коментарі
+          {t('memory.comments.heading')}
         </h2>
 
         {user ? (
@@ -393,18 +401,18 @@ export function MemoryDetailPage() {
               rows={4}
               value={commentText}
               onChange={(event) => setCommentText(event.target.value)}
-              placeholder="Напишіть теплий відгук або доповнення"
+              placeholder={t('memory.comments.placeholder')}
               disabled={submittingComment}
             />
             <div>
               <Button type="submit" disabled={submittingComment || !commentText.trim()}>
-                {submittingComment ? 'Додаємо…' : 'Додати коментар'}
+                {submittingComment ? t('memory.comments.submitting') : t('memory.comments.submit')}
               </Button>
             </div>
           </form>
         ) : (
           <p style={{ margin: '0 0 var(--space-6)', color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-            Увійдіть, щоб залишити коментар або подарувати тепло.
+            {t('memory.comments.signInPrompt')}
           </p>
         )}
 
@@ -452,7 +460,7 @@ export function MemoryDetailPage() {
                           padding: 0,
                         }}
                       >
-                        Видалити
+                        {t('memory.comments.delete')}
                       </button>
                     ) : null}
                   </div>
@@ -471,50 +479,49 @@ export function MemoryDetailPage() {
               );
             })
           ) : (
-            <div style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>Поки немає коментарів.</div>
+            <div style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>{t('memory.comments.empty')}</div>
           )}
         </div>
       </section>
 
       <Modal
         open={deleteOpen}
-        title="Видалити спогад"
+        title={t('memory.deleteModal.title')}
         onClose={() => setDeleteOpen(false)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setDeleteOpen(false)}>
-              Скасувати
+              {t('common.cancel')}
             </Button>
             <Button variant="danger-solid" onClick={() => void handleDeleteMemory()} disabled={deleting}>
-              {deleting ? 'Видаляємо…' : 'Підтвердити'}
+              {deleting ? t('memory.deleteModal.deleting') : t('memory.deleteModal.confirm')}
             </Button>
           </>
         }
       >
-        Цю дію не можна скасувати.
+        {t('memory.deleteModal.body')}
       </Modal>
 
       <Modal
         open={reportOpen}
-        title="Поскаржитися на спогад"
+        title={t('memory.reportModal.title')}
         onClose={() => setReportOpen(false)}
         footer={
           <>
             <Button variant="ghost" onClick={() => setReportOpen(false)}>
-              Скасувати
+              {t('common.cancel')}
             </Button>
             <Button variant="primary" onClick={() => void handleReport()}>
-              Надіслати
+              {t('memory.reportModal.submit')}
             </Button>
           </>
         }
       >
         <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
-          <p style={{ margin: 0 }}>За потреби коротко опишіть причину скарги.</p>
+          <p style={{ margin: 0 }}>{t('memory.reportModal.body')}</p>
           <Textarea rows={4} value={reportReason} onChange={(event) => setReportReason(event.target.value)} />
         </div>
       </Modal>
     </div>
   );
 }
-

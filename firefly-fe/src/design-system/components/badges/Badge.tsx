@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 export interface BadgeProps {
   variant?: "topic" | "privacy-public" | "privacy-private" | "warmth";
@@ -17,6 +18,7 @@ const TOPIC_COLORS: Record<"amber" | "moss", { bg: string; fg: string; border: s
  * Badge — small pill label used for topics, privacy state, and the "Warmth" count.
  */
 export function Badge({ variant = "topic", tone = "amber", children, icon = null }: BadgeProps) {
+  const { t } = useTranslation();
   if (variant === "privacy-public" || variant === "privacy-private") {
     const isPublic = variant === "privacy-public";
     return (
@@ -29,7 +31,7 @@ export function Badge({ variant = "topic", tone = "amber", children, icon = null
         border: `1px solid ${isPublic ? "var(--accent-soft-border)" : "var(--border-default)"}`,
       }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: isPublic ? "var(--accent)" : "var(--text-tertiary)" }} />
-        {isPublic ? "Публічно" : "Тільки я"}
+        {isPublic ? t("badge.public") : t("badge.private")}
       </span>
     );
   }

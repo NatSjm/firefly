@@ -1,31 +1,44 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getFeed } from '@/api/feed';
 import { FilterBar, MemoryCard, Message } from '@/design-system';
 import { useAsyncData } from '@/hooks/useAsyncData';
-import { CARD_GRID_STYLE, CITIES, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, TOPICS, getMemoryExcerpt } from '@/pages/pageShared';
+import {
+  CARD_GRID_STYLE,
+  PAGE_HEADING_STYLE,
+  PAGE_WRAPPER_STYLE,
+  SURFACE_STYLE,
+  getCities,
+  getMemoryExcerpt,
+  getTopics,
+} from '@/pages/pageShared';
 
 export function FeedPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [city, setCity] = useState('');
   const [topic, setTopic] = useState('');
   const [sort, setSort] = useState<'new' | 'popular'>('new');
 
   const fetchFeed = useCallback(
-    () =>
-      getFeed({
-        city: city || undefined,
-        topic: topic || undefined,
-        sort,
-      }).then((response) => response.data),
+    (signal: AbortSignal) =>
+      getFeed(
+        {
+          city: city || undefined,
+          topic: topic || undefined,
+          sort,
+        },
+        signal,
+      ).then((response) => response.data),
     [city, sort, topic],
   );
 
-  const { data: feed, loading, error } = useAsyncData(fetchFeed, 'Не вдалося завантажити стрічку.');
+  const { data: feed, loading, error } = useAsyncData(fetchFeed, t('feed.error'));
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
-      <h1 style={PAGE_HEADING_STYLE}>Стрічка спогадів</h1>
+      <h1 style={PAGE_HEADING_STYLE}>{t('feed.title')}</h1>
       <div style={{ marginBottom: 'var(--space-6)' }}>
         <FilterBar
           city={city}
@@ -34,15 +47,15 @@ export function FeedPage() {
           onTopicChange={(event) => setTopic(event.target.value)}
           sort={sort}
           onSortChange={setSort}
-          cities={CITIES}
-          topics={TOPICS}
+          cities={getCities()}
+          topics={getTopics()}
         />
       </div>
 
       {error ? <Message tone="error">{error}</Message> : null}
 
       {loading ? (
-        <div style={SURFACE_STYLE}>Завантажуємо стрічку…</div>
+        <div style={SURFACE_STYLE}>{t('feed.loading')}</div>
       ) : feed?.items.length ? (
         <>
           <p
@@ -52,7 +65,7 @@ export function FeedPage() {
               color: 'var(--text-secondary)',
             }}
           >
-            Знайдено {feed.total} спогадів
+            {t('feed.found', { total: feed.total })}
           </p>
           <div style={CARD_GRID_STYLE}>
             {feed.items.map((memory) => (
@@ -72,11 +85,8 @@ export function FeedPage() {
           </div>
         </>
       ) : (
-        <div style={SURFACE_STYLE}>
-          Поки немає публічних спогадів за цими фільтрами. Спробуйте інше місто, тему або спосіб сортування.
-        </div>
+        <div style={SURFACE_STYLE}>{t('feed.empty')}</div>
       )}
     </div>
   );
 }
-

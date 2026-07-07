@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getLostRequest } from '@/api/lost';
 import { Badge, Button, Message } from '@/design-system';
@@ -6,21 +7,25 @@ import { useAsyncData } from '@/hooks/useAsyncData';
 import { PAGE_WRAPPER_STYLE, SURFACE_STYLE, formatDate, getLostTypeLabel } from '@/pages/pageShared';
 
 export function LostDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const fetchRequest = useCallback(() => {
-    if (!id || Number.isNaN(Number(id))) {
-      return Promise.reject(new Error('Некоректний ідентифікатор запиту.'));
-    }
+  const fetchRequest = useCallback(
+    (signal: AbortSignal) => {
+      if (!id || Number.isNaN(Number(id))) {
+        return Promise.reject(new Error(t('lost.detail.invalidId')));
+      }
 
-    return getLostRequest(Number(id)).then((response) => response.data);
-  }, [id]);
+      return getLostRequest(Number(id), signal).then((response) => response.data);
+    },
+    [id, t],
+  );
 
-  const { data: request, loading, error } = useAsyncData(fetchRequest, 'Не вдалося завантажити запит.');
+  const { data: request, loading, error } = useAsyncData(fetchRequest, t('lost.detail.loadError'));
 
   if (loading) {
-    return <div style={PAGE_WRAPPER_STYLE}>Завантажуємо запит…</div>;
+    return <div style={PAGE_WRAPPER_STYLE}>{t('lost.detail.loading')}</div>;
   }
 
   if (error && !request) {
@@ -34,7 +39,7 @@ export function LostDetailPage() {
   if (!request) {
     return (
       <div style={PAGE_WRAPPER_STYLE}>
-        <div style={SURFACE_STYLE}>Запит не знайдено.</div>
+        <div style={SURFACE_STYLE}>{t('lost.detail.notFound')}</div>
       </div>
     );
   }
@@ -55,7 +60,7 @@ export function LostDetailPage() {
           fontWeight: 600,
         }}
       >
-        ← До списку запитів
+        {t('lost.detail.back')}
       </button>
 
       <div style={SURFACE_STYLE}>
@@ -81,7 +86,7 @@ export function LostDetailPage() {
             color: 'var(--text-primary)',
           }}
         >
-          Запит на пошук спогадів
+          {t('lost.detail.title')}
         </h1>
 
         <p style={{ margin: '0 0 var(--space-5)', color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
@@ -117,13 +122,13 @@ export function LostDetailPage() {
                 color: 'var(--text-primary)',
               }}
             >
-              Контакт
+              {t('lost.detail.contact')}
             </h2>
             <p style={{ margin: 0, color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>{request.contactEmail}</p>
           </div>
           <div>
             <Button type="button" onClick={() => (window.location.href = `mailto:${request.contactEmail}`)}>
-              Написати автору
+              {t('lost.detail.contactButton')}
             </Button>
           </div>
         </section>
@@ -131,4 +136,3 @@ export function LostDetailPage() {
     </div>
   );
 }
-

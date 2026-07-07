@@ -1,10 +1,12 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Field, Message, TextInput } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { FORM_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, getErrorMessage } from '@/pages/pageShared';
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,7 +41,7 @@ export function LoginPage() {
     setError('');
 
     if (!email.trim() || !password.trim()) {
-      setError('Вкажіть email і пароль.');
+      setError(t('auth.login.missingFields'));
       return;
     }
 
@@ -49,7 +51,7 @@ export function LoginPage() {
       await login(email, password);
       navigate(from, { replace: true });
     } catch (submitError) {
-      setError(getErrorMessage(submitError, 'Не вдалося увійти. Перевірте дані та спробуйте ще раз.'));
+      setError(getErrorMessage(submitError, t('auth.login.error')));
     } finally {
       setSubmitting(false);
     }
@@ -58,32 +60,32 @@ export function LoginPage() {
   return (
     <div style={PAGE_WRAPPER_STYLE}>
       <div style={{ ...SURFACE_STYLE, maxWidth: '560px', margin: '0 auto' }}>
-        <h1 style={PAGE_HEADING_STYLE}>Вхід</h1>
+        <h1 style={PAGE_HEADING_STYLE}>{t('auth.login.title')}</h1>
         <form style={FORM_STYLE} onSubmit={handleSubmit} noValidate>
           {error ? <Message tone="error">{error}</Message> : null}
-          <Field label="Email" required>
+          <Field label={t('auth.email')} required>
             <TextInput
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
-              placeholder="you@example.com"
+              placeholder={t('auth.emailPlaceholder')}
               required
               disabled={submitting}
             />
           </Field>
-          <Field label="Пароль" required>
+          <Field label={t('auth.password')} required>
             <TextInput
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Ваш пароль"
+              placeholder={t('auth.login.passwordPlaceholder')}
               required
               disabled={submitting}
             />
           </Field>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
             <Button type="submit" fullWidth disabled={submitting}>
-              {submitting ? 'Входимо…' : 'Увійти'}
+              {submitting ? t('auth.login.submitting') : t('auth.login.submit')}
             </Button>
             <p
               style={{
@@ -93,9 +95,9 @@ export function LoginPage() {
                 color: 'var(--text-secondary)',
               }}
             >
-              Ще не маєте профілю?{' '}
+              {t('auth.login.noProfile')}{' '}
               <Link to="/register" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-                Зареєструватися
+                {t('auth.login.registerLink')}
               </Link>
             </p>
           </div>

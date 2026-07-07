@@ -23,10 +23,11 @@ export interface LostRequestCreate {
   contactEmail: string;
 }
 
-export const getLostRequests = (params?: { city?: string; type?: string }) =>
-  client.get<LostRequestSummary[]>('/lost-requests', { params });
+export const getLostRequests = (params?: { city?: string; type?: string }, signal?: AbortSignal) =>
+  client.get<LostRequestSummary[]>('/lost-requests', { params, signal });
 
-export const getLostRequest = (id: number) => client.get<LostRequest>(`/lost-requests/${id}`);
+export const getLostRequest = (id: number, signal?: AbortSignal) =>
+  client.get<LostRequest>(`/lost-requests/${id}`, { signal });
 
 export const createLostRequest = (data: LostRequestCreate) =>
   client.post<LostRequest>('/lost-requests', data);

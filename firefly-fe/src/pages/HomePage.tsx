@@ -1,11 +1,19 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { PAGE_WRAPPER_STYLE } from '@/pages/pageShared';
 
+interface HomeFeature {
+  title: string;
+  text: string;
+}
+
 export function HomePage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const features = t('home.features', { returnObjects: true }) as HomeFeature[];
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
@@ -33,7 +41,7 @@ export function HomePage() {
               fontWeight: 600,
             }}
           >
-            Світлячок
+            {t('app.name')}
           </span>
           <div>
             <h1
@@ -45,7 +53,7 @@ export function HomePage() {
                 margin: '0 0 var(--space-4)',
               }}
             >
-              Збережи світло свого дитинства
+              {t('home.title')}
             </h1>
             <p
               style={{
@@ -57,13 +65,13 @@ export function HomePage() {
                 maxWidth: '56ch',
               }}
             >
-              Простір для теплих історій, рецептів, дворів і загублених світлин, які хочеться повернути собі та близьким.
+              {t('home.subtitle')}
             </p>
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-            <Button onClick={() => navigate('/feed')}>Переглянути стрічку</Button>
+            <Button onClick={() => navigate('/feed')}>{t('home.viewFeed')}</Button>
             <Button variant="secondary" onClick={() => navigate(user ? '/memories/new' : '/register')}>
-              {user ? 'Новий спогад' : 'Приєднатися'}
+              {user ? t('nav.newMemory') : t('home.join')}
             </Button>
           </div>
         </div>
@@ -79,20 +87,7 @@ export function HomePage() {
             gap: 'var(--space-4)',
           }}
         >
-          {[
-            {
-              title: 'Пам’ять по темах',
-              text: 'Збирайте спогади про музику, рецепти, ігри та міста, що формували дитинство.',
-            },
-            {
-              title: 'Тепла стрічка',
-              text: 'Читайте публічні історії інших людей, додавайте коментарі й даруйте тепло.',
-            },
-            {
-              title: 'Загублені світлячки',
-              text: 'Залишайте запити на фото й відео, що загубилися.',
-            },
-          ].map((item) => (
+          {features.map((item) => (
             <div
               key={item.title}
               style={{
@@ -129,4 +124,3 @@ export function HomePage() {
     </div>
   );
 }
-

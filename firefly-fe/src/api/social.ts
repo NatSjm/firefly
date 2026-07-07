@@ -9,8 +9,8 @@ export interface Comment {
   createdAt: string;
 }
 
-export const getComments = (memoryId: number) =>
-  client.get<Comment[]>(`/memories/${memoryId}/comments`);
+export const getComments = (memoryId: number, signal?: AbortSignal) =>
+  client.get<Comment[]>(`/memories/${memoryId}/comments`, { signal });
 
 export const addComment = (memoryId: number, text: string) =>
   client.post<Comment>(`/memories/${memoryId}/comments`, { text });

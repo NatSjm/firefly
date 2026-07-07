@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createMemory, getMemory, updateMemory, type MemoryRequest } from '@/api/memories';
 import { Button, Field, Message, Select, TextInput, Textarea } from '@/design-system';
 import {
-  CITIES,
   FORM_STYLE,
-  MEMORY_TOPIC_OPTIONS,
   PAGE_HEADING_STYLE,
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
+  getCityOptions,
   getErrorMessage,
+  getTopicOptions,
   toPhotoUrl,
 } from '@/pages/pageShared';
 
@@ -28,12 +29,6 @@ interface MemoryFormState {
   isPublic: boolean;
 }
 
-const CITY_OPTIONS = CITIES.map((city) => ({ value: city, label: city }));
-const TYPE_OPTIONS = [
-  { value: 'story', label: 'Історія' },
-  { value: 'recipe', label: 'Рецепт' },
-] as const;
-
 const INITIAL_FORM: MemoryFormState = {
   type: 'story',
   title: '',
@@ -48,6 +43,7 @@ const INITIAL_FORM: MemoryFormState = {
 };
 
 export function MemoryFormPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
   const isEdit = Boolean(id);
@@ -58,19 +54,30 @@ export function MemoryFormPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  const cityOptions = useMemo(() => getCityOptions(), []);
+  const topicOptions = useMemo(() => getTopicOptions(), []);
+  const typeOptions = useMemo(
+    () => [
+      { value: 'story', label: t('memory.form.story') },
+      { value: 'recipe', label: t('memory.form.recipe') },
+    ],
+    [t],
+  );
+
   useEffect(() => {
     if (!id) {
       return;
     }
 
     let active = true;
+    const controller = new AbortController();
 
     const loadMemory = async () => {
       setLoading(true);
       setError('');
 
       try {
-        const response = await getMemory(Number(id));
+        const response = await getMemory(Number(id), controller.signal);
         if (!active) {
           return;
         }
@@ -91,7 +98,7 @@ export function MemoryFormPage() {
         setCurrentPhotoUrl(memory.mediaUrls[0] ? toPhotoUrl(memory.mediaUrls[0]) : '');
       } catch (loadError) {
         if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити спогад.'));
+          setError(getErrorMessage(loadError, t('memory.form.loadError')));
         }
       } finally {
         if (active) {
@@ -104,10 +111,9 @@ export function MemoryFormPage() {
 
     return () => {
       active = false;
+      controller.abort();
     };
-  }, [id]);
-
-  const topicOptions = useMemo(() => MEMORY_TOPIC_OPTIONS, []);
+  }, [id, t]);
 
   const handleChange = <K extends keyof MemoryFormState>(key: K, value: MemoryFormState[K]) => {
     setForm((current) => ({ ...current, [key]: value }));
@@ -122,7 +128,7 @@ export function MemoryFormPage() {
     setError('');
 
     if (!form.title.trim() || !form.text.trim()) {
-      setError('Заповніть назву та основний текст спогаду.');
+      setError(t('memory.form.missingFields'));
       return;
     }
 
@@ -148,94 +154,94 @@ export function MemoryFormPage() {
 
       navigate(`/memories/${response.data.id}`);
     } catch (submitError) {
-      setError(getErrorMessage(submitError, 'Не вдалося зберегти спогад.'));
+      setError(getErrorMessage(submitError, t('memory.form.saveError')));
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div style={PAGE_WRAPPER_STYLE}>Завантажуємо форму спогаду…</div>;
+    return <div style={PAGE_WRAPPER_STYLE}>{t('memory.form.loading')}</div>;
   }
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
       <div style={{ ...SURFACE_STYLE, maxWidth: '760px', margin: '0 auto' }}>
-        <h1 style={PAGE_HEADING_STYLE}>{isEdit ? 'Редагувати спогад' : 'Новий спогад'}</h1>
+        <h1 style={PAGE_HEADING_STYLE}>{isEdit ? t('memory.form.editTitle') : t('memory.form.newTitle')}</h1>
         <form style={FORM_STYLE} onSubmit={handleSubmit}>
           {error ? <Message tone="error">{error}</Message> : null}
 
-          <Field label="Формат">
+          <Field label={t('memory.form.format')}>
             <Select
               value={form.type}
               onChange={(event) => handleChange('type', event.target.value as MemoryType)}
-              options={TYPE_OPTIONS.map((option) => ({ value: option.value, label: option.label }))}
+              options={typeOptions}
             />
           </Field>
 
-          <Field label="Назва" required>
+          <Field label={t('memory.form.title')} required>
             <TextInput value={form.title} onChange={(event) => handleChange('title', event.target.value)} />
           </Field>
 
-          <Field label="Текст" required>
+          <Field label={t('memory.form.text')} required>
             <Textarea rows={8} value={form.text} onChange={(event) => handleChange('text', event.target.value)} />
           </Field>
 
           {form.type === 'recipe' ? (
             <>
-              <Field label="Інгредієнти">
+              <Field label={t('memory.form.ingredients')}>
                 <Textarea rows={5} value={form.ingredients} onChange={(event) => handleChange('ingredients', event.target.value)} />
               </Field>
-              <Field label="Кроки приготування">
+              <Field label={t('memory.form.steps')}>
                 <Textarea rows={6} value={form.steps} onChange={(event) => handleChange('steps', event.target.value)} />
               </Field>
             </>
           ) : null}
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 'var(--space-5)' }}>
-            <Field label="Місто">
+            <Field label={t('memory.form.city')}>
               <Select
                 value={form.city}
                 onChange={(event) => handleChange('city', event.target.value)}
-                placeholder="Оберіть місто"
-                options={CITY_OPTIONS}
+                placeholder={t('memory.form.cityPlaceholder')}
+                options={cityOptions}
               />
             </Field>
-            <Field label="Тема">
+            <Field label={t('memory.form.topic')}>
               <Select
                 value={form.topicSlug}
                 onChange={(event) => handleChange('topicSlug', event.target.value)}
-                placeholder="Оберіть тему"
+                placeholder={t('memory.form.topicPlaceholder')}
                 options={topicOptions}
               />
             </Field>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--space-5)' }}>
-            <Field label="Рік від">
+            <Field label={t('memory.form.yearFrom')}>
               <TextInput
                 value={form.yearFrom}
                 onChange={(event) => handleChange('yearFrom', event.target.value)}
-                placeholder="Наприклад, 1998"
+                placeholder={t('memory.form.yearFromPlaceholder')}
                 inputMode="numeric"
               />
             </Field>
-            <Field label="Рік до">
+            <Field label={t('memory.form.yearTo')}>
               <TextInput
                 value={form.yearTo}
                 onChange={(event) => handleChange('yearTo', event.target.value)}
-                placeholder="Наприклад, 2004"
+                placeholder={t('memory.form.yearToPlaceholder')}
                 inputMode="numeric"
               />
             </Field>
           </div>
 
-          <Field label="Фото">
+          <Field label={t('memory.form.photo')}>
             <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
               {currentPhotoUrl ? (
                 <img
                   src={currentPhotoUrl}
-                  alt="Поточне фото спогаду"
+                  alt={t('memory.form.currentPhotoAlt')}
                   style={{
                     width: '100%',
                     maxWidth: '320px',
@@ -274,15 +280,15 @@ export function MemoryFormPage() {
               checked={form.isPublic}
               onChange={(event) => handleChange('isPublic', event.target.checked)}
             />
-            Показувати спогад у публічній стрічці
+            {t('memory.form.isPublic')}
           </label>
 
           <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
             <Button type="submit" disabled={submitting}>
-              {submitting ? 'Зберігаємо…' : isEdit ? 'Оновити спогад' : 'Створити спогад'}
+              {submitting ? t('memory.form.submitting') : isEdit ? t('memory.form.update') : t('memory.form.create')}
             </Button>
             <Button variant="ghost" onClick={() => navigate(isEdit && id ? `/memories/${id}` : '/dashboard')} type="button">
-              Скасувати
+              {t('common.cancel')}
             </Button>
           </div>
         </form>
@@ -290,4 +296,3 @@ export function MemoryFormPage() {
     </div>
   );
 }
-

@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/design-system';
 import { PAGE_WRAPPER_STYLE, SURFACE_STYLE } from '@/pages/pageShared';
 
 export function NotFoundPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   return (
@@ -26,11 +28,10 @@ export function NotFoundPage() {
             lineHeight: 'var(--lh-body)',
           }}
         >
-          Сторінку не знайдено. Можливо, посилання застаріло або сторінку вже перенесено.
+          {t('notFound.text')}
         </p>
-        <Button onClick={() => navigate('/')}>На головну</Button>
+        <Button onClick={() => navigate('/')}>{t('notFound.goHome')}</Button>
       </div>
     </div>
   );
 }
-

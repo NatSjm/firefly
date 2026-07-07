@@ -56,7 +56,7 @@ describe('DashboardPage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Приватні' }));
 
-    expect(apiMocks.getMyMemories).toHaveBeenLastCalledWith({ isPublic: false });
+    expect(apiMocks.getMyMemories).toHaveBeenLastCalledWith({ isPublic: false }, expect.any(AbortSignal));
   });
 
   // @trace FR-MEM-04

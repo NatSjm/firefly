@@ -1,4 +1,5 @@
 import axios from 'axios';
+import i18n from '@/i18n';
 
 function extractResponseMessage(data: unknown): string | undefined {
   if (typeof data !== 'object' || data === null) {
@@ -17,7 +18,7 @@ function extractResponseMessage(data: unknown): string | undefined {
   return undefined;
 }
 
-export function getErrorMessage(error: unknown, fallback = 'Не вдалося виконати дію. Спробуйте ще раз.') {
+export function getErrorMessage(error: unknown, fallback = i18n.t('errors.generic')) {
   if (axios.isAxiosError(error)) {
     return extractResponseMessage(error.response?.data) ?? error.message ?? fallback;
   }

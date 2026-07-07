@@ -1,24 +1,18 @@
+import { useTranslation } from 'react-i18next';
 import { PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE } from '@/pages/pageShared';
 
+interface AboutSection {
+  title: string;
+  text: string;
+}
+
 export function AboutPage() {
-  const sections = [
-    {
-      title: 'Що таке Світлячок',
-      text: 'Світлячок — це українська спільнота для дорослих, які хочуть зберігати теплі спогади про дитинство, ділитися ними з іншими та повертати втрачені фрагменти сімейної пам’яті.',
-    },
-    {
-      title: 'Для кого цей простір',
-      text: 'Для тих, хто хоче записати родинні історії, зібрати улюблені рецепти, зберегти дворові легенди, знайти фото зі школи, табору чи дитсадка та підтримати інших добрим словом.',
-    },
-    {
-      title: 'Що тут можна робити',
-      text: 'Створювати приватні та публічні спогади, читати стрічку, дарувати тепло історіям, коментувати, редагувати свій профіль і залишати запити в розділі загублених світлячків.',
-    },
-  ];
+  const { t } = useTranslation();
+  const sections = t('about.sections', { returnObjects: true }) as AboutSection[];
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
-      <h1 style={PAGE_HEADING_STYLE}>Про проєкт</h1>
+      <h1 style={PAGE_HEADING_STYLE}>{t('about.title')}</h1>
       <div style={{ display: 'grid', gap: 'var(--space-5)' }}>
         {sections.map((section) => (
           <section key={section.title} style={SURFACE_STYLE}>
@@ -49,4 +43,3 @@ export function AboutPage() {
     </div>
   );
 }
-

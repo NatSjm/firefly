@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getLostRequests } from '@/api/lost';
 import { Button, FilterBar, LostRequestCard, Message } from '@/design-system';
@@ -6,32 +7,43 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAsyncData } from '@/hooks/useAsyncData';
 import {
   CARD_GRID_STYLE,
-  CITIES,
-  LOST_TYPE_FILTER_OPTIONS,
-  LOST_TYPE_VALUE_BY_LABEL,
   PAGE_HEADING_STYLE,
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
   formatDate,
+  getCities,
+  getLostTypeOptions,
   getMemoryExcerpt,
 } from '@/pages/pageShared';
 
 export function LostPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [city, setCity] = useState('');
   const [type, setType] = useState('');
 
-  const fetchRequests = useCallback(
-    () =>
-      getLostRequests({
-        city: city || undefined,
-        type: type ? LOST_TYPE_VALUE_BY_LABEL[type] : undefined,
-      }).then((response) => response.data),
-    [city, type],
+  // FilterBar works with plain labels, so keep a label<->value mapping around.
+  const typeOptions = useMemo(() => getLostTypeOptions(), []);
+  const typeLabels = useMemo(() => typeOptions.map((option) => option.label), [typeOptions]);
+  const typeValueByLabel = useMemo(
+    () => Object.fromEntries(typeOptions.map((option) => [option.label, option.value])) as Record<string, string>,
+    [typeOptions],
   );
 
-  const { data, loading, error } = useAsyncData(fetchRequests, 'Не вдалося завантажити запити.');
+  const fetchRequests = useCallback(
+    (signal: AbortSignal) =>
+      getLostRequests(
+        {
+          city: city || undefined,
+          type: type ? typeValueByLabel[type] : undefined,
+        },
+        signal,
+      ).then((response) => response.data),
+    [city, type, typeValueByLabel],
+  );
+
+  const { data, loading, error } = useAsyncData(fetchRequests, t('lost.listError'));
   const requests = data ?? [];
 
   return (
@@ -47,13 +59,13 @@ export function LostPage() {
         }}
       >
         <div>
-          <h1 style={PAGE_HEADING_STYLE}>Загублені світлячки</h1>
+          <h1 style={PAGE_HEADING_STYLE}>{t('lost.title')}</h1>
           <p style={{ margin: '-var(--space-3) 0 0', fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
-            Місце для пошуку шкільних, дворових і табірних фото та відео.
+            {t('lost.subtitle')}
           </p>
         </div>
         <Button variant={user ? 'primary' : 'secondary'} onClick={() => navigate(user ? '/lost/new' : '/login')}>
-          {user ? 'Залишити запит' : 'Увійти, щоб залишити запит'}
+          {user ? t('lost.ctaSignedIn') : t('lost.ctaSignedOut')}
         </Button>
       </div>
 
@@ -63,8 +75,8 @@ export function LostPage() {
           onCityChange={(event) => setCity(event.target.value)}
           topic={type}
           onTopicChange={(event) => setType(event.target.value)}
-          cities={CITIES}
-          topics={LOST_TYPE_FILTER_OPTIONS}
+          cities={getCities()}
+          topics={typeLabels}
           showSort={false}
         />
       </div>
@@ -72,7 +84,7 @@ export function LostPage() {
       {error ? <Message tone="error">{error}</Message> : null}
 
       {loading ? (
-        <div style={SURFACE_STYLE}>Завантажуємо запити…</div>
+        <div style={SURFACE_STYLE}>{t('lost.loading')}</div>
       ) : requests.length ? (
         <div style={CARD_GRID_STYLE}>
           {requests.map((request) => (
@@ -89,11 +101,8 @@ export function LostPage() {
           ))}
         </div>
       ) : (
-        <div style={SURFACE_STYLE}>
-          Поки немає запитів за цими фільтрами. Спробуйте інше місто або тип місця.
-        </div>
+        <div style={SURFACE_STYLE}>{t('lost.empty')}</div>
       )}
     </div>
   );
 }
-
