@@ -4,6 +4,17 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
 
+data class LostRequestSummaryDto(
+    val id: Long,
+    val userId: Long,
+    val authorName: String,
+    val city: String,
+    val type: String,
+    val years: String?,
+    val description: String,
+    val createdAt: String
+)
+
 data class LostRequestDto(
     val id: Long,
     val userId: Long,
@@ -26,10 +37,22 @@ data class LostRequestRequest(
     @field:Size(max = 50)
     val years: String? = null,
     @field:NotBlank
+    @field:Size(max = 4000)
     val description: String,
     @field:Email
     @field:NotBlank
     val contactEmail: String
+)
+
+fun LostRequest.toSummaryDto() = LostRequestSummaryDto(
+    id = id,
+    userId = user.id,
+    authorName = user.name,
+    city = city,
+    type = type,
+    years = years,
+    description = description,
+    createdAt = createdAt.toString()
 )
 
 fun LostRequest.toDto() = LostRequestDto(

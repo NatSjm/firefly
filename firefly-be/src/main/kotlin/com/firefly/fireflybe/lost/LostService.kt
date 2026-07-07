@@ -9,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class LostService(private val lostRequestRepository: LostRequestRepository) {
 
-    fun list(city: String?, type: String?): List<LostRequestDto> =
+    fun list(city: String?, type: String?): List<LostRequestSummaryDto> =
         lostRequestRepository.findByFilters(
             city?.trim()?.takeIf { it.isNotBlank() },
             type?.trim()?.takeIf { it.isNotBlank() }
-        ).map { it.toDto() }
+        ).map { it.toSummaryDto() }
 
     @Transactional
     fun create(user: User, req: LostRequestRequest): LostRequestDto {

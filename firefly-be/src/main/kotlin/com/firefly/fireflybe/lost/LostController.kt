@@ -21,7 +21,7 @@ class LostController(private val lostService: LostService) {
     fun getAll(
         @RequestParam(required = false) city: String?,
         @RequestParam(required = false) type: String?
-    ): List<LostRequestDto> = lostService.list(city, type)
+    ): List<LostRequestSummaryDto> = lostService.list(city, type)
 
     @PostMapping
     fun create(

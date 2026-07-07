@@ -9,6 +9,13 @@
       "processComplete": true
     },
     {
+      "slice": "2026-07-06-add-lost-fireflies",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
       "slice": "2026-07-06-add-personal-archive",
       "reviewEvidence": "unclean",
       "trailerCommits": 1,
@@ -18,7 +25,7 @@
     {
       "slice": "2026-07-06-add-public-feed-and-social",
       "reviewEvidence": "unclean",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     }
@@ -32,15 +39,19 @@
     },
     {
       "check": "review-evidence",
+      "msg": "2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-06-add-lost-fireflies: no commit carries a \"Slice: add-lost-fireflies\" trailer"
+    },
+    {
+      "check": "review-evidence",
       "msg": "2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)"
     },
     {
       "check": "review-evidence",
       "msg": "2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-06-add-public-feed-and-social: no commit carries a \"Slice: add-public-feed-and-social\" trailer"
     }
   ]
 }
