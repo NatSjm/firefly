@@ -6,10 +6,10 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-07 21:47:00 (UTC+02:00)
-- **Current phase:** **Phase 5 — Cross-cutting hardening complete**
+- **Date and time:** 2026-07-07 23:10:00 (UTC+02:00)
+- **Current phase:** **Phase 6 — QA proof pack complete**
 - **Active change:** none
-- **Progress:** Phase 5 complete. Integration test layer already exists in backend (7 IntegrationTest classes using Testcontainers PostgreSQL). Added E2E test layer with Playwright: 4 spec files (auth.spec.ts, rbac.spec.ts, core-flow.spec.ts, responsive.spec.ts) covering authentication, RBAC, core user journey, and responsive breakpoints. Created seed helper (e2e/helpers/seed-demo-data.ts) with deterministic IDs and idempotent upserts. Wired test:integration and test:e2e scripts. Full validation battery passed: lint 0 warnings, 83/83 unit tests, build green, OpenSpec 6/6 passed.
+- **Progress:** Phase 6 complete. Created comprehensive QA documentation pack (6 files: README, traceability matrix, manual test plan, demo script, risk register, acceptance report). Added @trace FR annotations to tests (37/38 FRs traced, 97% coverage). Created automated demo recording harness with 13 clips covering 36 FRs. Authored 14 eval cases across 5 domains (error-clarity, empty-state-usability, copy-tone, auth-security). Generated automated-verification-latest.md. Recording-evidence warnings expected (recordings require running app). Ready for Gate G6 checkpoint.
 
 Previous slice 5 `add-moderation-and-admin` progress: The three parallel reviewers (code, security, spec-compliance) found 5 majors and overlapping minors; all confirmed fixes were applied in one pass:
   - **FE — AdminPage:** Stale sibling report rows after cascade delete now properly removed (filter by targetType+targetId, not just clicked row id). Per-row `pendingIds` set prevents double-submit on delete and ban-toggle race. Cross-cleared banners: success clears error and vice versa.
@@ -151,7 +151,7 @@ Current test expectation: `firefly-fe` test/lint/build are green locally (0 warn
 
 ## Next Task
 
-Phase 5 complete. Next: **Phase 6 — QA proof pack + demo recordings + evals**. Tasks: 1) Author QA documentation pack (README, traceability matrix, test plan, demo script, risk register, acceptance report) from templates. 2) Add @trace FR-XX annotations to all test files to close 76 traceability warnings. 3) Create headless Playwright recording harness for demo recordings (one clip per capability with FR assertions). 4) Run eval-suite workflow over eval cases and establish baseline. 5) Run qa:verify to regenerate automated-verification-latest.md. Gate G6 checkpoint.
+Phase 6 complete. Next: **Execute the recordings** — Start the Firefly app (frontend + backend) and run `node scripts/record-demos.mjs` to generate the 13 demo recording clips with FR assertions. Then run `node scripts/check-recordings.mjs` to validate. After recordings: run eval-suite workflow (requires eval-judge agent) to grade the 14 eval cases and establish baseline with `check-eval-ratchet.mjs --update`. Gate G6: recordings + eval baseline + commit. Then Phase 7: global review, docs, release.
 
 ## Environment / Deployment
 

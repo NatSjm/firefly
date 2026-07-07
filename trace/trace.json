@@ -70,7 +70,11 @@
         "openspec/specs/slice-1-skeleton.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts"
+      ],
       "recordings": []
     },
     {
@@ -79,7 +83,11 @@
         "openspec/specs/slice-1-skeleton.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts"
+      ],
       "recordings": []
     },
     {
@@ -88,7 +96,10 @@
         "openspec/specs/slice-1-skeleton.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -97,7 +108,9 @@
         "openspec/specs/slice-1-skeleton.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "e2e/responsive.spec.ts"
+      ],
       "recordings": []
     },
     {
@@ -106,7 +119,13 @@
         "openspec/specs/slice-2-auth.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "e2e/auth.spec.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/RegisterPage.test.tsx",
+        "firefly-fe/src/test/pages/RegisterPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -115,7 +134,13 @@
         "openspec/specs/slice-2-auth.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "e2e/auth.spec.ts",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -124,7 +149,9 @@
         "openspec/specs/slice-2-auth.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "e2e/auth.spec.ts"
+      ],
       "recordings": []
     },
     {
@@ -142,7 +169,14 @@
         "openspec/specs/slice-2-auth.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "evals/cases/moderation.eval.ts",
+        "e2e/auth.spec.ts",
+        "e2e/rbac.spec.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -151,7 +185,13 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -160,7 +200,11 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -169,7 +213,10 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -178,7 +225,16 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -187,7 +243,10 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -196,7 +255,10 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -205,7 +267,14 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -214,7 +283,12 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -223,7 +297,10 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -232,7 +309,9 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -241,7 +320,10 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -250,7 +332,13 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -259,7 +347,10 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedSocialPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -268,7 +359,9 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -277,7 +370,9 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -286,7 +381,9 @@
         "openspec/specs/slice-3-memories.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -295,7 +392,9 @@
         "openspec/specs/slice-4-feed.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "e2e/core-flow.spec.ts"
+      ],
       "recordings": []
     },
     {
@@ -305,7 +404,13 @@
         "openspec/specs/slice-5-lost.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -315,7 +420,16 @@
         "openspec/specs/slice-5-lost.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -325,7 +439,13 @@
         "openspec/specs/slice-5-lost.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -335,7 +455,11 @@
         "openspec/specs/slice-5-lost.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -345,7 +469,13 @@
         "openspec/specs/slice-5-lost.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -354,7 +484,9 @@
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/RulesPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -364,7 +496,13 @@
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/moderation.eval.ts",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -374,7 +512,19 @@
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "evals/cases/moderation.eval.ts",
+        "e2e/rbac.spec.ts",
+        "e2e/rbac.spec.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -384,7 +534,16 @@
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -394,7 +553,11 @@
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx",
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx",
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -404,7 +567,9 @@
         "openspec/specs/slice-7-content-pages.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/AboutPage.test.tsx"
+      ],
       "recordings": []
     },
     {
@@ -414,7 +579,9 @@
         "openspec/specs/slice-7-content-pages.md"
       ],
       "planned": true,
-      "tests": [],
+      "tests": [
+        "firefly-fe/src/test/pages/RulesPage.test.tsx"
+      ],
       "recordings": []
     }
   ],
@@ -422,155 +589,7 @@
   "warnings": [
     {
       "check": "test-trace",
-      "msg": "FR-SHELL-01 has no test annotated \"@trace FR-SHELL-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-SHELL-02 has no test annotated \"@trace FR-SHELL-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-SHELL-03 has no test annotated \"@trace FR-SHELL-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-SHELL-04 has no test annotated \"@trace FR-SHELL-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-AUTH-01 has no test annotated \"@trace FR-AUTH-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-AUTH-02 has no test annotated \"@trace FR-AUTH-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-AUTH-03 has no test annotated \"@trace FR-AUTH-03\""
-    },
-    {
-      "check": "test-trace",
       "msg": "FR-AUTH-04 has no test annotated \"@trace FR-AUTH-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-AUTH-05 has no test annotated \"@trace FR-AUTH-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-01 has no test annotated \"@trace FR-MEM-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-02 has no test annotated \"@trace FR-MEM-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-03 has no test annotated \"@trace FR-MEM-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-04 has no test annotated \"@trace FR-MEM-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-05 has no test annotated \"@trace FR-MEM-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MEM-06 has no test annotated \"@trace FR-MEM-06\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-01 has no test annotated \"@trace FR-FEED-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-02 has no test annotated \"@trace FR-FEED-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-03 has no test annotated \"@trace FR-FEED-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-04 has no test annotated \"@trace FR-FEED-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-05 has no test annotated \"@trace FR-FEED-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-06 has no test annotated \"@trace FR-FEED-06\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-FEED-07 has no test annotated \"@trace FR-FEED-07\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TOPIC-01 has no test annotated \"@trace FR-TOPIC-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-TOPIC-02 has no test annotated \"@trace FR-TOPIC-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CITY-01 has no test annotated \"@trace FR-CITY-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CITY-02 has no test annotated \"@trace FR-CITY-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-LOST-01 has no test annotated \"@trace FR-LOST-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-LOST-02 has no test annotated \"@trace FR-LOST-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-LOST-03 has no test annotated \"@trace FR-LOST-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-LOST-04 has no test annotated \"@trace FR-LOST-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-LOST-05 has no test annotated \"@trace FR-LOST-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MOD-01 has no test annotated \"@trace FR-MOD-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MOD-02 has no test annotated \"@trace FR-MOD-02\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MOD-03 has no test annotated \"@trace FR-MOD-03\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MOD-04 has no test annotated \"@trace FR-MOD-04\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-MOD-05 has no test annotated \"@trace FR-MOD-05\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CONTENT-01 has no test annotated \"@trace FR-CONTENT-01\""
-    },
-    {
-      "check": "test-trace",
-      "msg": "FR-CONTENT-02 has no test annotated \"@trace FR-CONTENT-02\""
     },
     {
       "check": "recording-evidence",

@@ -10,7 +10,7 @@ import { test, expect, devices } from '@playwright/test';
 test.describe('Responsive Design', () => {
   
   test('should render correctly on mobile (360px)', async ({ browser }) => {
-    // @trace FR-SHELL-02
+    // @trace FR-SHELL-01, FR-SHELL-02
     const context = await browser.newContext({
       ...devices['iPhone 12'],
       viewport: { width: 360, height: 640 },
@@ -33,7 +33,7 @@ test.describe('Responsive Design', () => {
   });
   
   test('should render correctly on tablet (768px)', async ({ browser }) => {
-    // @trace FR-SHELL-02
+    // @trace FR-SHELL-01, FR-SHELL-02
     const context = await browser.newContext({
       viewport: { width: 768, height: 1024 },
     });
@@ -52,7 +52,7 @@ test.describe('Responsive Design', () => {
   });
   
   test('should render correctly on desktop (1280px)', async ({ browser }) => {
-    // @trace FR-SHELL-02
+    // @trace FR-SHELL-01, FR-SHELL-02, FR-SHELL-04
     const context = await browser.newContext({
       viewport: { width: 1280, height: 720 },
     });

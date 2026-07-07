@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { RulesPage } from '@/pages/RulesPage';
 
-// @trace FR-CONTENT-02
+// @trace FR-MOD-01, FR-CONTENT-02
 
 describe('RulesPage', () => {
   function renderRules() {

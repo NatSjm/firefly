@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 
-// @trace FR-AUTH-05, FR-MOD-03
+// @trace FR-SHELL-03, FR-AUTH-05, FR-MOD-03
 
 function LocationProbe() {
   const location = useLocation();

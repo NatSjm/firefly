@@ -70,7 +70,7 @@ describe('FeedPage', () => {
     expect(screen.getByRole('button', { name: 'Популярні' })).toBeInTheDocument();
   });
 
-  // @trace FR-FEED-01, FR-FEED-06, FR-FEED-07
+  // @trace FR-FEED-01, FR-FEED-04, FR-FEED-06, FR-FEED-07
   it('renders memory cards with warmth count and comment count', async () => {
     mockFeed.mockResolvedValue(feedWithOneItem as never);
 
