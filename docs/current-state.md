@@ -6,10 +6,12 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-07 19:42:00 (UTC+02:00)
-- **Current phase:** **Phase 4 — slice 5 complete, proceeding to slice 6**
-- **Active change:** none (slice `add-moderation-and-admin` archived)
-- **Progress:** Slice 5 `add-moderation-and-admin` completed the Phase 4 review-gate loop. The three parallel reviewers (code, security, spec-compliance) found 5 majors and overlapping minors; all confirmed fixes were applied in one pass:
+- **Date and time:** 2026-07-07 20:59:00 (UTC+02:00)
+- **Current phase:** **Phase 4 — slice 6 complete, all MVP slices retrofitted**
+- **Active change:** none (slice `add-content-pages` archived)
+- **Progress:** Slice 6 `add-content-pages` completed the Phase 4 retrofit validation. The two static content pages (`/about` and `/rules`) were already implemented with correct Ukrainian content, design tokens, and no exclamation marks (BC-BRAND-01 compliance). Added tests (15 new: 6 for AboutPage, 9 for RulesPage) confirming FR-CONTENT-01 and FR-CONTENT-02 requirements. All validations passed.
+
+Previous slice 5 `add-moderation-and-admin` progress: The three parallel reviewers (code, security, spec-compliance) found 5 majors and overlapping minors; all confirmed fixes were applied in one pass:
   - **FE — AdminPage:** Stale sibling report rows after cascade delete now properly removed (filter by targetType+targetId, not just clicked row id). Per-row `pendingIds` set prevents double-submit on delete and ban-toggle race. Cross-cleared banners: success clears error and vice versa.
   - **FE — MemoryDetailPage report modal:** `submittingReport` state added; error displayed inside the modal; submit button disabled while in-flight; `aria-label` and `maxLength=500` on the reason Textarea; separate `commentReportTarget` state and a second report modal added so users can report individual comments (closes FR-MOD-02's comment half, the only missing UI entry point).
   - **BE — AdminReportDto:** `GET /api/admin/reports` now returns `AdminReportDto` (id, targetType, targetId, reason, createdAt, reporterId) instead of the raw `Report` entity — prevents leaking internal JPA internals.
@@ -41,7 +43,9 @@ Archived changes:
 - `2026-07-06-add-identity-and-access` — Phase 4 retrofit validation completed and archived.
 - `2026-07-06-add-personal-archive` — Phase 4 retrofit validation completed and archived.
 - `2026-07-06-add-public-feed-and-social` — Phase 4 retrofit validation completed and archived.
+- `2026-07-07-add-lost-fireflies` — Phase 4 retrofit validation completed and archived.
 - `2026-07-07-add-moderation-and-admin` — Phase 4 retrofit validation completed and archived; review gate found and fixed: stale sibling report rows in AdminPage, per-row pending guards, cross-cleared banners, report modal error visibility + double-submit guard + accessibility, per-comment report action (FR-MOD-02 comment half), AdminReportDto replacing raw entity serialization, ReportService 404 for nonexistent targets, errors.ts Ukrainian fallback, ProtectedRoute adminOnly test.
+- `2026-07-07-add-content-pages` — Phase 4 retrofit validation completed and archived; static content pages `/about` and `/rules` documented in OpenSpec (FR-CONTENT-01, FR-CONTENT-02), unit tests added (15 new: 6 AboutPage, 9 RulesPage), validated Ukrainian content with design tokens and BC-BRAND-01 compliance (no exclamation marks).
 
 ## Completed Changes
 
@@ -105,7 +109,18 @@ Latest checks:
 - `firefly-fe`: lint passed with 1 pre-existing unrelated warning, tests passed (10 files / 47 tests), build passed.
 - `firefly-be`: `.\mvnw.cmd test` passed (93 tests green) with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`.
 
-### 5. `add-moderation-and-admin`
+### 6. `add-content-pages`
+
+Status: archived.
+Implemented:
+- Existing content-pages slice documented in OpenSpec for FR-CONTENT-01 and FR-CONTENT-02 (new `content-pages` accepted spec).
+- Frontend unit tests added for `/about` and `/rules` pages (15 new tests: 6 AboutPage, 9 RulesPage).
+- Validation confirmed: both pages render Ukrainian content from i18n, use design tokens, contain no exclamation marks (BC-BRAND-01), are publicly accessible (no auth required), and match product brief tone.
+Smoke test:
+- Frontend validation battery passed locally.
+Latest checks:
+- `firefly-fe`: lint passed with 0 warnings, tests passed (15 files / 83 tests), build passed.
+- `firefly-be`: not applicable (no backend changes for static content pages).
 
 Status: archived.
 Implemented:
@@ -132,11 +147,11 @@ npm run build
 npx openspec validate --all --strict
 ```
 
-Current test expectation: `firefly-fe` test/lint/build are green locally (0 warnings, 68/68 tests). `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
+Current test expectation: `firefly-fe` test/lint/build are green locally (0 warnings, 83/83 tests). `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
 
 ## Next Task
 
-Continue Phase 4 with slice 6 `add-content-pages` (FR-MOD-01 `/rules`, FR-CONTENT-01 `/about`). Remaining backlog carried forward: enum-typed roles/types, feed enrichment N+1 fix, LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, rate limiting (flagged minor, before public marketing push), lost-request `type` field server-side whitelist.
+Phase 4 MVP retrofit complete. All 6 capability slices documented in OpenSpec and validated. Remaining backlog for post-MVP hardening: enum-typed roles/types, feed enrichment N+1 fix, LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, rate limiting (flagged minor, before public marketing push), lost-request `type` field server-side whitelist.
 
 ## Environment / Deployment
 

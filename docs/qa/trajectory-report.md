@@ -5,8 +5,8 @@ archived slice took: review evidence, `Slice:` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: 5 archived slice(s).
-Result: PASS, 6 warning(s)
+Scope: 6 archived slice(s).
+Result: PASS, 9 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
@@ -15,6 +15,7 @@ Result: PASS, 6 warning(s)
 | 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
 | 2026-07-07-2026-07-07-add-moderation-and-admin | **missing** | **0** | yes | - |
+| 2026-07-07-add-content-pages | **missing** | **0** | **no** | - |
 
 ## Cross-slice module overlap
 
@@ -32,3 +33,6 @@ None.
 - **review-evidence**: 2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-07-2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)
 - **trailer**: 2026-07-07-2026-07-07-add-moderation-and-admin: no commit carries a "Slice: 2026-07-07-add-moderation-and-admin" trailer
+- **review-evidence**: 2026-07-07-add-content-pages: review-findings.json is missing (review must have run clean before archive)
+- **process**: 2026-07-07-add-content-pages: archived change is missing design.md and/or tasks.md
+- **trailer**: 2026-07-07-add-content-pages: no commit carries a "Slice: add-content-pages" trailer

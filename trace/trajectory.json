@@ -35,6 +35,13 @@
       "trailerCommits": 0,
       "libDomains": [],
       "processComplete": true
+    },
+    {
+      "slice": "2026-07-07-add-content-pages",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": false
     }
   ],
   "overlaps": [],
@@ -63,6 +70,18 @@
     {
       "check": "trailer",
       "msg": "2026-07-07-2026-07-07-add-moderation-and-admin: no commit carries a \"Slice: 2026-07-07-add-moderation-and-admin\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-07-add-content-pages: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "process",
+      "msg": "2026-07-07-add-content-pages: archived change is missing design.md and/or tasks.md"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-07-add-content-pages: no commit carries a \"Slice: add-content-pages\" trailer"
     }
   ]
 }

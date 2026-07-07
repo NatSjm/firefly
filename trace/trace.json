@@ -400,6 +400,7 @@
     {
       "id": "FR-CONTENT-01",
       "specs": [
+        "openspec/specs/content-pages/spec.md",
         "openspec/specs/slice-7-content-pages.md"
       ],
       "planned": true,
@@ -409,6 +410,7 @@
     {
       "id": "FR-CONTENT-02",
       "specs": [
+        "openspec/specs/content-pages/spec.md",
         "openspec/specs/slice-7-content-pages.md"
       ],
       "planned": true,
