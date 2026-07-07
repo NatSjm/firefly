@@ -91,7 +91,7 @@ export function Footer({ onNavigate }: FooterProps) {
       <div style={{ display: "flex", gap: 20, fontSize: 13, color: "var(--text-secondary)" }}>
         <a style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }} onClick={() => onNavigate?.("about")}>{t("nav.about")}</a>
         <a style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }} onClick={() => onNavigate?.("rules")}>{t("nav.rules")}</a>
-        <a style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }}>{t("nav.report")}</a>
+        <a style={{ color: "inherit", textDecoration: "none", cursor: "pointer" }} onClick={() => onNavigate?.("report")}>{t("nav.report")}</a>
       </div>
       <span style={{ fontSize: 12, color: "var(--text-tertiary)" }}>{t("nav.copyright")}</span>
     </footer>

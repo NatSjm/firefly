@@ -70,7 +70,7 @@ class LostAndReportIntegrationTest : IntegrationTestBase() {
         }
     }
 
-    // @trace FR-ADMIN-01
+    // @trace FR-MOD-02
     @Test
     fun `report is created by an authenticated user only`() {
         val author = register()
@@ -90,6 +90,32 @@ class LostAndReportIntegrationTest : IntegrationTestBase() {
             status { isCreated() }
             jsonPath("$.status") { value("ok") }
         }
+    }
+
+    // @trace FR-MOD-02
+    @Test
+    fun `report creation rejects unknown targetType with 400`() {
+        val reporter = register(email = "reporter2@example.com")
+        val author = register(email = "author2@example.com")
+        val memoryId = createMemory(author)
+
+        mockMvc.post("/api/reports") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"targetType":"post","targetId":$memoryId,"reason":"Тест"}"""
+            header(HttpHeaders.AUTHORIZATION, bearer(reporter))
+        }.andExpect { status { isBadRequest() } }
+    }
+
+    // @trace FR-MOD-02
+    @Test
+    fun `report creation rejects a nonexistent memory target with 404`() {
+        val reporter = register(email = "reporter3@example.com")
+
+        mockMvc.post("/api/reports") {
+            contentType = MediaType.APPLICATION_JSON
+            content = """{"targetType":"memory","targetId":999999,"reason":"Тест"}"""
+            header(HttpHeaders.AUTHORIZATION, bearer(reporter))
+        }.andExpect { status { isNotFound() } }
     }
 
     private fun createLost(token: String, city: String, type: String) {

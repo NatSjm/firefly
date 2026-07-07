@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { MemoryDetailPage } from '@/pages/MemoryDetailPage';
 import type { Memory } from '@/api/memories';
@@ -94,6 +95,67 @@ describe('MemoryDetailPage', () => {
     await screen.findByRole('heading', { name: 'Бабусин борщ' });
     expect(screen.queryByRole('button', { name: 'Редагувати' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Поскаржитися' })).toBeInTheDocument();
+  });
+
+  // @trace FR-MOD-02
+  it('hides the report button from the owner and from signed-out visitors', async () => {
+    renderPage();
+    await screen.findByRole('heading', { name: 'Бабусин борщ' });
+    expect(screen.queryByRole('button', { name: 'Поскаржитися' })).not.toBeInTheDocument();
+
+    authState.user = { id: 7, email: 'olia@example.com', name: 'Оля', role: 'user' };
+    renderPage();
+    await screen.findAllByRole('heading', { name: 'Бабусин борщ' });
+    expect(screen.queryByRole('button', { name: 'Поскаржитися' })).not.toBeInTheDocument();
+  });
+
+  // @trace FR-MOD-02
+  it('submits a report with the trimmed reason and confirms', async () => {
+    const user = userEvent.setup();
+    authState.user = { id: 99, email: 'inna@example.com', name: 'Інна', role: 'user' };
+    apiMocks.createReport.mockResolvedValue({});
+
+    renderPage();
+    await user.click(await screen.findByRole('button', { name: 'Поскаржитися' }));
+
+    const modal = screen.getByRole('heading', { name: 'Поскаржитися на спогад' })
+      .parentElement as HTMLElement;
+    await user.type(within(modal).getByRole('textbox'), '  Спам  ');
+    await user.click(within(modal).getByRole('button', { name: 'Надіслати' }));
+
+    expect(apiMocks.createReport).toHaveBeenCalledWith('memory', 1, 'Спам');
+    expect(await screen.findByText('Скаргу надіслано.')).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Поскаржитися на спогад' })).not.toBeInTheDocument();
+  });
+
+  // @trace FR-MOD-02
+  it('submits a report without a reason when the field is left blank', async () => {
+    const user = userEvent.setup();
+    authState.user = { id: 99, email: 'inna@example.com', name: 'Інна', role: 'user' };
+    apiMocks.createReport.mockResolvedValue({});
+
+    renderPage();
+    await user.click(await screen.findByRole('button', { name: 'Поскаржитися' }));
+    const modal = screen.getByRole('heading', { name: 'Поскаржитися на спогад' })
+      .parentElement as HTMLElement;
+    await user.click(within(modal).getByRole('button', { name: 'Надіслати' }));
+
+    expect(apiMocks.createReport).toHaveBeenCalledWith('memory', 1, undefined);
+  });
+
+  // @trace FR-MOD-02
+  it('surfaces an error when submitting the report fails', async () => {
+    const user = userEvent.setup();
+    authState.user = { id: 99, email: 'inna@example.com', name: 'Інна', role: 'user' };
+    apiMocks.createReport.mockRejectedValue(new Error('boom'));
+
+    renderPage();
+    await user.click(await screen.findByRole('button', { name: 'Поскаржитися' }));
+    const modal = screen.getByRole('heading', { name: 'Поскаржитися на спогад' })
+      .parentElement as HTMLElement;
+    await user.click(within(modal).getByRole('button', { name: 'Надіслати' }));
+
+    expect(await screen.findByText(/boom/i)).toBeInTheDocument();
   });
 });
 

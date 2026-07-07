@@ -5,15 +5,16 @@ archived slice took: review evidence, `Slice:` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: 4 archived slice(s).
-Result: PASS, 4 warning(s)
+Scope: 5 archived slice(s).
+Result: PASS, 6 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
 | 2026-07-06-add-identity-and-access | **unclean** | 1 | yes | - |
-| 2026-07-06-add-lost-fireflies | **missing** | 2 | yes | - |
+| 2026-07-06-add-lost-fireflies | **missing** | 3 | yes | - |
 | 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
+| 2026-07-07-2026-07-07-add-moderation-and-admin | **missing** | **0** | yes | - |
 
 ## Cross-slice module overlap
 
@@ -29,3 +30,5 @@ None.
 - **review-evidence**: 2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)
+- **review-evidence**: 2026-07-07-2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)
+- **trailer**: 2026-07-07-2026-07-07-add-moderation-and-admin: no commit carries a "Slice: 2026-07-07-add-moderation-and-admin" trailer

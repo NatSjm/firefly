@@ -21,37 +21,71 @@ export function AdminPage() {
   const { t } = useTranslation();
   const { user: currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState<AdminTab>('reports');
-  const [message, setMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [pendingIds, setPendingIds] = useState<Set<number>>(new Set());
 
   const { data, setData, loading, error, setError } = useAsyncData(fetchAdminData, t('admin.loadError'));
   const reports = data?.reports ?? [];
   const users = data?.users ?? [];
 
+  const showSuccess = (msg: string) => {
+    setSuccessMessage(msg);
+    setError('');
+  };
+
+  const showError = (msg: string) => {
+    setError(msg);
+    setSuccessMessage('');
+  };
+
+  const setPending = (id: number, on: boolean) =>
+    setPendingIds((prev) => {
+      const next = new Set(prev);
+      if (on) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+
   const handleModerateReport = useCallback(
     async (report: AdminReport) => {
+      if (pendingIds.has(report.id)) return;
+      setPending(report.id, true);
       try {
         if (report.targetType === 'memory') {
           await adminDeleteMemory(report.targetId);
         } else if (report.targetType === 'comment') {
           await adminDeleteComment(report.targetId);
         } else {
-          setError(t('admin.reports.unknownTarget'));
+          showError(t('admin.reports.unknownTarget'));
           return;
         }
 
+        // Remove all sibling report rows for the same deleted target
         setData((current) =>
-          current ? { ...current, reports: current.reports.filter((item) => item.id !== report.id) } : current,
+          current
+            ? {
+                ...current,
+                reports: current.reports.filter(
+                  (item) => !(item.targetType === report.targetType && item.targetId === report.targetId),
+                ),
+              }
+            : current,
         );
-        setMessage(t('admin.reports.deleted'));
+        showSuccess(t('admin.reports.deleted'));
       } catch (actionError) {
-        setError(getErrorMessage(actionError, t('admin.reports.deleteError')));
+        showError(getErrorMessage(actionError, t('admin.reports.deleteError')));
+      } finally {
+        setPending(report.id, false);
       }
     },
-    [setData, setError, t],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pendingIds, setData, setError, t],
   );
 
   const handleToggleBan = useCallback(
     async (userId: number) => {
+      if (pendingIds.has(userId)) return;
+      setPending(userId, true);
       try {
         const response = await banUser(userId);
         setData((current) =>
@@ -64,12 +98,15 @@ export function AdminPage() {
               }
             : current,
         );
-        setMessage(response.data.banned ? t('admin.users.bannedMsg') : t('admin.users.unbannedMsg'));
+        showSuccess(response.data.banned ? t('admin.users.bannedMsg') : t('admin.users.unbannedMsg'));
       } catch (actionError) {
-        setError(getErrorMessage(actionError, t('admin.users.banError')));
+        showError(getErrorMessage(actionError, t('admin.users.banError')));
+      } finally {
+        setPending(userId, false);
       }
     },
-    [setData, setError, t],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pendingIds, setData, setError, t],
   );
 
   return (
@@ -102,10 +139,10 @@ export function AdminPage() {
         })}
       </div>
 
-      {message ? (
+      {successMessage ? (
         <div style={{ marginBottom: 'var(--space-5)' }}>
-          <Message tone="success" onDismiss={() => setMessage('')}>
-            {message}
+          <Message tone="success" onDismiss={() => setSuccessMessage('')}>
+            {successMessage}
           </Message>
         </div>
       ) : null}
@@ -140,7 +177,12 @@ export function AdminPage() {
                     <td style={CELL_STYLE}>{report.reason || t('admin.reports.noReason')}</td>
                     <td style={CELL_STYLE}>{formatDate(report.createdAt)}</td>
                     <td style={CELL_STYLE}>
-                      <Button size="sm" variant="danger" onClick={() => void handleModerateReport(report)}>
+                      <Button
+                        size="sm"
+                        variant="danger"
+                        disabled={pendingIds.has(report.id)}
+                        onClick={() => void handleModerateReport(report)}
+                      >
                         {t('admin.reports.delete')}
                       </Button>
                     </td>
@@ -177,7 +219,7 @@ export function AdminPage() {
                         size="sm"
                         variant={adminUser.isBanned ? 'secondary' : 'danger'}
                         onClick={() => void handleToggleBan(adminUser.id)}
-                        disabled={isProtectedAccount}
+                        disabled={isProtectedAccount || pendingIds.has(adminUser.id)}
                       >
                         {isProtectedAccount
                           ? t('admin.users.protected')

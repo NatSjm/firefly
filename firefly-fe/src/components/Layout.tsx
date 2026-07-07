@@ -21,6 +21,7 @@ export function Layout({ children }: { children: ReactNode }) {
       lost: '/lost',
       about: '/about',
       rules: '/rules',
+      report: '/rules',
       dashboard: '/dashboard',
       create: '/memories/new',
       profile: '/profile',

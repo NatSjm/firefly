@@ -1,6 +1,5 @@
 package com.firefly.fireflybe.admin
 
-import com.firefly.fireflybe.reports.Report
 import com.firefly.fireflybe.users.User
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class AdminController(private val adminService: AdminService) {
 
     @GetMapping("/reports")
-    fun getReports(): List<Report> = adminService.reports()
+    fun getReports(): List<AdminReportDto> = adminService.reports()
 
     @GetMapping("/users")
     fun getUsers(): List<AdminUserDto> = adminService.users()

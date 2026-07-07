@@ -9,7 +9,7 @@ import org.springframework.test.web.servlet.post
 
 class AdminIntegrationTest : IntegrationTestBase() {
 
-    // @trace FR-ADMIN-01
+    // @trace FR-MOD-03
     @Test
     fun `admin area is closed to anonymous and regular users`() {
         mockMvc.get("/api/admin/users").andExpect { status { isUnauthorized() } }
@@ -20,7 +20,7 @@ class AdminIntegrationTest : IntegrationTestBase() {
         }.andExpect { status { isForbidden() } }
     }
 
-    // @trace FR-ADMIN-01
+    // @trace FR-MOD-02, FR-MOD-03
     @Test
     fun `admin lists users and reports`() {
         register(email = "person@example.com")
@@ -50,7 +50,7 @@ class AdminIntegrationTest : IntegrationTestBase() {
         }
     }
 
-    // @trace FR-ADMIN-03
+    // @trace FR-MOD-04
     @Test
     fun `ban toggles and blocks the user, but self and admins are protected`() {
         val admin = registerAdmin()
@@ -86,7 +86,7 @@ class AdminIntegrationTest : IntegrationTestBase() {
         }.andExpect { status { isNotFound() } }
     }
 
-    // @trace FR-ADMIN-02
+    // @trace FR-MOD-04
     @Test
     fun `admin deletes a reported memory together with its reports`() {
         val author = register(email = "author@example.com")
@@ -116,7 +116,7 @@ class AdminIntegrationTest : IntegrationTestBase() {
         }.andExpect { status { isNotFound() } }
     }
 
-    // @trace FR-ADMIN-02
+    // @trace FR-MOD-04
     @Test
     fun `admin deletes a reported comment together with its reports`() {
         val author = register(email = "author@example.com")

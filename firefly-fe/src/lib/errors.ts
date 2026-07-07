@@ -20,7 +20,7 @@ function extractResponseMessage(data: unknown): string | undefined {
 
 export function getErrorMessage(error: unknown, fallback = i18n.t('errors.generic')) {
   if (axios.isAxiosError(error)) {
-    return extractResponseMessage(error.response?.data) ?? error.message ?? fallback;
+    return extractResponseMessage(error.response?.data) ?? fallback;
   }
 
   if (error instanceof Error) {

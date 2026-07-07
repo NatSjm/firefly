@@ -6,14 +6,17 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-07 07:05:00 (UTC+02:00)
-- **Current phase:** **Phase 4 — slice 4 complete, proceeding to slice 5**
-- **Active change:** none (slice `add-lost-fireflies` archived)
-- **Progress:** Slice 4 `add-lost-fireflies` completed the Phase 4 loop. New backend unit coverage landed for `LostService` (8 tests: create/trim/blank-years, list with no/city/type filters, blank-filter normalization, get-by-id, get-404). New frontend render coverage landed for `LostPage` (8 tests), `LostNewPage` (5 tests), and `LostDetailPage` (4 tests). Review-gate (code, security, spec-compliance, run in parallel) found two real defects fixed in this pass: (1) security-major — `GET /api/lost-requests` returned every row's raw `contactEmail`, enabling bulk PII scraping from the public, unauthenticated, unpaginated list endpoint; fixed by splitting the DTO into `LostRequestSummaryDto` (list, no email) vs `LostRequestDto` (detail, with email) — only the detail endpoint exposes contact email now. (2) spec-major — lost-request cards on `/lost` rendered the full untruncated description instead of an excerpt as FR-LOST-04 requires; fixed by applying `getMemoryExcerpt` before passing `description` to `LostRequestCard`. Also added a server-side `@Size(max = 4000)` cap on `description` (previously unbounded `TEXT`), and deduplicated the type-label map that existed separately in `pageShared.ts` and `design-system/components/cards/Cards.tsx` into a single `design-system/components/cards/lostTypeLabels.ts` source.
-- **Progress (cont.):** Validation is fully green: `firefly-fe` lint passed with 1 pre-existing warning (unrelated `AuthContext.tsx`), tests passed (10 files / 47 tests), build passed; `firefly-be` `mvnw test` passed with 93 tests green (including `LostAndReportIntegrationTest` against a real Testcontainers PostgreSQL instance, serving as the real-DB smoke evidence for this slice); `npx openspec validate --all --strict` passed with the archived slice 4 change and accepted `lost-fireflies` spec.
-- **Progress (FE refactor):** A behavior-preserving frontend architecture pass landed between slices: the duplicated page fetch pattern (manual `active` flag + loading/error state, 7 pages) is now a shared `src/hooks/useAsyncData.ts` hook; auth was split into `contexts/AuthContext.ts` (context + `useAuth`, fixing the long-standing fast-refresh lint warning) and `contexts/AuthProvider.tsx` (memoized value, stable callbacks); token storage is centralized in `src/api/token.ts` and the axios client now clears a stale token and signs the user out on 401; `getErrorMessage` moved to `src/lib/errors.ts` (re-exported from `pageShared`); `LostRequestCard` accepts any backend `type` string (removing an unsafe cast in `LostPage`); routes are code-split via `React.lazy`. `MemoryFormPage` intentionally keeps its manual fetch effect because it hydrates editable form state. Lint is now expected to pass with **zero** warnings; all 47 FE tests and the build stay green.
-- **Progress (FE refactor, part 2):** Two follow-ups landed. (1) AbortSignal adoption: all read-path API functions (`getFeed`, `getMyMemories`, `getMemory`, `getComments`, `getLostRequests`, `getLostRequest`, `getReports`, `getAdminUsers`) accept an optional `signal`; `useAsyncData` creates an `AbortController` per run and aborts the in-flight request on refetch/unmount (previously stale responses were only ignored, not cancelled). (2) i18n adoption: all hard-coded Ukrainian UI copy moved into `src/locales/uk/common.json` (rewritten to match the actual rendered copy — the old catalog had drifted); every page, `Layout`, `ProtectedRoute`, and the design-system components with embedded copy (Navigation, FilterBar, Cards, Badge) now use `useTranslation`; non-component helpers (`getErrorMessage`, `formatYears`, option lists in `pageShared`) read via the `i18n` instance; `i18n.ts` uses `initAsync: false` (i18next v26 renamed `initImmediate`) so bundled resources are available synchronously, and `src/test/setup.ts` imports `@/i18n`. The design-system `LOST_TYPE_LABEL` map was replaced by a `LOST_TYPES` values list with labels under `lost.types.*`. Validation stays green: lint 0 warnings, 47/47 tests, build passes.
-- **Next task:** Continue Phase 4 with slice 5 `add-moderation-and-admin`. Remaining backend backlog carried forward from prior reviews: enum-typed roles/types, feed enrichment N+1 fix (batch count queries), LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, no rate limiting on `POST`/`GET /api/lost-requests` (flagged minor, tracked before public marketing push), backend `type` field on lost requests still accepts any string with no server-side enum/whitelist (flagged minor by code review).
+- **Date and time:** 2026-07-07 19:42:00 (UTC+02:00)
+- **Current phase:** **Phase 4 — slice 5 complete, proceeding to slice 6**
+- **Active change:** none (slice `add-moderation-and-admin` archived)
+- **Progress:** Slice 5 `add-moderation-and-admin` completed the Phase 4 review-gate loop. The three parallel reviewers (code, security, spec-compliance) found 5 majors and overlapping minors; all confirmed fixes were applied in one pass:
+  - **FE — AdminPage:** Stale sibling report rows after cascade delete now properly removed (filter by targetType+targetId, not just clicked row id). Per-row `pendingIds` set prevents double-submit on delete and ban-toggle race. Cross-cleared banners: success clears error and vice versa.
+  - **FE — MemoryDetailPage report modal:** `submittingReport` state added; error displayed inside the modal; submit button disabled while in-flight; `aria-label` and `maxLength=500` on the reason Textarea; separate `commentReportTarget` state and a second report modal added so users can report individual comments (closes FR-MOD-02's comment half, the only missing UI entry point).
+  - **BE — AdminReportDto:** `GET /api/admin/reports` now returns `AdminReportDto` (id, targetType, targetId, reason, createdAt, reporterId) instead of the raw `Report` entity — prevents leaking internal JPA internals.
+  - **BE — ReportService:** `create()` now validates that the target exists (memory or comment) before saving; returns 404 for nonexistent targets, eliminating junk reports polluting the queue.
+  - **FE — errors.ts:** `getErrorMessage` for AxiosErrors no longer falls through to the raw `error.message` (which produced English "Request failed with status code …" strings); now returns the server Ukrainian message if present, or the Ukrainian fallback.
+  - **Tests added:** FE 68 tests (was 62, +6: ProtectedRoute.test.tsx 4, AdminPage sibling-rows/pending/banner-clear 3, AdminPage original count rechecked). BE 111 tests (was 107, +4: ReportServiceTest 404-memory/comment 2, LostAndReportIntegrationTest 400-unknown-targetType + 404-nonexistent-memory 2).
+- **Validation:** FE lint 0 warnings, 68/68 tests, build green. BE 111/111 tests (all integration tests including Testcontainers pass). `npx openspec validate --all --strict` 5/5 pass.
 
 ## Source Of Truth
 
@@ -38,7 +41,7 @@ Archived changes:
 - `2026-07-06-add-identity-and-access` — Phase 4 retrofit validation completed and archived.
 - `2026-07-06-add-personal-archive` — Phase 4 retrofit validation completed and archived.
 - `2026-07-06-add-public-feed-and-social` — Phase 4 retrofit validation completed and archived.
-- `2026-07-06-add-lost-fireflies` — Phase 4 retrofit validation completed and archived; review gate found and fixed a real PII-exposure bug (contactEmail on the public list endpoint) and a spec-compliance gap (missing description excerpt on cards).
+- `2026-07-07-add-moderation-and-admin` — Phase 4 retrofit validation completed and archived; review gate found and fixed: stale sibling report rows in AdminPage, per-row pending guards, cross-cleared banners, report modal error visibility + double-submit guard + accessibility, per-comment report action (FR-MOD-02 comment half), AdminReportDto replacing raw entity serialization, ReportService 404 for nonexistent targets, errors.ts Ukrainian fallback, ProtectedRoute adminOnly test.
 
 ## Completed Changes
 
@@ -102,6 +105,22 @@ Latest checks:
 - `firefly-fe`: lint passed with 1 pre-existing unrelated warning, tests passed (10 files / 47 tests), build passed.
 - `firefly-be`: `.\mvnw.cmd test` passed (93 tests green) with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`.
 
+### 5. `add-moderation-and-admin`
+
+Status: archived.
+Implemented:
+- Moderation & Admin slice documented in OpenSpec for FR-MOD-02–05 (new `moderation-and-admin` accepted spec).
+- Backend unit coverage added for `ReportService` (6 tests: create/trim, absent reason, whitespace reason, bad targetType 400, nonexistent memory 404, nonexistent comment 404) and `AdminService` (8 tests: reports list, users DTO, deleteMemory cascades, deleteMemory 404, deleteComment, deleteComment 404, toggleBan, ban self/admin guard, 404).
+- Frontend render coverage added for `AdminPage` (11 tests: report row render, fallback no-reason, empty state, load error, cascade delete removes sibling rows, comment routing, delete error, pending guard, user ban/unban, protected accounts, banner cross-clear) and `ProtectedRoute` (4 tests: unauthenticated redirect, auth pass, adminOnly redirect, admin pass). Footer link tests already existed.
+- Review-gate (code, security, spec-compliance) confirmed fixes applied: stale sibling report rows, per-row pending guards, cross-cleared banners, report modal error inside + double-submit guard + aria-label/maxLength, per-comment report action (closes FR-MOD-02 comment half), `AdminReportDto` replacing raw entity serialization, `ReportService.create()` 404 for nonexistent targets, `errors.ts` Ukrainian fallback replacing raw axios message.
+- Integration test gaps closed: 400 for unknown targetType (HTTP layer), 404 for nonexistent memory target.
+Smoke test:
+- Frontend validation battery passed locally.
+- Backend Maven suite passed locally (111 tests, 0 failures) with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`.
+Latest checks:
+- `firefly-fe`: lint 0 warnings, tests passed (13 files / 68 tests), build passed.
+- `firefly-be`: `.\mvnw.cmd test` passed (111 tests green) with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`.
+
 ## Validation Commands
 
 ```bash
@@ -113,7 +132,11 @@ npm run build
 npx openspec validate --all --strict
 ```
 
-Current test expectation: `firefly-fe` test/lint/build are green locally. `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
+Current test expectation: `firefly-fe` test/lint/build are green locally (0 warnings, 68/68 tests). `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
+
+## Next Task
+
+Continue Phase 4 with slice 6 `add-content-pages` (FR-MOD-01 `/rules`, FR-CONTENT-01 `/about`). Remaining backlog carried forward: enum-typed roles/types, feed enrichment N+1 fix, LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, rate limiting (flagged minor, before public marketing push), lost-request `type` field server-side whitelist.
 
 ## Environment / Deployment
 

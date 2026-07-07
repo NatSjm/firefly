@@ -28,6 +28,12 @@ export function MemoryDetailPage() {
   const { user } = useAuth();
   const [commentText, setCommentText] = useState('');
   const [reportReason, setReportReason] = useState('');
+  const [reportError, setReportError] = useState('');
+  const [commentReportTarget, setCommentReportTarget] = useState<number | null>(null);
+  const [commentReportReason, setCommentReportReason] = useState('');
+  const [commentReportError, setCommentReportError] = useState('');
+  const [submittingReport, setSubmittingReport] = useState(false);
+  const [submittingCommentReport, setSubmittingCommentReport] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [submittingComment, setSubmittingComment] = useState(false);
   const [updatingLike, setUpdatingLike] = useState(false);
@@ -163,9 +169,12 @@ export function MemoryDetailPage() {
   };
 
   const handleReport = async () => {
-    if (!memory) {
+    if (!memory || submittingReport) {
       return;
     }
+
+    setSubmittingReport(true);
+    setReportError('');
 
     try {
       await createReport('memory', memory.id, reportReason.trim() || undefined);
@@ -173,7 +182,29 @@ export function MemoryDetailPage() {
       setReportOpen(false);
       setFeedback(t('memory.reportModal.sent'));
     } catch (reportError) {
-      setError(getErrorMessage(reportError, t('memory.reportModal.error')));
+      setReportError(getErrorMessage(reportError, t('memory.reportModal.error')));
+    } finally {
+      setSubmittingReport(false);
+    }
+  };
+
+  const handleReportComment = async () => {
+    if (commentReportTarget === null || submittingCommentReport) {
+      return;
+    }
+
+    setSubmittingCommentReport(true);
+    setCommentReportError('');
+
+    try {
+      await createReport('comment', commentReportTarget, commentReportReason.trim() || undefined);
+      setCommentReportReason('');
+      setCommentReportTarget(null);
+      setFeedback(t('memory.reportModal.sent'));
+    } catch (err) {
+      setCommentReportError(getErrorMessage(err, t('memory.reportModal.error')));
+    } finally {
+      setSubmittingCommentReport(false);
     }
   };
 
@@ -463,6 +494,23 @@ export function MemoryDetailPage() {
                         {t('memory.comments.delete')}
                       </button>
                     ) : null}
+                    {user && user.id !== comment.userId && user.role !== 'admin' ? (
+                      <button
+                        type="button"
+                        onClick={() => setCommentReportTarget(comment.id)}
+                        style={{
+                          border: 'none',
+                          background: 'none',
+                          color: 'var(--text-tertiary)',
+                          cursor: 'pointer',
+                          fontFamily: 'var(--font-ui)',
+                          fontSize: 'var(--text-caption)',
+                          padding: 0,
+                        }}
+                      >
+                        {t('memory.comments.report')}
+                      </button>
+                    ) : null}
                   </div>
                   <p
                     style={{
@@ -505,21 +553,62 @@ export function MemoryDetailPage() {
       <Modal
         open={reportOpen}
         title={t('memory.reportModal.title')}
-        onClose={() => setReportOpen(false)}
+        onClose={() => {
+          setReportOpen(false);
+          setReportError('');
+        }}
         footer={
           <>
-            <Button variant="ghost" onClick={() => setReportOpen(false)}>
+            <Button variant="ghost" onClick={() => { setReportOpen(false); setReportError(''); }}>
               {t('common.cancel')}
             </Button>
-            <Button variant="primary" onClick={() => void handleReport()}>
-              {t('memory.reportModal.submit')}
+            <Button variant="primary" onClick={() => void handleReport()} disabled={submittingReport}>
+              {submittingReport ? t('memory.reportModal.submitting') : t('memory.reportModal.submit')}
             </Button>
           </>
         }
       >
         <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+          {reportError ? <Message tone="error">{reportError}</Message> : null}
           <p style={{ margin: 0 }}>{t('memory.reportModal.body')}</p>
-          <Textarea rows={4} value={reportReason} onChange={(event) => setReportReason(event.target.value)} />
+          <Textarea
+            rows={4}
+            value={reportReason}
+            onChange={(event) => setReportReason(event.target.value)}
+            aria-label={t('memory.reportModal.reasonLabel')}
+            maxLength={500}
+          />
+        </div>
+      </Modal>
+
+      <Modal
+        open={commentReportTarget !== null}
+        title={t('memory.reportModal.commentTitle')}
+        onClose={() => {
+          setCommentReportTarget(null);
+          setCommentReportError('');
+        }}
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => { setCommentReportTarget(null); setCommentReportError(''); }}>
+              {t('common.cancel')}
+            </Button>
+            <Button variant="primary" onClick={() => void handleReportComment()} disabled={submittingCommentReport}>
+              {submittingCommentReport ? t('memory.reportModal.submitting') : t('memory.reportModal.submit')}
+            </Button>
+          </>
+        }
+      >
+        <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+          {commentReportError ? <Message tone="error">{commentReportError}</Message> : null}
+          <p style={{ margin: 0 }}>{t('memory.reportModal.body')}</p>
+          <Textarea
+            rows={4}
+            value={commentReportReason}
+            onChange={(event) => setCommentReportReason(event.target.value)}
+            aria-label={t('memory.reportModal.reasonLabel')}
+            maxLength={500}
+          />
         </div>
       </Modal>
     </div>

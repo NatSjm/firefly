@@ -360,6 +360,7 @@
     {
       "id": "FR-MOD-02",
       "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
@@ -369,6 +370,7 @@
     {
       "id": "FR-MOD-03",
       "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
@@ -378,6 +380,7 @@
     {
       "id": "FR-MOD-04",
       "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,
@@ -387,6 +390,7 @@
     {
       "id": "FR-MOD-05",
       "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
         "openspec/specs/slice-6-moderation.md"
       ],
       "planned": true,

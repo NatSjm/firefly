@@ -4,7 +4,6 @@ import com.firefly.fireflybe.comments.CommentRepository
 import com.firefly.fireflybe.common.ApiException
 import com.firefly.fireflybe.memories.MemoryRepository
 import com.firefly.fireflybe.memories.MemoryService
-import com.firefly.fireflybe.reports.Report
 import com.firefly.fireflybe.reports.ReportRepository
 import com.firefly.fireflybe.users.User
 import com.firefly.fireflybe.users.UserRepository
@@ -13,6 +12,15 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
+
+data class AdminReportDto(
+    val id: Long,
+    val targetType: String,
+    val targetId: Long,
+    val reason: String?,
+    val createdAt: Instant,
+    val reporterId: Long?
+)
 
 data class AdminUserDto(
     val id: Long,
@@ -31,7 +39,16 @@ class AdminService(
     private val memoryService: MemoryService
 ) {
 
-    fun reports(): List<Report> = reportRepository.findAll()
+    fun reports(): List<AdminReportDto> = reportRepository.findAll().map { r ->
+        AdminReportDto(
+            id = r.id,
+            targetType = r.targetType,
+            targetId = r.targetId,
+            reason = r.reason,
+            createdAt = r.createdAt,
+            reporterId = r.reporterId
+        )
+    }
 
     fun users(): List<AdminUserDto> = userRepository.findAll().map {
         AdminUserDto(id = it.id, name = it.name, email = it.email, role = it.role, isBanned = it.isBanned)
