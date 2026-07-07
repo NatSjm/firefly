@@ -6,12 +6,12 @@ It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
 Scope: 4 archived slice(s).
-Result: PASS, 5 warning(s)
+Result: PASS, 4 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
 | 2026-07-06-add-identity-and-access | **unclean** | 1 | yes | - |
-| 2026-07-06-add-lost-fireflies | **missing** | **0** | yes | - |
+| 2026-07-06-add-lost-fireflies | **missing** | 1 | yes | - |
 | 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
 
@@ -27,6 +27,5 @@ None.
 
 - **review-evidence**: 2026-07-06-add-identity-and-access: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-06-add-lost-fireflies: no commit carries a "Slice: add-lost-fireflies" trailer
 - **review-evidence**: 2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)

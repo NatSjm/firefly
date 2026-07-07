@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useMemo, useState, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { adminDeleteComment } from '@/api/admin';
 import { deleteMemory, getMemory, type Memory } from '@/api/memories';
 import { addComment, createReport, deleteComment, getComments, toggleLike, type Comment } from '@/api/social';
 import { Badge, Button, Message, Modal, Textarea } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAsyncData } from '@/hooks/useAsyncData';
 import {
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
@@ -14,14 +15,15 @@ import {
   toPhotoUrl,
 } from '@/pages/pageShared';
 
+interface MemoryDetails {
+  memory: Memory;
+  comments: Comment[];
+}
+
 export function MemoryDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [memory, setMemory] = useState<Memory | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [commentText, setCommentText] = useState('');
   const [reportReason, setReportReason] = useState('');
   const [feedback, setFeedback] = useState('');
@@ -32,50 +34,31 @@ export function MemoryDetailPage() {
   const [reportOpen, setReportOpen] = useState(false);
   const memoryId = Number(id);
 
+  const fetchDetails = useCallback(async () => {
+    if (!Number.isFinite(memoryId)) {
+      throw new Error('Некоректний ідентифікатор спогаду.');
+    }
+
+    const [memoryResponse, commentsResponse] = await Promise.all([getMemory(memoryId), getComments(memoryId)]);
+    return { memory: memoryResponse.data, comments: commentsResponse.data };
+  }, [memoryId]);
+
+  const { data, setData, loading, error, setError } = useAsyncData(fetchDetails, 'Не вдалося завантажити спогад.');
+  const memory = data?.memory ?? null;
+  const comments = data?.comments ?? [];
+
+  const updateDetails = useCallback(
+    (updater: (current: MemoryDetails) => MemoryDetails) => {
+      setData((current) => (current ? updater(current) : current));
+    },
+    [setData],
+  );
+
   const isOwner = Boolean(user && memory && user.id === memory.userId);
   const years = useMemo(
     () => (memory ? formatYears(memory.yearFrom, memory.yearTo) : ''),
     [memory],
   );
-
-  useEffect(() => {
-    if (!Number.isFinite(memoryId)) {
-      setError('Некоректний ідентифікатор спогаду.');
-      setLoading(false);
-      return;
-    }
-
-    let active = true;
-
-    const loadMemory = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        const [memoryResponse, commentsResponse] = await Promise.all([getMemory(memoryId), getComments(memoryId)]);
-        if (!active) {
-          return;
-        }
-
-        setMemory(memoryResponse.data);
-        setComments(commentsResponse.data);
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити спогад.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void loadMemory();
-
-    return () => {
-      active = false;
-    };
-  }, [memoryId]);
 
   const handleToggleLike = async () => {
     if (!memory || !user || updatingLike) {
@@ -86,15 +69,14 @@ export function MemoryDetailPage() {
 
     try {
       const response = await toggleLike(memory.id);
-      setMemory((current) =>
-        current
-          ? {
-              ...current,
-              likedByMe: response.data.liked,
-              likesCount: response.data.count,
-            }
-          : current,
-      );
+      updateDetails((current) => ({
+        ...current,
+        memory: {
+          ...current.memory,
+          likedByMe: response.data.liked,
+          likesCount: response.data.count,
+        },
+      }));
     } catch (toggleError) {
       setError(getErrorMessage(toggleError, 'Не вдалося оновити тепло.'));
     } finally {
@@ -113,15 +95,14 @@ export function MemoryDetailPage() {
 
     try {
       const response = await addComment(memory.id, commentText.trim());
-      setComments((current) => [response.data, ...current]);
-      setMemory((current) =>
-        current
-          ? {
-              ...current,
-              commentsCount: current.commentsCount + 1,
-            }
-          : current,
-      );
+      updateDetails((current) => ({
+        ...current,
+        comments: [response.data, ...current.comments],
+        memory: {
+          ...current.memory,
+          commentsCount: current.memory.commentsCount + 1,
+        },
+      }));
       setCommentText('');
     } catch (commentError) {
       setError(getErrorMessage(commentError, 'Не вдалося додати коментар.'));
@@ -142,15 +123,14 @@ export function MemoryDetailPage() {
         await deleteComment(memory.id, comment.id);
       }
 
-      setComments((current) => current.filter((item) => item.id !== comment.id));
-      setMemory((current) =>
-        current
-          ? {
-              ...current,
-              commentsCount: Math.max(0, current.commentsCount - 1),
-            }
-          : current,
-      );
+      updateDetails((current) => ({
+        ...current,
+        comments: current.comments.filter((item) => item.id !== comment.id),
+        memory: {
+          ...current.memory,
+          commentsCount: Math.max(0, current.memory.commentsCount - 1),
+        },
+      }));
     } catch (deleteError) {
       setError(getErrorMessage(deleteError, 'Не вдалося видалити коментар.'));
     }

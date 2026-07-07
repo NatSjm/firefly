@@ -1,51 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getLostRequest, type LostRequest } from '@/api/lost';
+import { getLostRequest } from '@/api/lost';
 import { Badge, Button, Message } from '@/design-system';
-import { PAGE_WRAPPER_STYLE, SURFACE_STYLE, formatDate, getErrorMessage, getLostTypeLabel } from '@/pages/pageShared';
+import { useAsyncData } from '@/hooks/useAsyncData';
+import { PAGE_WRAPPER_STYLE, SURFACE_STYLE, formatDate, getLostTypeLabel } from '@/pages/pageShared';
 
 export function LostDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [request, setRequest] = useState<LostRequest | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
+  const fetchRequest = useCallback(() => {
     if (!id || Number.isNaN(Number(id))) {
-      setError('Некоректний ідентифікатор запиту.');
-      setLoading(false);
-      return;
+      return Promise.reject(new Error('Некоректний ідентифікатор запиту.'));
     }
 
-    let active = true;
-
-    const loadRequest = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        const response = await getLostRequest(Number(id));
-        if (active) {
-          setRequest(response.data);
-        }
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити запит.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void loadRequest();
-
-    return () => {
-      active = false;
-    };
+    return getLostRequest(Number(id)).then((response) => response.data);
   }, [id]);
+
+  const { data: request, loading, error } = useAsyncData(fetchRequest, 'Не вдалося завантажити запит.');
 
   if (loading) {
     return <div style={PAGE_WRAPPER_STYLE}>Завантажуємо запит…</div>;

@@ -1,52 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getFeed, type FeedResponse } from '@/api/feed';
+import { getFeed } from '@/api/feed';
 import { FilterBar, MemoryCard, Message } from '@/design-system';
-import { CARD_GRID_STYLE, CITIES, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, TOPICS, getErrorMessage, getMemoryExcerpt } from '@/pages/pageShared';
+import { useAsyncData } from '@/hooks/useAsyncData';
+import { CARD_GRID_STYLE, CITIES, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, TOPICS, getMemoryExcerpt } from '@/pages/pageShared';
 
 export function FeedPage() {
   const navigate = useNavigate();
   const [city, setCity] = useState('');
   const [topic, setTopic] = useState('');
   const [sort, setSort] = useState<'new' | 'popular'>('new');
-  const [feed, setFeed] = useState<FeedResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    let active = true;
+  const fetchFeed = useCallback(
+    () =>
+      getFeed({
+        city: city || undefined,
+        topic: topic || undefined,
+        sort,
+      }).then((response) => response.data),
+    [city, sort, topic],
+  );
 
-    const loadFeed = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        const response = await getFeed({
-          city: city || undefined,
-          topic: topic || undefined,
-          sort,
-        });
-
-        if (active) {
-          setFeed(response.data);
-        }
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити стрічку.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void loadFeed();
-
-    return () => {
-      active = false;
-    };
-  }, [city, sort, topic]);
+  const { data: feed, loading, error } = useAsyncData(fetchFeed, 'Не вдалося завантажити стрічку.');
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>

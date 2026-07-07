@@ -1,80 +1,73 @@
-import { useEffect, useState } from 'react';
-import { adminDeleteComment, adminDeleteMemory, banUser, getAdminUsers, getReports, type AdminReport, type AdminUser } from '@/api/admin';
+import { useCallback, useState } from 'react';
+import { adminDeleteComment, adminDeleteMemory, banUser, getAdminUsers, getReports, type AdminReport } from '@/api/admin';
 import { Button, Message } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAsyncData } from '@/hooks/useAsyncData';
 import { PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, formatDate, getErrorMessage } from '@/pages/pageShared';
 
 type AdminTab = 'reports' | 'users';
 
+const fetchAdminData = async () => {
+  const [reportsResponse, usersResponse] = await Promise.all([getReports(), getAdminUsers()]);
+  return { reports: reportsResponse.data, users: usersResponse.data };
+};
+
 export function AdminPage() {
   const { user: currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState<AdminTab>('reports');
-  const [reports, setReports] = useState<AdminReport[]>([]);
-  const [users, setUsers] = useState<AdminUser[]>([]);
-  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    let active = true;
+  const { data, setData, loading, error, setError } = useAsyncData(
+    fetchAdminData,
+    'Не вдалося завантажити дані адмін-панелі.',
+  );
+  const reports = data?.reports ?? [];
+  const users = data?.users ?? [];
 
-    const loadAdminData = async () => {
-      setLoading(true);
-      setError('');
-
+  const handleModerateReport = useCallback(
+    async (report: AdminReport) => {
       try {
-        const [reportsResponse, usersResponse] = await Promise.all([getReports(), getAdminUsers()]);
-        if (active) {
-          setReports(reportsResponse.data);
-          setUsers(usersResponse.data);
+        if (report.targetType === 'memory') {
+          await adminDeleteMemory(report.targetId);
+        } else if (report.targetType === 'comment') {
+          await adminDeleteComment(report.targetId);
+        } else {
+          setError('Невідомий тип цілі для видалення.');
+          return;
         }
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити дані адмін-панелі.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
+
+        setData((current) =>
+          current ? { ...current, reports: current.reports.filter((item) => item.id !== report.id) } : current,
+        );
+        setMessage('Контент видалено.');
+      } catch (actionError) {
+        setError(getErrorMessage(actionError, 'Не вдалося видалити контент.'));
       }
-    };
+    },
+    [setData, setError],
+  );
 
-    void loadAdminData();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  const handleModerateReport = async (report: AdminReport) => {
-    try {
-      if (report.targetType === 'memory') {
-        await adminDeleteMemory(report.targetId);
-      } else if (report.targetType === 'comment') {
-        await adminDeleteComment(report.targetId);
-      } else {
-        setError('Невідомий тип цілі для видалення.');
-        return;
+  const handleToggleBan = useCallback(
+    async (userId: number) => {
+      try {
+        const response = await banUser(userId);
+        setData((current) =>
+          current
+            ? {
+                ...current,
+                users: current.users.map((item) =>
+                  item.id === userId ? { ...item, isBanned: response.data.banned } : item,
+                ),
+              }
+            : current,
+        );
+        setMessage(response.data.banned ? 'Користувача заблоковано.' : 'Користувача розблоковано.');
+      } catch (actionError) {
+        setError(getErrorMessage(actionError, 'Не вдалося змінити статус користувача.'));
       }
-
-      setReports((current) => current.filter((item) => item.id !== report.id));
-      setMessage('Контент видалено.');
-    } catch (actionError) {
-      setError(getErrorMessage(actionError, 'Не вдалося видалити контент.'));
-    }
-  };
-
-  const handleToggleBan = async (userId: number) => {
-    try {
-      const response = await banUser(userId);
-      setUsers((current) =>
-        current.map((item) => (item.id === userId ? { ...item, isBanned: response.data.banned } : item)),
-      );
-      setMessage(response.data.banned ? 'Користувача заблоковано.' : 'Користувача розблоковано.');
-    } catch (actionError) {
-      setError(getErrorMessage(actionError, 'Не вдалося змінити статус користувача.'));
-    }
-  };
+    },
+    [setData, setError],
+  );
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMyMemories, type Memory } from '@/api/memories';
+import { getMyMemories } from '@/api/memories';
 import { Button, MemoryCard, Message } from '@/design-system';
-import { CARD_GRID_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, getErrorMessage, getMemoryExcerpt } from '@/pages/pageShared';
+import { useAsyncData } from '@/hooks/useAsyncData';
+import { CARD_GRID_STYLE, PAGE_HEADING_STYLE, PAGE_WRAPPER_STYLE, SURFACE_STYLE, getMemoryExcerpt } from '@/pages/pageShared';
 
 type FilterKey = 'all' | 'public' | 'private';
 
@@ -15,46 +16,17 @@ const FILTER_LABELS: Record<FilterKey, string> = {
 export function DashboardPage() {
   const navigate = useNavigate();
   const [filter, setFilter] = useState<FilterKey>('all');
-  const [memories, setMemories] = useState<Memory[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    let active = true;
+  const fetchMemories = useCallback(
+    () =>
+      getMyMemories(filter === 'all' ? undefined : { isPublic: filter === 'public' }).then(
+        (response) => response.data,
+      ),
+    [filter],
+  );
 
-    const loadMemories = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        const response = await getMyMemories(
-          filter === 'all'
-            ? undefined
-            : {
-                isPublic: filter === 'public',
-              },
-        );
-
-        if (active) {
-          setMemories(response.data);
-        }
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити ваші спогади.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void loadMemories();
-
-    return () => {
-      active = false;
-    };
-  }, [filter]);
+  const { data, loading, error } = useAsyncData(fetchMemories, 'Не вдалося завантажити ваші спогади.');
+  const memories = data ?? [];
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>

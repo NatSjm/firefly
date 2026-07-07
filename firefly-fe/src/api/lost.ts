@@ -1,6 +1,6 @@
 import client from './client';
 
-export interface LostRequest {
+export interface LostRequestSummary {
   id: number;
   userId: number;
   authorName: string;
@@ -8,8 +8,11 @@ export interface LostRequest {
   type: string;
   years?: string;
   description: string;
-  contactEmail: string;
   createdAt: string;
+}
+
+export interface LostRequest extends LostRequestSummary {
+  contactEmail: string;
 }
 
 export interface LostRequestCreate {
@@ -21,7 +24,7 @@ export interface LostRequestCreate {
 }
 
 export const getLostRequests = (params?: { city?: string; type?: string }) =>
-  client.get<LostRequest[]>('/lost-requests', { params });
+  client.get<LostRequestSummary[]>('/lost-requests', { params });
 
 export const getLostRequest = (id: number) => client.get<LostRequest>(`/lost-requests/${id}`);
 

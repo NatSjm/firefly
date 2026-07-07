@@ -11,7 +11,7 @@
     {
       "slice": "2026-07-06-add-lost-fireflies",
       "reviewEvidence": "missing",
-      "trailerCommits": 0,
+      "trailerCommits": 1,
       "libDomains": [],
       "processComplete": true
     },
@@ -40,10 +40,6 @@
     {
       "check": "review-evidence",
       "msg": "2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)"
-    },
-    {
-      "check": "trailer",
-      "msg": "2026-07-06-add-lost-fireflies: no commit carries a \"Slice: add-lost-fireflies\" trailer"
     },
     {
       "check": "review-evidence",

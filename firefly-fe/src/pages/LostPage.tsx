@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getLostRequests, type LostRequest } from '@/api/lost';
+import { getLostRequests } from '@/api/lost';
 import { Button, FilterBar, LostRequestCard, Message } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAsyncData } from '@/hooks/useAsyncData';
 import {
   CARD_GRID_STYLE,
   CITIES,
@@ -12,7 +13,7 @@ import {
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
   formatDate,
-  getErrorMessage,
+  getMemoryExcerpt,
 } from '@/pages/pageShared';
 
 export function LostPage() {
@@ -20,43 +21,18 @@ export function LostPage() {
   const { user } = useAuth();
   const [city, setCity] = useState('');
   const [type, setType] = useState('');
-  const [requests, setRequests] = useState<LostRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    let active = true;
+  const fetchRequests = useCallback(
+    () =>
+      getLostRequests({
+        city: city || undefined,
+        type: type ? LOST_TYPE_VALUE_BY_LABEL[type] : undefined,
+      }).then((response) => response.data),
+    [city, type],
+  );
 
-    const loadRequests = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        const response = await getLostRequests({
-          city: city || undefined,
-          type: type ? LOST_TYPE_VALUE_BY_LABEL[type] : undefined,
-        });
-
-        if (active) {
-          setRequests(response.data);
-        }
-      } catch (loadError) {
-        if (active) {
-          setError(getErrorMessage(loadError, 'Не вдалося завантажити запити.'));
-        }
-      } finally {
-        if (active) {
-          setLoading(false);
-        }
-      }
-    };
-
-    void loadRequests();
-
-    return () => {
-      active = false;
-    };
-  }, [city, type]);
+  const { data, loading, error } = useAsyncData(fetchRequests, 'Не вдалося завантажити запити.');
+  const requests = data ?? [];
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
@@ -103,9 +79,9 @@ export function LostPage() {
             <LostRequestCard
               key={request.id}
               city={request.city}
-              type={request.type as 'kindergarten' | 'school' | 'camp' | 'yard' | 'other'}
+              type={request.type}
               years={request.years}
-              description={request.description}
+              description={getMemoryExcerpt(request.description)}
               author={request.authorName}
               date={formatDate(request.createdAt)}
               onClick={() => navigate(`/lost/${request.id}`)}

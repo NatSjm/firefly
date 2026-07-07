@@ -1,5 +1,6 @@
 import React from "react";
 import { Badge } from "../badges/Badge";
+import { LOST_TYPE_LABEL } from "./lostTypeLabels";
 
 const PLACEHOLDER_PATTERN = "url('/design-system/assets/placeholder-pattern.svg')";
 
@@ -87,17 +88,10 @@ export function MemoryCard({
   );
 }
 
-const TYPE_LABEL: Record<string, string> = {
-  kindergarten: "Дитсадок",
-  school: "Школа",
-  camp: "Табір",
-  yard: "Двір",
-  other: "Інше",
-};
-
 export interface LostRequestCardProps {
   city: string;
-  type?: "kindergarten" | "school" | "camp" | "yard" | "other";
+  /** Backend value; unknown values fall back to being shown verbatim. */
+  type?: string;
   years?: string;
   description: string;
   author: string;
@@ -129,7 +123,7 @@ export function LostRequestCard({ city, type = "other", years, description, auth
     >
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Badge variant="topic" tone="moss">{city}</Badge>
-        <Badge variant="topic" tone="amber">{TYPE_LABEL[type] ?? type}</Badge>
+        <Badge variant="topic" tone="amber">{LOST_TYPE_LABEL[type] ?? type}</Badge>
         {years && <span style={{ fontSize: 12, color: "var(--text-tertiary)", alignSelf: "center" }}>{years}</span>}
       </div>
       <p style={{ fontSize: 15, color: "var(--text-primary)", lineHeight: "var(--lh-body)", margin: 0 }}>

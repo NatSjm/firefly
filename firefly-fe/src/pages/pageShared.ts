@@ -1,5 +1,7 @@
-import axios from 'axios';
 import type { CSSProperties } from 'react';
+import { LOST_TYPE_LABEL } from '@/design-system';
+
+export { getErrorMessage } from '@/lib/errors';
 
 export const PAGE_WRAPPER_STYLE: CSSProperties = {
   maxWidth: 'var(--content-max)',
@@ -41,13 +43,7 @@ export const TOPICS = ['Океан Ельзи', 'Бабусині рецепти
 
 export const MEMORY_TOPIC_OPTIONS = TOPICS.map((topic) => ({ value: topic, label: topic }));
 
-export const LOST_TYPE_LABELS: Record<string, string> = {
-  kindergarten: 'Дитсадок',
-  school: 'Школа',
-  camp: 'Табір',
-  yard: 'Двір',
-  other: 'Інше',
-};
+export const LOST_TYPE_LABELS = LOST_TYPE_LABEL;
 
 export const LOST_TYPE_OPTIONS = Object.entries(LOST_TYPE_LABELS).map(([value, label]) => ({ value, label }));
 
@@ -59,32 +55,6 @@ export const LOST_TYPE_VALUE_BY_LABEL = Object.fromEntries(
 
 export function getLostTypeLabel(value: string) {
   return LOST_TYPE_LABELS[value] ?? value;
-}
-
-export function getErrorMessage(error: unknown, fallback = 'Не вдалося виконати дію. Спробуйте ще раз.') {
-  if (axios.isAxiosError(error)) {
-    const responseData = error.response?.data;
-    const responseMessage =
-      typeof responseData === 'object' &&
-      responseData &&
-      'message' in responseData &&
-      typeof responseData.message === 'string'
-        ? responseData.message
-        : typeof responseData === 'object' &&
-            responseData &&
-            'error' in responseData &&
-            typeof responseData.error === 'string'
-          ? responseData.error
-        : undefined;
-
-    return responseMessage ?? error.message ?? fallback;
-  }
-
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
 }
 
 export function formatDate(value: string) {
