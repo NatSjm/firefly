@@ -8,8 +8,8 @@
         "build": "pnpm --filter firefly-fe run build",
         "test:run": "pnpm --filter firefly-fe run test:run",
         "test:coverage": "pnpm --filter firefly-fe run test:coverage",
-        "test:integration": "echo test:integration: run via docker compose in CI",
-        "test:e2e": "echo test:e2e: not yet configured",
+        "test:integration": "cd firefly-be && ..\\mvnw.cmd test -Dtest=*IntegrationTest",
+        "test:e2e": "playwright test",
         "check:trace": "node scripts/check-traceability.mjs",
         "check:trajectory": "node scripts/check-trajectory.mjs",
         "check:coverage": "node scripts/check-coverage-ratchet.mjs",
@@ -22,6 +22,7 @@
         "qa:record-proof": "node scripts/record-demos.mjs --proof"
     },
     "devDependencies": {
+        "@playwright/test": "^1.61.1",
         "typescript": "^6.0.3"
     }
 }

@@ -6,10 +6,10 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-07 20:59:00 (UTC+02:00)
-- **Current phase:** **Phase 4 — slice 6 complete, all MVP slices retrofitted**
-- **Active change:** none (slice `add-content-pages` archived)
-- **Progress:** Slice 6 `add-content-pages` completed the Phase 4 retrofit validation. The two static content pages (`/about` and `/rules`) were already implemented with correct Ukrainian content, design tokens, and no exclamation marks (BC-BRAND-01 compliance). Added tests (15 new: 6 for AboutPage, 9 for RulesPage) confirming FR-CONTENT-01 and FR-CONTENT-02 requirements. All validations passed.
+- **Date and time:** 2026-07-07 21:47:00 (UTC+02:00)
+- **Current phase:** **Phase 5 — Cross-cutting hardening complete**
+- **Active change:** none
+- **Progress:** Phase 5 complete. Integration test layer already exists in backend (7 IntegrationTest classes using Testcontainers PostgreSQL). Added E2E test layer with Playwright: 4 spec files (auth.spec.ts, rbac.spec.ts, core-flow.spec.ts, responsive.spec.ts) covering authentication, RBAC, core user journey, and responsive breakpoints. Created seed helper (e2e/helpers/seed-demo-data.ts) with deterministic IDs and idempotent upserts. Wired test:integration and test:e2e scripts. Full validation battery passed: lint 0 warnings, 83/83 unit tests, build green, OpenSpec 6/6 passed.
 
 Previous slice 5 `add-moderation-and-admin` progress: The three parallel reviewers (code, security, spec-compliance) found 5 majors and overlapping minors; all confirmed fixes were applied in one pass:
   - **FE — AdminPage:** Stale sibling report rows after cascade delete now properly removed (filter by targetType+targetId, not just clicked row id). Per-row `pendingIds` set prevents double-submit on delete and ban-toggle race. Cross-cleared banners: success clears error and vice versa.
@@ -147,11 +147,11 @@ npm run build
 npx openspec validate --all --strict
 ```
 
-Current test expectation: `firefly-fe` test/lint/build are green locally (0 warnings, 83/83 tests). `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start.
+Current test expectation: `firefly-fe` test/lint/build are green locally (0 warnings, 83/83 tests). `firefly-be` `mvnw test` is green when run with Docker available and `JAVA_HOME=%USERPROFILE%\.jdks\openjdk-26.0.1`; the shell default Java is too old and fails Surefire before tests start. `test:integration` runs backend IntegrationTest classes via mvnw. `test:e2e` runs Playwright E2E tests (requires both backend and frontend running).
 
 ## Next Task
 
-Phase 4 MVP retrofit complete. All 6 capability slices documented in OpenSpec and validated. Remaining backlog for post-MVP hardening: enum-typed roles/types, feed enrichment N+1 fix, LAZY fetching + entity graphs, CORS/JWT-secret hardening, like-toggle race, magic-byte photo validation, rate limiting (flagged minor, before public marketing push), lost-request `type` field server-side whitelist.
+Phase 5 complete. Next: **Phase 6 — QA proof pack + demo recordings + evals**. Tasks: 1) Author QA documentation pack (README, traceability matrix, test plan, demo script, risk register, acceptance report) from templates. 2) Add @trace FR-XX annotations to all test files to close 76 traceability warnings. 3) Create headless Playwright recording harness for demo recordings (one clip per capability with FR assertions). 4) Run eval-suite workflow over eval cases and establish baseline. 5) Run qa:verify to regenerate automated-verification-latest.md. Gate G6 checkpoint.
 
 ## Environment / Deployment
 
