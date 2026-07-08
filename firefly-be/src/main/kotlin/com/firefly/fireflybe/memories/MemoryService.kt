@@ -43,6 +43,7 @@ class MemoryService(
 
     @Transactional
     fun create(user: User, req: MemoryRequest, photo: MultipartFile?): MemoryDto {
+        validateYearRange(req.yearFrom, req.yearTo)
         val memory = Memory(
             user = user,
             type = req.type.trim(),
@@ -70,6 +71,7 @@ class MemoryService(
 
     @Transactional
     fun update(id: Long, user: User, req: MemoryRequest, photo: MultipartFile?): MemoryDto {
+        validateYearRange(req.yearFrom, req.yearTo)
         val memory = findOrThrow(id)
         if (memory.user.id != user.id) {
             throw forbidden()
@@ -161,4 +163,13 @@ class MemoryService(
     }
 
     private fun forbidden() = ApiException(HttpStatus.FORBIDDEN, "Доступ заборонено")
+
+    private fun validateYearRange(yearFrom: Int?, yearTo: Int?) {
+        if (yearFrom != null && yearTo != null && yearFrom > yearTo) {
+            throw ApiException(
+                HttpStatus.BAD_REQUEST,
+                "Перевірте діапазон років — кінцевий рік не може бути раніше початкового."
+            )
+        }
+    }
 }

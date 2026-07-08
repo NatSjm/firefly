@@ -13,8 +13,11 @@ data class MemoryRequest(
     @field:Size(max = 255, message = "Назва не може перевищувати 255 символів")
     val title: String,
     @field:NotBlank
+    @field:Size(max = 20000, message = "Текст не може перевищувати 20000 символів")
     val text: String,
+    @field:Size(max = 20000, message = "Інгредієнти не можуть перевищувати 20000 символів")
     val ingredients: String? = null,
+    @field:Size(max = 20000, message = "Кроки не можуть перевищувати 20000 символів")
     val steps: String? = null,
     @field:Size(max = 120)
     val city: String? = null,

@@ -17,13 +17,13 @@ Result: PASS, 3 warning(s)
 | FR-AUTH-03 | yes | yes | 1 | yes |
 | FR-AUTH-04 | yes | yes | - | - |
 | FR-AUTH-05 | yes | yes | 6 | yes |
-| FR-MEM-01 | yes | yes | 5 | yes |
+| FR-MEM-01 | yes | yes | 7 | yes |
 | FR-MEM-02 | yes | yes | 3 | yes |
 | FR-MEM-03 | yes | yes | 2 | yes |
 | FR-MEM-04 | yes | yes | 8 | yes |
 | FR-MEM-05 | yes | yes | 2 | yes |
 | FR-MEM-06 | yes | yes | 2 | yes |
-| FR-FEED-01 | yes | yes | 6 | yes |
+| FR-FEED-01 | yes | yes | 8 | yes |
 | FR-FEED-02 | yes | yes | 4 | yes |
 | FR-FEED-03 | yes | yes | 2 | yes |
 | FR-FEED-04 | yes | yes | 1 | yes |

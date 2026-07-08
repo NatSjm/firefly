@@ -14,8 +14,8 @@ Result: PASS, 9 warning(s)
 | 2026-07-06-add-lost-fireflies | **missing** | 3 | yes | - |
 | 2026-07-06-add-personal-archive | **unclean** | 1 | yes | - |
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
-| 2026-07-07-2026-07-07-add-moderation-and-admin | **missing** | **0** | yes | - |
 | 2026-07-07-add-content-pages | **missing** | **0** | **no** | - |
+| 2026-07-07-add-moderation-and-admin | **missing** | **0** | yes | - |
 
 ## Cross-slice module overlap
 
@@ -31,8 +31,8 @@ None.
 - **review-evidence**: 2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)
 - **review-evidence**: 2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)
-- **review-evidence**: 2026-07-07-2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)
-- **trailer**: 2026-07-07-2026-07-07-add-moderation-and-admin: no commit carries a "Slice: 2026-07-07-add-moderation-and-admin" trailer
 - **review-evidence**: 2026-07-07-add-content-pages: review-findings.json is missing (review must have run clean before archive)
 - **process**: 2026-07-07-add-content-pages: archived change is missing design.md and/or tasks.md
 - **trailer**: 2026-07-07-add-content-pages: no commit carries a "Slice: add-content-pages" trailer
+- **review-evidence**: 2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)
+- **trailer**: 2026-07-07-add-moderation-and-admin: no commit carries a "Slice: add-moderation-and-admin" trailer

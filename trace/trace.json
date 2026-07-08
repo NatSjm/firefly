@@ -206,6 +206,8 @@
         "e2e/core-flow.spec.ts",
         "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
         "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
         "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
       ],
       "recordings": [
@@ -298,6 +300,8 @@
       "tests": [
         "evals/cases/feed.eval.ts",
         "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
         "firefly-fe/src/test/pages/FeedPage.test.tsx",
         "firefly-fe/src/test/pages/FeedPage.test.tsx",
         "firefly-fe/src/test/pages/FeedPage.test.tsx",

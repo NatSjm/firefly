@@ -10,20 +10,20 @@ The system SHALL provide a public `/about` page that describes what Svitlyachok 
 #### Scenario: About page renders project description
 
 - **WHEN** any visitor navigates to `/about`
-- **THEN** the page renders a heading "��� �����"
-- **AND** the page shows a section "�� ���� ��������" describing the project as a Ukrainian community for preserving and sharing childhood memories
+- **THEN** the page renders a heading "Про проєкт"
+- **AND** the page shows a section "Що таке Світлячок" describing the project as a Ukrainian community for preserving and sharing childhood memories
 - **AND** the description mentions personal archive, community features, and finding lost photos
 
 #### Scenario: About page renders target audience
 
 - **WHEN** the `/about` page renders
-- **THEN** a section "��� ���� ��� ������" describes the target audience
+- **THEN** a section "Для кого цей простір" describes the target audience
 - **AND** the text mentions family stories, recipes, lost photos from school/kindergarten/camp/yards, and supporting others
 
 #### Scenario: About page renders usage information
 
 - **WHEN** the `/about` page renders
-- **THEN** a section "�� ��� ����� ������" lists available features
+- **THEN** a section "Що тут можна робити" lists available features
 - **AND** the text mentions creating private and public memories, reading the feed, leaving warmth, commenting, editing profile, and posting lost firefly requests
 
 #### Scenario: About page is accessible without authentication
@@ -46,7 +46,7 @@ The system SHALL provide a public `/rules` page that presents community guidelin
 #### Scenario: Rules page renders community guidelines
 
 - **WHEN** any visitor navigates to `/rules`
-- **THEN** the page renders a heading "������� ��������"
+- **THEN** the page renders a heading "Правила спільноти"
 - **AND** the page shows an ordered list of community rules
 
 #### Scenario: Rules cover required topics
@@ -56,7 +56,7 @@ The system SHALL provide a public `/rules` page that presents community guidelin
 - **AND** the rules include a guideline about no political conflicts
 - **AND** the rules include a guideline about no spam or advertising
 - **AND** the rules include a guideline about not sharing others' personal data without consent
-- **AND** the rules include a call-to-action to use the "������������" button when violations are observed
+- **AND** the rules include a call-to-action to use the "Поскаржитися" button when violations are observed
 
 #### Scenario: Rules page is accessible without authentication
 

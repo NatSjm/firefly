@@ -53,7 +53,7 @@ export function MemoryFormPage() {
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [fieldErrors, setFieldErrors] = useState<{ title?: string; text?: string }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ title?: string; text?: string; yearFrom?: string; yearTo?: string }>({});
 
   const cityOptions = useMemo(() => getCityOptions(), []);
   const topicOptions = useMemo(() => getTopicOptions(), []);
@@ -77,8 +77,15 @@ export function MemoryFormPage() {
       setLoading(true);
       setError('');
 
+      const memoryId = Number(id);
+      if (!Number.isFinite(memoryId)) {
+        setError(t('memory.invalidId'));
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await getMemory(Number(id), controller.signal);
+        const response = await getMemory(memoryId, controller.signal);
         if (!active) {
           return;
         }
@@ -128,15 +135,30 @@ export function MemoryFormPage() {
     event.preventDefault();
     setError('');
 
-    const nextFieldErrors: { title?: string; text?: string } = {};
+    const nextFieldErrors: { title?: string; text?: string; yearFrom?: string; yearTo?: string } = {};
     if (!form.title.trim()) {
       nextFieldErrors.title = t('memory.form.titleRequired');
     }
     if (!form.text.trim()) {
       nextFieldErrors.text = t('memory.form.textRequired');
     }
+
+    const yearFromText = form.yearFrom.trim();
+    const yearToText = form.yearTo.trim();
+    const yearFrom = yearFromText ? Number(yearFromText) : undefined;
+    const yearTo = yearToText ? Number(yearToText) : undefined;
+    if (yearFromText && (!/^\d+$/.test(yearFromText) || !Number.isFinite(yearFrom))) {
+      nextFieldErrors.yearFrom = t('memory.form.yearInvalid');
+    }
+    if (yearToText && (!/^\d+$/.test(yearToText) || !Number.isFinite(yearTo))) {
+      nextFieldErrors.yearTo = t('memory.form.yearInvalid');
+    }
+    if (!nextFieldErrors.yearFrom && !nextFieldErrors.yearTo && yearFrom !== undefined && yearTo !== undefined && yearFrom > yearTo) {
+      nextFieldErrors.yearTo = t('memory.form.yearRangeInvalid');
+    }
+
     setFieldErrors(nextFieldErrors);
-    if (nextFieldErrors.title || nextFieldErrors.text) {
+    if (nextFieldErrors.title || nextFieldErrors.text || nextFieldErrors.yearFrom || nextFieldErrors.yearTo) {
       return;
     }
 
@@ -148,8 +170,8 @@ export function MemoryFormPage() {
       steps: form.type === 'recipe' && form.steps.trim() ? form.steps.trim() : undefined,
       city: form.city || undefined,
       topicSlug: form.topicSlug || undefined,
-      yearFrom: form.yearFrom ? Number(form.yearFrom) : undefined,
-      yearTo: form.yearTo ? Number(form.yearTo) : undefined,
+      yearFrom,
+      yearTo,
       isPublic: form.isPublic,
     };
 
@@ -244,18 +266,26 @@ export function MemoryFormPage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 'var(--space-5)' }}>
-            <Field label={t('memory.form.yearFrom')}>
+            <Field label={t('memory.form.yearFrom')} error={fieldErrors.yearFrom}>
               <TextInput
                 value={form.yearFrom}
-                onChange={(event) => handleChange('yearFrom', event.target.value)}
+                error={fieldErrors.yearFrom}
+                onChange={(event) => {
+                  handleChange('yearFrom', event.target.value);
+                  setFieldErrors((current) => ({ ...current, yearFrom: undefined }));
+                }}
                 placeholder={t('memory.form.yearFromPlaceholder')}
                 inputMode="numeric"
               />
             </Field>
-            <Field label={t('memory.form.yearTo')}>
+            <Field label={t('memory.form.yearTo')} error={fieldErrors.yearTo}>
               <TextInput
                 value={form.yearTo}
-                onChange={(event) => handleChange('yearTo', event.target.value)}
+                error={fieldErrors.yearTo}
+                onChange={(event) => {
+                  handleChange('yearTo', event.target.value);
+                  setFieldErrors((current) => ({ ...current, yearTo: undefined }));
+                }}
                 placeholder={t('memory.form.yearToPlaceholder')}
                 inputMode="numeric"
               />

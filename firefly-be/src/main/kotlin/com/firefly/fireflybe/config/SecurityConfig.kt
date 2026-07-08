@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class SecurityConfig(private val jwtFilter: JwtFilter) {
+class SecurityConfig(private val jwtFilter: JwtFilter, private val rateLimitFilter: RateLimitFilter) {
 
     @Bean
     fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
@@ -49,13 +49,15 @@ class SecurityConfig(private val jwtFilter: JwtFilter) {
                     .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/feed").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/memories/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/memories/{id}").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/memories/{memoryId}/comments").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/lost-requests/**").permitAll()
                     .requestMatchers("/uploads/**").permitAll()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(rateLimitFilter, JwtFilter::class.java)
         return http.build()
     }
 }

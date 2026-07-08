@@ -91,6 +91,35 @@ describe('MemoryFormPage', () => {
     expect(screen.getByText('Додайте текст спогаду.')).toBeInTheDocument();
     expect(apiMocks.createMemory).not.toHaveBeenCalled();
   });
+
+  // @trace FR-MEM-01
+  it('blocks submission with an inline message when yearTo is before yearFrom', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.type(screen.getByLabelText(/Назва/), 'Спогад');
+    await user.type(screen.getByLabelText(/Текст/), 'Текст спогаду');
+    await user.type(screen.getByLabelText(/Рік від/), '2020');
+    await user.type(screen.getByLabelText(/Рік до/), '1990');
+    await user.click(screen.getByRole('button', { name: 'Створити спогад' }));
+
+    expect(screen.getByText('Кінцевий рік не може бути раніше початкового.')).toBeInTheDocument();
+    expect(apiMocks.createMemory).not.toHaveBeenCalled();
+  });
+
+  // @trace FR-MEM-01
+  it('blocks submission with an inline message when a year field is not numeric', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.type(screen.getByLabelText(/Назва/), 'Спогад');
+    await user.type(screen.getByLabelText(/Текст/), 'Текст спогаду');
+    await user.type(screen.getByLabelText(/Рік від/), 'abcd');
+    await user.click(screen.getByRole('button', { name: 'Створити спогад' }));
+
+    expect(screen.getByText('Введіть рік цифрами, наприклад 1998.')).toBeInTheDocument();
+    expect(apiMocks.createMemory).not.toHaveBeenCalled();
+  });
 });
 
 function renderPage() {

@@ -34,6 +34,14 @@ class MemoryServiceTest {
     private fun memory(owner: User, isPublic: Boolean) =
         Memory(id = 1, user = owner, title = "Спогад", text = "Текст", isPublic = isPublic)
 
+    private fun request(yearFrom: Int?, yearTo: Int?) = MemoryRequest(
+        type = "story",
+        title = "Спогад",
+        text = "Текст",
+        yearFrom = yearFrom,
+        yearTo = yearTo
+    )
+
     // @trace FR-MEM-03
     @Test
     fun `public memory is viewable anonymously`() {
@@ -120,5 +128,29 @@ class MemoryServiceTest {
         service().deletePhotoFiles(listOf("/uploads/../outside.jpg"))
 
         assertTrue(Files.exists(outside))
+    }
+
+    // @trace FR-MEM-01
+    @Test
+    fun `create rejects a backwards year range before touching the repository`() {
+        val owner = User(id = 1)
+
+        val exception = assertThrows<ApiException> {
+            service().create(owner, request(yearFrom = 2020, yearTo = 1990), photo = null)
+        }
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
+    }
+
+    // @trace FR-MEM-01
+    @Test
+    fun `update rejects a backwards year range before touching the repository`() {
+        val owner = User(id = 1)
+
+        val exception = assertThrows<ApiException> {
+            service().update(id = 1, user = owner, req = request(yearFrom = 2020, yearTo = 1990), photo = null)
+        }
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
     }
 }

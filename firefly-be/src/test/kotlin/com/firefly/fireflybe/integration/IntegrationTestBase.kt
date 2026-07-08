@@ -114,6 +114,10 @@ abstract class IntegrationTestBase {
             registry.add("spring.datasource.username", postgres::getUsername)
             registry.add("spring.datasource.password", postgres::getPassword)
             registry.add("app.upload.dir") { uploadDir.toString() }
+            // Integration tests legitimately register/login far more often per
+            // minute than a real client — the auth rate limiter would otherwise
+            // 429 them (see RateLimitFilter).
+            registry.add("app.rate-limit.enabled") { "false" }
         }
     }
 }

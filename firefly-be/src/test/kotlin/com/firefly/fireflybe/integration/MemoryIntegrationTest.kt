@@ -51,6 +51,12 @@ class MemoryIntegrationTest : IntegrationTestBase() {
 
     // @trace FR-MEM-04
     @Test
+    fun `anonymous request for my memories is rejected with 401, not 500`() {
+        mockMvc.get("/api/memories").andExpect { status { isUnauthorized() } }
+    }
+
+    // @trace FR-MEM-04
+    @Test
     fun `my memories lists only own memories with visibility and type filters`() {
         val mine = register(email = "mine@example.com")
         val other = register(email = "other@example.com")

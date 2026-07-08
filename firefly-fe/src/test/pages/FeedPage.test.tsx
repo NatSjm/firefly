@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as feedApi from '@/api/feed';
@@ -110,5 +111,36 @@ describe('FeedPage', () => {
     renderFeed();
 
     expect(await screen.findByText('Знайдено 1 спогадів')).toBeInTheDocument();
+  });
+
+  // @trace FR-FEED-01
+  it('hides pagination controls when there is only one page', async () => {
+    mockFeed.mockResolvedValue(feedWithOneItem as never);
+
+    renderFeed();
+
+    await screen.findByRole('heading', { name: 'Перший день у школі' });
+    expect(screen.queryByRole('button', { name: 'Наступна сторінка' })).not.toBeInTheDocument();
+  });
+
+  // @trace FR-FEED-01
+  it('advances to the next page and refetches with the incremented page param', async () => {
+    const user = userEvent.setup();
+    const multiPageFeed = {
+      data: { ...feedWithOneItem.data, total: 21, page: 0, totalPages: 2 },
+    };
+    mockFeed.mockResolvedValue(multiPageFeed as never);
+
+    renderFeed();
+
+    const nextButton = await screen.findByRole('button', { name: 'Наступна сторінка' });
+    expect(screen.getByRole('button', { name: 'Попередня сторінка' })).toBeDisabled();
+
+    await user.click(nextButton);
+
+    expect(mockFeed).toHaveBeenLastCalledWith(
+      expect.objectContaining({ page: 1 }),
+      expect.anything(),
+    );
   });
 });

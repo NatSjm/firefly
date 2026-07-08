@@ -140,8 +140,9 @@ Feed and lost-request list endpoints clamp page size to 1–100. On massive data
 **Current Mitigation:**
 - ✅ Default page size 10 (reasonable)
 - ✅ Max page size clamped to 100 (prevents abuse queries)
-- ✅ Indexes on `is_public`, `city`, `topic` optimize filtering
+- ❌ **Correction (found while writing `docs/technical/data-model.md` in Phase 7):** this line previously claimed indexes exist on `is_public`/`city`/`topic_slug` — verified against the actual Flyway migrations (`firefly-be/src/main/resources/db/migration/V2__create_memories.sql` etc.) and **no such indexes exist**. Only primary-key/unique indexes are present. Low risk at MVP scale (small table, `ddl-auto=validate` means a migration would be needed to add one), but the mitigation claim was aspirational, not real — corrected here rather than left stale.
 - ✅ Tests verify page clamp behavior
+- ✅ **Fixed in Phase 7 global review:** the backend always supported `page`/`size`, but `/feed` had no UI to reach page 2+ — any filter combination with more than 20 public memories left the rest permanently unreachable. Added prev/next pagination controls to `FeedPage.tsx`, regression-tested.
 
 **Actions Required:**
 1. Monitor slow query logs in production
@@ -287,14 +288,14 @@ JWT signing key (JWT_SECRET env var) is sensitive. If leaked, attackers can forg
 **Likelihood:** Low (if secrets managed properly)  
 **Impact:** Critical (authentication bypass)  
 **Current Mitigation:**
-- ✅ JWT_SECRET stored in .env.local (never committed)
 - ✅ Backend uses bcrypt + Spring Security JWT filter (standard)
 - ✅ Token includes exp claim (default 24 hours)
+- ⚠️ **Found in Phase 7 global security review:** `application.properties` ships a real-looking placeholder default (`svitlyachok-secret-key-change-in-production-min-32-chars`) that signs tokens if `JWT_SECRET` is never overridden — anyone who reads the repo could forge an admin token on such a deployment. Since the app has no Spring profile mechanism to distinguish dev/test from prod, we did not make this fail-fast (that would also break local dev and CI, which don't set the env var). **Mitigation added:** `JwtService.warnIfSecretIsInsecure()` logs a loud `ERROR`-level warning at startup if the secret is still a known placeholder or blank — verify this log is CLEAN (no warning) before any real deployment.
 - ❌ **Residual Risk:** No key rotation policy; token revocation not implemented
 
 **Actions Required:**
 1. Document secrets management (use GitHub Secrets in CI, AWS Secrets Manager in prod)
-2. Set strong JWT_SECRET (64+ character random string)
+2. Set strong JWT_SECRET (64+ character random string) and confirm the startup log has no JWT security warning
 3. Implement token refresh endpoint (post-MVP for better security)
 4. Monitor for token leaks in GitHub (GitHub Secret Scanning enabled)
 5. Test secret rotation procedure
@@ -444,6 +445,48 @@ If any EU users access the platform, GDPR applies. Data export, deletion request
 
 **Owner:** Legal / Product Lead / Backend Lead  
 **Target Resolution:** Before production (or soft-launch with privacy policy draft)
+
+---
+
+### Risk S9: Private Memory Photos Reachable Through Static File Serving
+
+**Description:**
+`GET /api/memories/{id}` correctly enforces the private-memory ownership guard (`ensureViewAllowed`), but the memory's photo file is served from the fully public, unauthenticated `/uploads/**` static directory. The only protection is an unguessable UUID filename — there is no ownership check at the file-serving layer. Found in the Phase 7 global security review; not fixed in this pass (would require proxying photo bytes through an authenticated controller endpoint, a larger architecture change than the MVP scope justifies right now).
+
+**Likelihood:** Low (requires the URL to leak — referrer header, shared link, browser history sync)
+**Impact:** Low-Medium (a private photo could be viewed without auth if its URL leaks)
+**Current Mitigation:**
+- ✅ JSON metadata for private memories is properly guarded
+- ✅ Filenames are random UUIDs, not sequential/guessable
+- ❌ **Residual Risk:** no auth check on the file bytes themselves
+
+**Actions Required:**
+1. If private-photo confidentiality becomes a hard requirement, add an authenticated `/api/memories/{id}/photo` endpoint reusing `ensureViewAllowed`, and stop serving `/uploads/**` publicly for private memories
+2. Until then, document this limitation for users choosing "private" visibility
+
+**Owner:** Backend Lead
+**Target Resolution:** Post-MVP (revisit if private-memory usage grows)
+
+---
+
+### Risk S10: Auth Token in localStorage (No httpOnly Cookie)
+
+**Description:**
+The JWT is persisted via `localStorage` and attached to requests from JS (`firefly-fe/src/api/token.ts`, `client.ts`). Found in the Phase 7 global security review. There is currently no `dangerouslySetInnerHTML` or other unsanitized-render path anywhere in the frontend, so there is no known exploitable XSS vector today — but any future XSS bug would allow full token exfiltration, unlike an httpOnly-cookie design.
+
+**Likelihood:** Low (no known XSS vector currently)
+**Impact:** High if a future XSS bug is introduced (full account takeover)
+**Current Mitigation:**
+- ✅ No `dangerouslySetInnerHTML` anywhere in `firefly-fe/src` (verified in Phase 7 review)
+- ✅ React's default JSX escaping is relied on throughout, never bypassed
+- ❌ **Residual Risk:** architecture allows JS to read the token at all
+
+**Actions Required:**
+1. Keep enforcing "no unsanitized rendering of user content" in code review — this is the only current mitigation
+2. If auth is reworked in a future slice, consider httpOnly + `SameSite` + `Secure` session cookies instead
+
+**Owner:** Security Lead / Frontend Lead
+**Target Resolution:** Post-MVP architecture review
 
 ---
 

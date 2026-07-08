@@ -375,7 +375,7 @@ export function MemoryDetailPage() {
               type="button"
               onClick={handleToggleLike}
               disabled={!user || updatingLike}
-              title={user ? undefined : t('memory.comments.signInPrompt')}
+              title={user ? undefined : t('memory.warmthSignInPrompt')}
               style={{
                 border: '1px solid var(--primary-soft-border)',
                 borderRadius: 'var(--radius-pill)',
@@ -390,6 +390,11 @@ export function MemoryDetailPage() {
             >
               {t('memory.warmth', { total: memory.likesCount })}
             </button>
+            {!user ? (
+              <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)', fontSize: 'var(--text-body-sm)' }}>
+                {t('memory.warmthSignInPrompt')}
+              </span>
+            ) : null}
             <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
               {t('memory.commentsCount', { total: memory.commentsCount })}
             </span>

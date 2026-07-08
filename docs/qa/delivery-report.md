@@ -1,0 +1,355 @@
+# Firefly (Світлячок) — MVP Delivery Report
+
+**Prepared:** 2026-07-08 (Europe/Kyiv, UTC+02:00)
+**Prepared for:** project stakeholder / customer sign-off
+**Repository state as of writing:** branch `mvp-implementation`, latest commit
+`c56c0fc` ("fix(eval-remediation): close Gate G6 — 14/14 eval cases now pass")
+
+---
+
+## 1. Executive summary
+
+Firefly (Світлячок) — a Ukrainian childhood-memories community platform — has
+its full MVP scope (37 functional requirements across 6 capabilities, per
+`docs/requirements.md` and `docs/mvp-capability-plan.md`) implemented, tested,
+and reviewed. **Current status: MVP complete; Phase 7 (global review,
+hardening, documentation) is done except deployment, which is pending
+user-provided secrets and explicit approval.**
+
+What "done" means concretely, with evidence cited throughout this report:
+
+- All 6 capability slices are implemented and archived in OpenSpec
+  (`npx openspec validate --all --strict` → 6/6 pass, no active changes).
+- Automated test suite is green: 88/88 frontend unit tests, 116/116 backend
+  tests (78 unit + 38 integration against a real Testcontainers PostgreSQL),
+  13/14 Playwright end-to-end tests pass (1 skipped by design, requires an
+  admin-role env var not configured for local/CI runs) — see
+  `docs/qa/automated-verification-latest.md`.
+- A graded-quality bar (evals, not just pass/fail tests) shows 14/14 passing
+  cases across 4 dimensions (error-clarity, empty-state-usability,
+  copy-tone, auth-security) — see `docs/qa/eval-report.md`.
+- A **fresh judge graded the development process itself** (not just the
+  product) and found this MVP was largely built **retrofit-first**: Project
+  Factory's spec→test→implement→review→archive discipline was onboarded onto
+  already-working code, not used to drive it from day one. This is disclosed
+  plainly in §4 below — it is a real, known characteristic of how this MVP
+  was delivered, not a hidden defect.
+- A whole-codebase security/correctness review (this session) found and
+  fixed 7 issues before release, described in §5.
+- 13 demo-recording clips exist, each checked by the recording-integrity
+  script and a vision pass — `docs/qa/demo-recordings/`.
+
+**Not yet done:** production deployment (needs a real `JWT_SECRET` and other
+environment values from the customer, plus explicit approval — see §7 Ops
+Actions), and a live Lighthouse/HTTPS audit (currently untested against a
+deployed target — see the risk register).
+
+---
+
+## 2. Capability-by-capability summary
+
+FR/NFR ownership per `docs/mvp-capability-plan.md` §5; test counts per
+`docs/current-state.md` "Latest checks" entries and the current full-suite
+run in `docs/qa/automated-verification-latest.md`.
+
+| # | Capability | FRs owned | Automated test evidence | OpenSpec status |
+|---|---|---|---|---|
+| 1 | `add-identity-and-access` | FR-SHELL-01–04, FR-AUTH-01–05 (9) | BE: `AuthIntegrationTest` (6 tests, real DB); FE: `LoginPage`/`RegisterPage`/`ProtectedRoute` (9 tests) | Archived, spec valid |
+| 2 | `add-personal-archive` | FR-MEM-01–06, FR-TOPIC-01–02, FR-CITY-01 (9) | BE: `MemoryIntegrationTest` (10 tests, incl. anonymous-401 regression); FE: `DashboardPage`/`MemoryFormPage`/`MemoryDetailPage` (21 tests) | Archived, spec valid |
+| 3 | `add-public-feed-and-social` | FR-FEED-01–07, FR-TOPIC-02, FR-CITY-02 (9) | BE: `FeedIntegrationTest` + `SocialIntegrationTest` (11 tests); FE: `FeedPage` (7 tests incl. pagination) + `FeedSocialPage` (5 tests) | Archived, spec valid |
+| 4 | `add-lost-fireflies` | FR-LOST-01–05 (5) | BE: `LostAndReportIntegrationTest` (6 tests); FE: `LostPage` (8), `LostNewPage` (6, incl. backwards-year-range), `LostDetailPage` (4) | Archived, spec valid |
+| 5 | `add-moderation-and-admin` | FR-MOD-02–05 (4) | BE: `AdminIntegrationTest` (5 tests); FE: `AdminPage` (11 tests) | Archived, spec valid |
+| 6 | `add-content-pages` | FR-CONTENT-01–02, FR-MOD-01 ("/rules" page) (3) | FE: `AboutPage` (6), `RulesPage` (9) | Archived, spec valid |
+
+Full-repo test totals (this session's re-run, `docs/qa/automated-verification-latest.md`):
+FE 88/88 unit tests (15 files), BE 116/116 tests total (38 shown running as
+the `*IntegrationTest` filter — the remaining are unit tests), Playwright
+E2E 13 passed / 1 skipped by design, lint 0 warnings, production build green,
+`npx openspec validate --all --strict` 6/6 pass.
+
+Traceability: `check-traceability.mjs` reports **0 failures** across the 38
+MVP FRs it checks, with 3 pre-existing warnings (FR-AUTH-04 missing an
+explicit `@trace` test annotation and recording reference, FR-TOPIC-01 not
+directly referenced by a recording manifest — both are exercised indirectly
+by other tests/recordings but lack the explicit trace tag; see
+`docs/qa/automated-verification-latest.md` §traceability). These are
+disclosed, not hidden.
+
+---
+
+## 3. Quality evidence
+
+### 3.1 Eval suite — the graded-quality bar
+
+`docs/qa/eval-report.md` (generated by the `eval-suite` workflow, graded by a
+fresh `eval-judge` agent, maker≠checker): **14/14 cases pass** across 4
+dimensions — error-clarity 86.0, empty-state-usability 83.0, copy-tone 78.0,
+auth-security 86.0 (all ratcheted, guarded by `check-eval-ratchet.mjs`, which
+this session's `automated-verification-latest.md` confirms passes for all
+four). Two real product bugs were found and fixed by this process before this
+report was written: a backwards year-range on Lost Fireflies requests was
+silently accepted (fixed with client + server validation), and missing-field
+validation on the memory and lost-request forms used one combined banner
+instead of per-field errors (fixed with per-field inline messages). Both
+fixes have regression tests and were re-verified live against a running
+backend. The eval report **decides** pass/fail per case; recordings
+illustrate but do not substitute for that verdict.
+
+### 3.2 Trajectory eval — grading the process, not just the product
+
+`docs/qa/trajectory-eval-report.md`, produced this session by a fresh
+`eval-judge` agent per archived slice (6 agents, each independently scoring
+process-order, test-integrity, in-scope, craft): **17 of 24 judgements pass,
+7 fail.**
+
+**Plain disclosure:** 5 of the 6 archived capability slices **fail the
+`process-order` dimension** (mean 38.8/100). The root cause, confirmed
+directly against git history and the archived spec text (not just judge
+assertion): this application's code was written first, and Project Factory's
+spec-first, test-first (red→green) discipline was **onboarded onto that
+pre-existing code** via `/project-factory:onboard` (commit
+`9aaa89a chore: /project-factory:onboard — retrofit all 6 MVP slices`), not
+used to drive development from an empty repository via `/project-factory:init`.
+The `add-public-feed-and-social` slice's own archived `proposal.md` says so
+explicitly: *"This change captures the already-implemented public memory
+feed... so the slice can move through Phase 4 with explicit tests, review
+evidence, and archive history."*
+
+What this means in practice: specs, tests, and review records for the 6 MVP
+slices were **written and validated against working code**, not used to
+drive a red-phase-first implementation. This is disclosed as a genuine
+characteristic of this delivery, not concealed. It does **not** mean the
+tests are fake — the same trajectory-eval report independently confirms
+`test-integrity` (mean 79.3/100) and `craft` (mean 82.7/100) **pass on all 6
+slices**, with judges directly inspecting test files (not just trusting
+prose) and finding real, specific assertions. `add-personal-archive` is the
+strongest slice (72/78/88/74), whose review record shows 4 genuine defects
+found and fixed pre-archive (missing `@Transactional`, an unrestricted
+upload-type acceptance, orphaned files on delete, a duplicated authorization
+guard).
+
+Two slices also fail `in-scope`: `add-public-feed-and-social` (an untracked
+backend service-layer refactor) and `add-lost-fireflies` (whose own commit
+message admits "architecture refactor" bundled into a UI-polish commit, plus
+a separate cross-cutting sweep). The code today is correct and tested in both
+cases; the finding is about historical process discipline, not current
+defects.
+
+**Decision on record:** git history was **not** rewritten to fabricate a
+red-phase or backdate trailers — that would trade an honest record for a
+dishonest one. Going forward, all new slices/bug fixes run the full
+spec→red→green→review→archive loop, as this session's Phase 7 global review
+already did using the structured multi-agent review-gate format.
+
+### 3.3 Demo recordings
+
+13 clips in `docs/qa/demo-recordings/` (`01-auth-register` through
+`13-auth-guard-negative`), each with a `.webm` recording, a settled `.png`
+still, and a `.md` manifest entry citing the FRs it proves. All 13 pass
+`node scripts/check-recordings.mjs` (0 failures, 0 warnings —
+`docs/qa/automated-verification-latest.md`) and were separately reviewed by
+a `vision-judge` pass in a prior session, which caught and led to the fix of
+a genuine mobile-viewport CSS bug (header nav overlapping the wordmark below
+720px — fixed in `firefly-fe/src/design-system/tokens/base.css` /
+`Navigation.tsx`). Recordings **illustrate** the capabilities for a human
+reviewer; the eval report in §3.1, not the recordings, is the pass/fail
+authority for graded-quality claims.
+
+---
+
+## 4. Honest characterization of the delivery process
+
+To be direct with the reader who was not in the room: this MVP was not built
+by writing OpenSpec change proposals first, watching tests fail, then
+implementing to green, one capability at a time, from an empty repository.
+It was built by developing the application first (July 5–7), then bringing
+it under the Project Factory spec/test/review/archive discipline via
+`/project-factory:onboard`, documenting and testing the existing behavior
+retroactively, and — from Phase 7 forward — running the full rigorous loop
+(global security/correctness review-gate, trajectory evals, this
+documentation pass) as new work. The trajectory-eval report (§3.2) is the
+authoritative, judge-graded record of this; nothing here overrides it.
+
+---
+
+## 5. Global Phase 7 hardening findings
+
+This session ran a whole-codebase review (code-reviewer, security-reviewer,
+spec-compliance-auditor, run in parallel as fresh agents, findings verified
+directly against the code before any fix was applied) — not a single-slice
+review. Presenting this as **issues found and fixed before release**, which
+is what a thorough hardening pass is supposed to produce:
+
+1. **Critical — insecure default JWT secret.** `application.properties`
+   shipped a real-looking placeholder default that signs auth tokens
+   (including admin tokens) if `JWT_SECRET` is never overridden. Fixed by
+   adding `JwtService.warnIfSecretIsInsecure()` — a loud `ERROR`-level
+   startup log if the secret is still the known placeholder or blank. A
+   hard fail-fast was considered and rejected: the app has no Spring
+   profile mechanism to distinguish dev/test/CI from production, and all
+   of those currently run without the env var set, so failing fast would
+   also break local dev/CI. **Ops action required — see §7.**
+2. **Major — anonymous request caused a 500 instead of 401.**
+   `SecurityConfig`'s `GET /api/memories/**` matcher also matched the bare
+   `/api/memories` collection endpoint (a Spring `/**` gotcha), so an
+   anonymous request hit an unguarded cast and returned an internal error.
+   Narrowed the matcher, added global exception-handler catch-alls so no
+   future unmapped exception leaks a stack trace, and added a regression
+   test (`MemoryIntegrationTest`).
+3. **Major — no rate limiting on login/register.** Added an in-memory
+   per-IP sliding-window rate limiter (20 requests/60s, configurable),
+   closing a credential-stuffing / bcrypt-cost CPU-exhaustion vector.
+4. **Major — `/feed` had no pagination UI.** The backend always supported
+   `page`/`size`, but any filter combination with more than 20 public
+   memories left the remainder permanently unreachable — no way to click
+   to page 2. Added prev/next controls with regression tests; filter
+   changes now reset to page 0.
+5. **Minor — memory year-range validation gap.** `MemoryRequest.yearFrom`/
+   `yearTo` accepted backwards ranges (e.g. 2020–1990) with no cross-field
+   check — the same bug class already fixed for Lost Fireflies in a prior
+   session, never mirrored here. Added server + client-side validation with
+   inline errors, plus a `NaN` guard on the edit-load path.
+6. **Minor — unbounded text field sizes.** `text`/`ingredients`/`steps` had
+   only the 20MB multipart ceiling, no character cap. Added a 20,000-
+   character server-side limit to each.
+7. **Minor — invisible sign-in prompt.** The Warmth (like) button's
+   signed-out prompt was a hover-only tooltip, invisible to a non-hovering
+   sighted visitor. Added a visible caption with its own copy string.
+
+All fixes have regression tests (5 new BE tests, 4 new FE tests this
+session) and the full validation battery was re-run green afterward: FE
+lint 0 warnings / 88/88 tests (was 84), BE 116/116 tests (was 113), build
+green, OpenSpec 6/6, E2E 13/14 pass + 1 skipped by design (unchanged).
+
+**Deferred, documented as accepted risk (not fixed this session):**
+private-memory photos are reachable through the public `/uploads/**` static
+file route if the URL leaks (Risk S9 below); the JWT is stored in
+`localStorage` rather than an httpOnly cookie (Risk S10 below). Both are
+architecture-scale changes judged out of proportion to current MVP risk,
+and both are recorded in the risk register with an explicit revisit trigger.
+
+---
+
+## 6. Known residual risks
+
+Full detail in `docs/qa/risk-register.md` (20 risks tracked: 8 resolved, 9
+mitigated with deploy/doc actions pending, 3 mitigated with post-MVP plans).
+The four most consequential for a non-technical reader:
+
+1. **JWT secret management (Risk S2, Critical).** The app signs login
+   sessions with a secret key. Right now, the deployed environment must be
+   given a real, random secret value — if it isn't, the app will still run,
+   but it will print a clear error-level warning at startup, and anyone who
+   can read the (open-source-style) code could forge a valid login,
+   including an administrator login. **This must be fixed before any public
+   deployment** — see Ops Actions below.
+2. **Private photos have a "back door" via their file link (Risk S9,
+   Low-Medium impact).** Private memories are protected everywhere in the
+   app's normal navigation, but if someone's private photo's direct file
+   address ever leaked (e.g., through a browser history sync or a shared
+   screenshot containing the URL), that specific photo could be viewed
+   without logging in. The address itself is not guessable. Fixing this
+   properly requires a larger change than the MVP scope justified; it is
+   tracked for a future release if usage of "private" memories grows.
+3. **Login sessions are stored in a way a future security bug could expose
+   (Risk S10, High impact if triggered).** Today there is no known way to
+   exploit this — the team verified there is no unsafe rendering of
+   user-typed content anywhere in the app — but the architecture (storing
+   the login token in the browser's local storage rather than a
+   more-locked-down cookie) means that if a cross-site-scripting bug were
+   ever introduced later, it could be more damaging than it would be with a
+   more defensive storage design. Recommended as a future architecture
+   review item, not an MVP blocker.
+4. **One administrator account, no backup or audit trail (Risk S7,
+   Critical if triggered).** The moderation/admin system currently assumes
+   a single admin login with no multi-factor authentication and no log of
+   what an admin did and when. If that one account were compromised, the
+   attacker could delete content or ban users without a trace. Recommended
+   before scaling the admin team, tracked as a deployment-runbook item.
+
+---
+
+## 7. Effort log
+
+Derived from `git log --format="%ad %s" --date=iso` across the whole
+repository (34 commits, 2026-07-05 through 2026-07-08), clustered by
+commit-timestamp gaps (a gap of roughly 2+ hours is treated as a session
+boundary). This reflects an AI-assisted, single-operator delivery — not a
+traditional team's calendar — so session lengths are short and often
+non-contiguous; the timestamps below are commit times, not continuous
+working-hour totals (real work between commits, including verification and
+judge-agent runs, is not fully captured by commit timestamps alone).
+
+| Session | Date/time span (UTC+02:00) | What it accomplished |
+|---|---|---|
+| 1 | 2026-07-05 17:04–17:07 | Initial commit; README encoding fix. |
+| 2 | 2026-07-05 20:42–21:31 | Project base; installed the Project Factory loop (Gate G0); switched linter to oxlint. |
+| 3 | 2026-07-06 08:21–10:50 | Added PRD and design system; fixed CI (pnpm setup, Node 24, workspace wiring). |
+| 4 | 2026-07-06 13:07–14:06 | `/project-factory:onboard` retrofit of all 6 MVP slices; `add-identity-and-access` given explicit tests/review/archive; CI wired for Kotlin+React, traceability gaps fixed. |
+| 5 | 2026-07-06 17:38–19:15 | `add-personal-archive` tests/review/archive; added the Testcontainers integration suite; extracted a backend service layer and global exception handler. |
+| 6 | 2026-07-06 21:01–22:08 | Logo fix; `add-public-feed-and-social` taken through the Phase 4 gated loop. |
+| 7 | 2026-07-07 06:39–07:23 | `add-lost-fireflies` backend hardening + OpenSpec archive; frontend UI polish (bundled with an architecture refactor); AbortSignal adoption + full i18n catalog extraction. |
+| 8 | 2026-07-07 19:57–22:44 | `add-moderation-and-admin` review-gate fixes + archive; `add-content-pages` completed; Phase 5 E2E tests + seed helpers; Phase 6 QA proof pack (traceability matrix, manual test plan, demo script, risk register, acceptance report scaffolding). |
+| 9 | 2026-07-08 06:18–07:10 | Phase 6 executed for real: demo recordings produced and vision-verified (found and fixed a mobile CSS bug), eval suite run for the first time (8/14→10/14 pass, real bugs found and fixed), dependency pinning + Dependabot added, Playwright E2E suite unblocked (0→13/14 passing). |
+| 10 | 2026-07-08 19:51–21:20+ | Eval remediation closing Gate G6 (10/14→14/14 eval cases passing, 2 real validation bugs fixed with regression tests); Phase 7 global review-gate (7 issues found and fixed, §5); Phase 7 trajectory evals (§3.2, §4); this documentation pass (`docs/estimation.md`, `docs/qa/delivery-report.md`). |
+
+**Calendar span:** 2026-07-05 to 2026-07-08 (4 days). **Commit count:** 34 (33
+prior + this session's uncommitted documentation work). No commits exist
+outside this window; no work is claimed beyond what these timestamps and the
+artifacts they produced support.
+
+---
+
+## 8. Ops actions required before production
+
+Pulled from `docs/qa/risk-register.md` and `docs/current-state.md`'s
+Environment/Deployment section — none of these are done yet:
+
+1. **Set `JWT_SECRET` to a real, random, ≥32-character value** in the
+   production environment. After starting the app, **check the startup
+   logs for the absence of** `JwtService`'s `SECURITY WARNING: JWT_SECRET is
+   not set to a real secret` line — its presence means the deployment is
+   still using the insecure placeholder and must not be exposed to
+   untrusted users. (Risk S2.)
+2. **Provision HTTPS** (TLS certificate, HTTPS redirect, HSTS headers) at
+   the Nginx reverse proxy — currently only verified in local dev without
+   TLS. (Risk S1, NFR-SEC-02.)
+3. **Set `DB_URL`, `DB_USER`, `DB_PASSWORD`, `UPLOAD_DIR`** for the
+   production PostgreSQL instance and uploads directory (`firefly-be`
+   expects these as env vars). Confirm automated backups are configured for
+   the production Postgres instance (not yet documented in a runbook —
+   Risk T1).
+4. **Create the admin account securely** via the documented admin-user
+   creation script (no hardcoded admin credentials exist) and restrict
+   admin login per ops policy (Risk S7).
+5. **If email is ever added** to this platform (not in MVP scope today),
+   verify a real, DNS-verified sending domain before any user-facing
+   send — sandbox senders such as `resend.dev` only deliver to the
+   provider account owner, per `AGENTS.md`'s Environment notes.
+6. **Run a Lighthouse Performance/Accessibility audit** against the actual
+   deployed target once it exists (NFR-PERF-02 ≥80, NFR-A11Y-01 ≥90) — the
+   MVP has not yet been measured against a live deployment (Risk T7).
+7. Confirm `.env.local` / secrets are not committed anywhere in the
+   repository (verified clean at time of writing, per `AGENTS.md`'s rule to
+   never print or commit it) before the customer's own CI/CD pipeline is
+   wired.
+
+---
+
+## 9. Next steps
+
+1. **Deploy** — pending the customer providing production secrets
+   (`JWT_SECRET`, DB credentials) and explicit approval for the push/deploy
+   target. No deployment has been made from this session; do not deploy or
+   push without that approval.
+2. Once deployed, smoke-check the live URL and record deployment facts
+   (URL, date, confirmed-clean JWT startup log) in `docs/current-state.md`.
+3. Recommended follow-ups from the risk register and trajectory-eval report
+   (not MVP blockers, but worth scheduling): a one-time retrofit-disclosure
+   note added to each of the 6 archived OpenSpec change folders (trajectory
+   report's recommendation #3); a privacy policy + data export/deletion
+   endpoints if GDPR-relevant users are expected (Risk S8); an admin
+   activity audit log and MFA before scaling the moderation team (Risk S7);
+   a decision on whether to harden private-photo file serving (Risk S9) or
+   move auth tokens to an httpOnly cookie (Risk S10) in a future
+   architecture pass.
