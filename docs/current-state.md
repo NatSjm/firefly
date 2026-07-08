@@ -6,9 +6,10 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-08 06:25:00 (UTC+02:00)
+- **Date and time:** 2026-07-08 06:49:00 (UTC+02:00)
 - **Current phase:** **Phase 6 — QA proof pack: recordings + eval-suite executed and verified**
 - **Active change:** none
+- **Dependency hygiene (2026-07-08):** frontend supply-chain audit ran clean (`pnpm audit` 0 vulns, registry-only resolutions, store integrity verified, no dependency lifecycle scripts executed — pnpm 10 blocks them and no `onlyBuiltDependencies` allowlist exists). All versions in `firefly-fe/package.json` and root `package.json` are now pinned exactly (no `^`/`~`) to the lockfile-resolved versions; stale npm `package-lock.json` removed (pnpm-lock.yaml is the only lockfile). `.github/dependabot.yml` added: weekly, 14-day cooldown on newly published releases, grouped minor/patch PRs, `versioning-strategy: increase` so update PRs keep exact pins.
 - **Progress:** Executed the two Phase 6 steps that required a running app; both committed (`e721dd8`, `57836a5`).
   - **Demo recordings**: fixed real bugs in `scripts/record-demos.mjs` (wrong `<select>` selectors, a page-lifecycle crash in the mobile clip, shared-DB idempotency issues) and ran it for real. All 13 clips pass `check-recordings` AND a `vision-judge` pass. Vision-verify caught a genuine mobile CSS bug (header nav overlapped the wordmark below 720px, no breakpoint existed at all) — fixed in `firefly-fe/src/design-system/tokens/base.css` + `Navigation.tsx` (`.ds-header-nav`/`.ds-header-menu-btn`).
   - **Eval suite**: all 14 `evals/cases/*.eval.ts` `produce()` functions were unimplemented placeholders (literally description strings, not real output). Drove the real app (Playwright + direct API calls) to capture genuine output, graded by fresh `eval-judge` agents. Result: **10/14 pass** (started at 8/14; 2 more fixed and re-verified after a backend restart). `docs/qa/eval-report.md` + `evals/results/latest.json` + `evals/results/manifest.json` written; baseline ratcheted via `check-eval-ratchet.mjs --update` (error-clarity 58.25, empty-state-usability 83, copy-tone 78, auth-security 86).

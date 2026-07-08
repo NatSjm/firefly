@@ -22,8 +22,8 @@
         "qa:record-proof": "node scripts/record-demos.mjs --proof"
     },
     "devDependencies": {
-        "@playwright/test": "^1.61.1",
-        "axios": "^1.18.1",
-        "typescript": "^6.0.3"
+        "@playwright/test": "1.61.1",
+        "axios": "1.18.1",
+        "typescript": "6.0.3"
     }
 }

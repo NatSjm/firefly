@@ -1,0 +1,47 @@
+# Dependabot — frontend (pnpm workspace: root + firefly-fe).
+#
+# Supply-chain policy: a 14-day cooldown means Dependabot only proposes
+# versions that have been public for at least two weeks, so a compromised
+# release is very likely to have been caught and unpublished before we are
+# asked to adopt it. This complements minimumReleaseAge (24h) in
+# pnpm-workspace.yaml, which guards manual installs.
+#
+# NOTE: Dependabot SECURITY updates (fixes for known CVEs) intentionally
+# bypass the cooldown — a fix for an actively exploited vulnerability should
+# not wait two weeks.
+#
+# Noise control: all minor/patch bumps arrive as ONE grouped weekly PR;
+# majors are separate. Email delivery itself is a personal GitHub
+# notification setting and cannot be turned off from this file — see the
+# repo Watch settings (Custom → untick "Pull requests").
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    # pnpm workspace root — pnpm-lock.yaml here covers the root manifest and
+    # firefly-fe; Dependabot updates both importers from this one entry.
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    # Two-week freeze on newly published versions.
+    cooldown:
+      default-days: 14
+    # Versions are pinned exactly (no ^/~) — bump the pin itself.
+    versioning-strategy: "increase"
+    open-pull-requests-limit: 3
+    groups:
+      frontend-minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+      frontend-security:
+        applies-to: security-updates
+        patterns:
+          - "*"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "chore(deps)"
