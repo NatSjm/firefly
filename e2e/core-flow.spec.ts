@@ -52,7 +52,7 @@ test.describe('Core Business Flow', () => {
     await page.goto('/feed');
     
     // Should see feed content
-    await expect(page.locator('text=/спогад|світлячок/i')).toBeVisible();
+    await expect(page.locator('text=/спогад|світлячок/i').first()).toBeVisible();
     
     // Step 5: Like a memory (if any public memories exist)
     const likeButton = page.locator('button:has-text("Тепло"), button[aria-label*="like"], button[aria-label*="Тепло"]').first();
@@ -81,21 +81,21 @@ test.describe('Core Business Flow', () => {
     await page.goto('/dashboard');
     
     // Should see both memories initially (or with "all" filter)
-    await expect(page.locator('text=Літо в бабусиному саду')).toBeVisible({ timeout: 3000 });
-    await expect(page.locator('text=Бабусин борщ')).toBeVisible({ timeout: 3000 });
-    
+    await expect(page.locator('text=Літо в бабусиному саду').first()).toBeVisible({ timeout: 3000 });
+    await expect(page.locator('text=Бабусин борщ').first()).toBeVisible({ timeout: 3000 });
+
     // Filter by public
     const publicFilter = page.locator('button:has-text("Публічні"), select option:has-text("Публічні")').first();
     if (await publicFilter.isVisible()) {
       await publicFilter.click();
-      await expect(page.locator('text=Літо в бабусиному саду')).toBeVisible();
+      await expect(page.locator('text=Літо в бабусиному саду').first()).toBeVisible();
     }
-    
+
     // Filter by private
     const privateFilter = page.locator('button:has-text("Приватні"), select option:has-text("Приватні")').first();
     if (await privateFilter.isVisible()) {
       await privateFilter.click();
-      await expect(page.locator('text=Бабусин борщ')).toBeVisible();
+      await expect(page.locator('text=Бабусин борщ').first()).toBeVisible();
     }
   });
   

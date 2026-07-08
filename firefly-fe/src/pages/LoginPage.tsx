@@ -66,6 +66,7 @@ export function LoginPage() {
           <Field label={t('auth.email')} required>
             <TextInput
               type="email"
+              name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder={t('auth.emailPlaceholder')}
@@ -76,6 +77,7 @@ export function LoginPage() {
           <Field label={t('auth.password')} required>
             <TextInput
               type="password"
+              name="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder={t('auth.login.passwordPlaceholder')}

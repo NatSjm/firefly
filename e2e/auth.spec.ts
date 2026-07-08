@@ -27,9 +27,10 @@ test.describe('Authentication', () => {
     
     // Should redirect to dashboard after successful registration
     await expect(page).toHaveURL('/dashboard', { timeout: 5000 });
-    
-    // Should see user name in header
-    await expect(page.locator('text=Новий Користувач')).toBeVisible();
+
+    // Should see the authenticated header (logout control) — the header only
+    // renders an avatar initial, not the full display name.
+    await expect(page.getByRole('button', { name: /вийти/i })).toBeVisible();
   });
   
   test('should allow user login', async ({ page }) => {
@@ -45,9 +46,9 @@ test.describe('Authentication', () => {
     
     // Should redirect to dashboard
     await expect(page).toHaveURL('/dashboard', { timeout: 5000 });
-    await expect(page.locator(`text=${TEST_USERS.regular.name}`)).toBeVisible();
+    await expect(page.getByRole('button', { name: /вийти/i })).toBeVisible();
   });
-  
+
   test('should allow user logout', async ({ page }) => {
     // @trace FR-AUTH-03
     const token = await seedUser(TEST_USERS.regular);
@@ -59,8 +60,8 @@ test.describe('Authentication', () => {
     }, token);
     
     await page.goto('/dashboard');
-    await expect(page.locator(`text=${TEST_USERS.regular.name}`)).toBeVisible();
-    
+    await expect(page.getByRole('button', { name: /вийти/i })).toBeVisible();
+
     // Click logout (look for button or link with text containing "Вийти" or similar)
     await page.click('text=/Вийти|Logout/i');
     
