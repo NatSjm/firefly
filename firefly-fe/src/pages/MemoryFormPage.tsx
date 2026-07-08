@@ -53,6 +53,7 @@ export function MemoryFormPage() {
   const [loading, setLoading] = useState(isEdit);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ title?: string; text?: string }>({});
 
   const cityOptions = useMemo(() => getCityOptions(), []);
   const topicOptions = useMemo(() => getTopicOptions(), []);
@@ -127,8 +128,15 @@ export function MemoryFormPage() {
     event.preventDefault();
     setError('');
 
-    if (!form.title.trim() || !form.text.trim()) {
-      setError(t('memory.form.missingFields'));
+    const nextFieldErrors: { title?: string; text?: string } = {};
+    if (!form.title.trim()) {
+      nextFieldErrors.title = t('memory.form.titleRequired');
+    }
+    if (!form.text.trim()) {
+      nextFieldErrors.text = t('memory.form.textRequired');
+    }
+    setFieldErrors(nextFieldErrors);
+    if (nextFieldErrors.title || nextFieldErrors.text) {
       return;
     }
 
@@ -180,12 +188,29 @@ export function MemoryFormPage() {
             />
           </Field>
 
-          <Field label={t('memory.form.title')} required>
-            <TextInput name="title" value={form.title} onChange={(event) => handleChange('title', event.target.value)} />
+          <Field label={t('memory.form.title')} required error={fieldErrors.title}>
+            <TextInput
+              name="title"
+              value={form.title}
+              error={fieldErrors.title}
+              onChange={(event) => {
+                handleChange('title', event.target.value);
+                setFieldErrors((current) => ({ ...current, title: undefined }));
+              }}
+            />
           </Field>
 
-          <Field label={t('memory.form.text')} required>
-            <Textarea name="text" rows={8} value={form.text} onChange={(event) => handleChange('text', event.target.value)} />
+          <Field label={t('memory.form.text')} required error={fieldErrors.text}>
+            <Textarea
+              name="text"
+              rows={8}
+              value={form.text}
+              error={fieldErrors.text}
+              onChange={(event) => {
+                handleChange('text', event.target.value);
+                setFieldErrors((current) => ({ ...current, text: undefined }));
+              }}
+            />
           </Field>
 
           {form.type === 'recipe' ? (

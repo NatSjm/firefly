@@ -35,7 +35,7 @@ Result: PASS, 3 warning(s)
 | FR-CITY-01 | yes | yes | 1 | yes |
 | FR-CITY-02 | yes | yes | 1 | yes |
 | FR-LOST-01 | yes | yes | 5 | yes |
-| FR-LOST-02 | yes | yes | 8 | yes |
+| FR-LOST-02 | yes | yes | 9 | yes |
 | FR-LOST-03 | yes | yes | 5 | yes |
 | FR-LOST-04 | yes | yes | 3 | yes |
 | FR-LOST-05 | yes | yes | 5 | yes |

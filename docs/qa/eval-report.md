@@ -2,23 +2,23 @@
 
 The quality BAR for graded behavior. Recordings illustrate these cases for humans; this report decides pass/fail. Guarded in CI by `node scripts/check-eval-ratchet.mjs` against `quality/eval-baseline.json`.
 
-- Cases: 14 (10 pass, 4 fail)
+- Cases: 14 (14 pass, 0 fail)
 - Pass mark: 70/100 per case; CRITICAL rubric misses fail a case outright.
-- Per-dimension score (ratcheted): {"error-clarity":58.25,"empty-state-usability":83.0,"copy-tone":78.0,"auth-security":86.0}
-- Judging method: each case was captured against the REAL running app (Playwright + direct API calls, not descriptions) and graded by a single fresh `eval-judge` agent per domain batch (maker≠checker — the judge did not implement the code). The workflow's double-judge protocol for borderline cases was not run this pass due to session time constraints; treat scores within ±10 of the 70 threshold as provisional. Two cases (`memory-title-too-long`, `report-blank-reason`) were re-captured and re-graded after fixes landed and the backend was restarted.
+- Per-dimension score (ratcheted): {"error-clarity":86.0,"empty-state-usability":83.0,"copy-tone":78.0,"auth-security":86.0}
+- Judging method: each case was captured against the REAL running app (Playwright/browser automation + direct API calls, not descriptions) and graded by a single fresh `eval-judge` agent per domain batch (maker≠checker — the judge did not implement the code). The workflow's double-judge protocol for borderline cases was not run this pass; treat scores within ±10 of the 70 threshold as provisional. Four cases (`memory-title-too-long`, `report-blank-reason` in a prior session; `lost-request-invalid-year`, `lost-request-missing-description`, `memory-missing-title`, `register-weak-password` in this session) were re-captured and re-graded after real fixes landed (or, for `register-weak-password`, after a cleaner re-capture with no code change).
 
 | Case | Dimension | Proves | Score | Verdict | Judges |
 |---|---|---|---|---|---|
 | eval-error-clarity-login-invalid | error-clarity | FR-AUTH-02, BC-BRAND-01 | 80 | pass | 1 |
-| eval-error-clarity-register-weak-password | error-clarity | FR-AUTH-01, BC-BRAND-01 | 40 | **FAIL** | 1 |
+| eval-error-clarity-register-weak-password | error-clarity | FR-AUTH-01, BC-BRAND-01 | 82 | pass | 1 |
 | eval-auth-security-protected-route-unauthenticated | auth-security | FR-AUTH-05, FR-SHELL-03 | 82 | pass | 1 |
 | eval-error-clarity-register-duplicate-email | error-clarity | FR-AUTH-01, BC-BRAND-01 | 82 | pass | 1 |
 | eval-empty-state-feed-no-results | empty-state-usability | FR-FEED-01, FR-FEED-02, BC-BRAND-01 | 84 | pass | 1 |
 | eval-copy-tone-like-prompt-unauthenticated | copy-tone | FR-FEED-06, BC-BRAND-01 | 78 | pass | 1 |
-| eval-error-clarity-lost-request-invalid-year | error-clarity | FR-LOST-02, BC-BRAND-01 | 5 | **FAIL** | 1 |
+| eval-error-clarity-lost-request-invalid-year | error-clarity | FR-LOST-02, BC-BRAND-01 | 92 | pass | 1 |
 | eval-empty-state-lost-requests-no-results | empty-state-usability | FR-LOST-01, FR-LOST-03, BC-BRAND-01 | 80 | pass | 1 |
-| eval-error-clarity-lost-request-missing-description | error-clarity | FR-LOST-02, BC-BRAND-01 | 45 | **FAIL** | 1 |
-| eval-error-clarity-memory-missing-title | error-clarity | FR-MEM-01, FR-MEM-02, BC-BRAND-01 | 40 | **FAIL** | 1 |
+| eval-error-clarity-lost-request-missing-description | error-clarity | FR-LOST-02, BC-BRAND-01 | 88 | pass | 1 |
+| eval-error-clarity-memory-missing-title | error-clarity | FR-MEM-01, FR-MEM-02, BC-BRAND-01 | 90 | pass | 1 |
 | eval-empty-state-dashboard-no-memories | empty-state-usability | FR-MEM-04, BC-BRAND-01 | 85 | pass | 1 |
 | eval-error-clarity-memory-title-too-long | error-clarity | FR-MEM-02, BC-BRAND-01 | 82 | pass | 1 |
 | eval-error-clarity-report-blank-reason | error-clarity | FR-MOD-02, BC-BRAND-01 | 92 | pass | 1 |
@@ -29,8 +29,8 @@ The quality BAR for graded behavior. Recordings illustrate these cases for human
 ### eval-error-clarity-login-invalid — 80/100 (pass)
 The critical inline-error requirement is clearly met with a specific, Ukrainian, non-accusatory, exclamation-free message ("Невірний email або пароль"). The only gap is the lack of an actionable next step (e.g., a password-reset link/suggestion).
 
-### eval-error-clarity-register-weak-password — 40/100 (FAIL)
-The captured evidence is inconclusive on whether a distinct error message actually rendered after submit versus only the pre-existing static password hint being visible. Per the CRITICAL-ambiguity-graded-down rule this fails. **Not confirmed to be a real product bug** — the source (`RegisterPage.tsx`) does set `error = t('auth.register.passwordTooShort')` on submit when `password.length < 8`; this is a capture-methodology gap (produce() needs to wait longer / assert the error text explicitly), not necessarily broken behavior. Re-run with a longer settle before re-grading.
+### eval-error-clarity-register-weak-password — 82/100 (pass, RE-GRADED)
+**Confirmed as real behavior; previous 40/FAIL was a capture-methodology false negative, not a product bug.** A fresh accessibility-tree capture (fill an invalid 3-character password, submit) shows a distinct banner-style error — "Пароль має містити щонайменше 8 символів." — rendered at the top of the form, separate from the field's always-present static hint "Мінімум 8 символів". Ukrainian, exclamation-free, specific about the 8-character minimum; field values are preserved (no submit occurred). Miss: the banner is page-level rather than DOM-attached to the password input, the same class of gap as `memory-title-too-long`.
 
 ### eval-auth-security-protected-route-unauthenticated — 82/100 (pass)
 Redirect to /login with no flash of protected content is clearly evidenced. Miss: no `returnTo`/redirect param preserved, so the user's intended destination is lost across login (real, minor UX gap — not fixed this session).
@@ -42,47 +42,53 @@ Inline, Ukrainian, specific, non-accusatory message ("Email вже зареєс�
 Clear, warm, actionable Ukrainian empty state. Miss: references "these filters" generically rather than naming the specific selected city/topic.
 
 ### eval-copy-tone-like-prompt-unauthenticated — 78/100 (pass)
-Warm, Ukrainian, exclamation-free tooltip + comments-section prompt explaining login is required to give warmth. **Fixed this session**: added a native `title` tooltip to the disabled warmth button (`MemoryDetailPage.tsx`) reusing the existing sign-in-prompt copy, since previously clicking/hovering the disabled button gave no explanation at all. Remaining miss: no inline clickable CTA at the point of friction (only the always-present header "Увійти" link).
+Warm, Ukrainian, exclamation-free tooltip + comments-section prompt explaining login is required to give warmth. Fixed in a prior session (added a native `title` tooltip to the disabled warmth button). Remaining miss: no inline clickable CTA at the point of friction (only the always-present header "Увійти" link).
 
-### eval-error-clarity-lost-request-invalid-year — 5/100 (FAIL)
-**Real scope gap, not fixed this session.** The `years` field on a lost request is free text (`String?`, max 50 chars) with zero format or range validation — there are no separate `yearFrom`/`yearTo` numeric fields as the original eval scenario assumed. A backwards range like `"2025-1990"` is accepted verbatim and persisted (HTTP 201). Fixing this properly means deciding whether `years` should become a structured/validated field, which is a product decision beyond this QA pass — flagged to the risk register.
+### eval-error-clarity-lost-request-invalid-year — 92/100 (pass, RE-GRADED 5 → 92)
+**Real bug fixed and verified this session.** `years` was a free-text field with zero format/range validation; a backwards range ("2025-1990") was previously accepted verbatim (HTTP 201). Fixed with a client-side check in `LostNewPage.tsx` (regex-matches a `YYYY-YYYY` pattern, rejects if the end year precedes the start year) plus a matching server-side 400 guard in `LostService.kt` for defense-in-depth against direct API calls. Submitting the backwards range now puts a red border on the "Роки" field with "Перевірте діапазон років — кінцевий рік не може бути раніше початкового." beneath it; the form does not submit. Free text that isn't a strict `YYYY-YYYY` range (e.g. "приблизно 1999") is left untouched — deliberately not over-constraining the field, since the product decision was to keep `years` free text rather than a structured range.
 
 ### eval-empty-state-lost-requests-no-results — 80/100 (pass)
 Dedicated, Ukrainian, actionable empty state. Misses: generic "these filters" wording, and tone reads procedural rather than warm for this emotionally-charged feature; no "create a request" CTA surfaced.
 
-### eval-error-clarity-lost-request-missing-description — 45/100 (FAIL)
-Form is correctly blocked client-side and the message is Ukrainian/exclamation-free, but it's a generic combined "city, description, contact email" banner, not inline on the description field, and is misleading in this exact repro (claims contactEmail is missing when it was pre-filled from the logged-in user's profile). Real UX gap — per-field inline validation is not implemented on this form; not fixed this session (would require reworking `LostNewPage.tsx` validation from a single combined check to per-field state).
+### eval-error-clarity-lost-request-missing-description — 88/100 (pass, RE-GRADED 45 → 88)
+**Real bug fixed and verified this session.** The combined "city, description, contact email" banner has been replaced with per-field inline validation in `LostNewPage.tsx`: submitting with only description blank now shows "Опишіть, що саме шукаєте." directly under the description field, with no false-positive error on the already-filled city/contact-email fields. Ukrainian, exclamation-free, states the requirement clearly.
 
-### eval-error-clarity-memory-missing-title — 40/100 (FAIL)
-Form is blocked client-side, message is Ukrainian and professional, but it's a page-level banner combining title+text, not inline on the title field, and doesn't isolate "title is required". Same class of gap as lost-request-missing-description — not fixed this session (`MemoryFormPage.tsx` uses one combined `missingFields` check).
+### eval-error-clarity-memory-missing-title — 90/100 (pass, RE-GRADED 40 → 90)
+**Real bug fixed and verified this session.** The combined "title+text" banner has been replaced with per-field inline validation in `MemoryFormPage.tsx`: submitting blank now shows a distinct "Вкажіть назву спогаду." under the title field and a separate "Додайте текст спогаду." under the text field. Ukrainian, exclamation-free, professional.
 
 ### eval-empty-state-dashboard-no-memories — 85/100 (pass)
 Strong on-brand empty state ("Тут поки тихо") with a clear CTA. Miss: no icon/illustration, just typographic treatment.
 
 ### eval-error-clarity-memory-title-too-long — 82/100 (pass, RE-GRADED)
-**Real bug found by this case, fixed and verified this session.** The backend's field-specific validation detail was in English ("size must be between 0 and 255", not Ukrainian as the app requires), and the frontend's `getErrorMessage()` never surfaced the `details` object at all — only a generic "Перевірте заповнення полів" banner reached the user, with no constraint or count shown. Fixed in `MemoryDtos.kt` (explicit Ukrainian `@Size` message) and `GlobalExceptionHandler.kt` (surfaces a single field violation as the headline `error`). After a backend restart, a direct API repro confirms the top-level error is now `"Назва не може перевищувати 255 символів"`. The judge treated the shared-banner presentation as satisfying "inline" in spirit (consistent with AGENTS.md's documented shared-banner error convention) since it unambiguously names the field. Remaining miss: no current-count-vs-limit display (e.g. "300/255").
+**Real bug found by this case, fixed and verified in a prior session.** The backend's field-specific validation detail was in English, not Ukrainian; fixed in `MemoryDtos.kt` and `GlobalExceptionHandler.kt`. The judge treats the shared-banner presentation as satisfying "inline" in spirit since it unambiguously names the field. Remaining miss: no current-count-vs-limit display (e.g. "300/255").
 
 ### eval-error-clarity-report-blank-reason — 92/100 (pass, RE-GRADED)
-Submission behavior is correct (reason is intentionally optional, no forced validation, Ukrainian success confirmation, non-punitive tone) but the reason textarea had no placeholder/helper copy encouraging the reporter to add context before submitting blank. **Fixed this session**: added a placeholder ("Наприклад: образливий зміст, спам або чужі персональні дані") to both the memory-report and comment-report textareas in `MemoryDetailPage.tsx`, verified visually in the preview browser and re-graded by a fresh judge. Remaining miss: the placeholder gives example categories but doesn't explicitly explain why context helps moderators.
+Fixed in a prior session: added a placeholder ("Наприклад: образливий зміст, спам або чужі персональні дані") to the report-reason textareas. Remaining miss: the placeholder gives example categories but doesn't explicitly explain why context helps moderators.
 
 ### eval-auth-security-admin-panel-non-admin — 90/100 (pass)
 Non-admin is silently redirected to the home page with zero flash or leakage of admin structure. Silent redirect (no explicit message) is a defensible security pattern, costing only a small deduction.
 
 ## Fixes applied this session
 
-1. **`MemoryDetailPage.tsx`** — added a `title` tooltip to the disabled warmth/like button for unauthenticated visitors (fixes `eval-copy-tone-like-prompt-unauthenticated`'s finding).
-2. **`MemoryDtos.kt` / `GlobalExceptionHandler.kt`** — Ukrainian `@Size` message on memory title + single-field-violation surfacing in the top-level error response. **Verified after backend restart**: `eval-error-clarity-memory-title-too-long` re-graded 22 → 82, now passes.
-3. **`common.json` / `MemoryDetailPage.tsx`** — added encouraging placeholder copy to the report-reason textareas. **Verified**: `eval-error-clarity-report-blank-reason` re-graded 58 → 92, now passes.
-4. **`base.css` / `Navigation.tsx`** (found via vision-verify on the demo recordings, not the eval suite) — fixed a real mobile header overlap bug at ≤720px.
+1. **`MemoryFormPage.tsx` / `common.json`** — replaced the combined title+text validation banner with per-field inline errors (`Field`/`TextInput`/`Textarea` `error` props), each cleared on change. Fixes `eval-error-clarity-memory-missing-title` (40 → 90).
+2. **`LostNewPage.tsx` / `common.json`** — replaced the combined city+description+email validation banner with per-field inline errors. Fixes `eval-error-clarity-lost-request-missing-description` (45 → 88).
+3. **`LostNewPage.tsx` (client) + `LostService.kt` (server)** — added backwards-year-range validation for the `years` field (regex-matches `YYYY-YYYY`, rejects if end < start), client-side inline error plus a server-side 400 for defense-in-depth. Free text that isn't a strict year range is left unvalidated (deliberate: `years` stays free text, not a structured field). Fixes `eval-error-clarity-lost-request-invalid-year` (5 → 92).
+4. **Re-capture only, no code change** — `eval-error-clarity-register-weak-password` re-captured with a clean accessibility-tree read confirming the distinct error banner was always there; the prior 40/FAIL was a capture-methodology false negative (40 → 82).
+
+Regression tests added: `MemoryFormPage.test.tsx` (per-field messages), `LostNewPage.test.tsx` (per-field messages + a new backwards-year-range case), `LostServiceTest.kt` (backwards-range rejection + forward-range/free-text pass-through, 2 new tests).
+
+## Previously known gaps — resolved this session
+
+- ~~No per-field inline validation UI on `MemoryFormPage.tsx` / `LostNewPage.tsx`~~ — fixed (see above).
+- ~~`LostRequestRequest.years` is unvalidated free text~~ — the backwards-range case (the actual reported defect) is now rejected; `years` remains free text by product decision (not every string is a parseable range, and users may write things like "приблизно 1999").
+- ~~`eval-error-clarity-register-weak-password` capture-methodology gap~~ — resolved via re-capture, confirmed not a real bug.
 
 ## Known gaps not fixed this session (candidates for a follow-up slice)
 
-- No per-field inline validation UI on `MemoryFormPage.tsx` / `LostNewPage.tsx` — both use a single combined "fill in X, Y, Z" banner instead of attaching errors to the specific empty field. Affects `eval-error-clarity-memory-missing-title` (40) and `eval-error-clarity-lost-request-missing-description` (45).
-- `LostRequestRequest.years` is unvalidated free text; no way to reject an impossible/backwards year range. Affects `eval-error-clarity-lost-request-invalid-year` (5) — this case's original scenario (numeric yearFrom/yearTo range) doesn't even match the real schema; needs a product decision on whether `years` should become structured.
-- `eval-error-clarity-register-weak-password` (40) — capture-methodology gap, not confirmed as a real product bug (see per-case note); needs a re-capture with a longer settle before it can be trusted either way.
-- No `returnTo` redirect-preservation after being bounced to `/login` from a protected route.
+- No `returnTo` redirect-preservation after being bounced to `/login` from a protected route (affects `eval-auth-security-protected-route-unauthenticated`, still passes at 82 but flagged as a minor UX gap).
+- Several passing error-clarity cases still use a page-level shared banner rather than a DOM-attached (`aria-describedby`) field association (`memory-title-too-long`, `register-weak-password`) — acceptable per AGENTS.md's documented shared-banner convention, but a stronger implementation would attach errors directly to the offending input.
 
 ## Next steps
 
-1. Decide whether the remaining known gaps above are in scope for this MVP or deferred — log the decision in `docs/qa/risk-register.md`.
-2. Re-capture `eval-error-clarity-register-weak-password` with a longer settle and re-grade — current 40 may be a false negative.
+1. Baseline ratcheted via `node scripts/check-eval-ratchet.mjs --update` (`error-clarity` 58.25 → 86.0, others unchanged).
+2. Proceed to Phase 7 (global review, technical docs, release) now that Gate G6 is fully clean (14/14 eval cases passing).

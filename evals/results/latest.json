@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T06:20:00Z",
+  "generatedAt": "2026-07-08T19:35:00Z",
   "threshold": 70,
   "dimensions": {
-    "error-clarity": 58.25,
+    "error-clarity": 86.0,
     "empty-state-usability": 83.0,
     "copy-tone": 78.0,
     "auth-security": 86.0
@@ -24,11 +24,11 @@
       "dimension": "error-clarity",
       "trace": ["FR-AUTH-01", "BC-BRAND-01"],
       "capability": "authentication",
-      "score": 40,
-      "pass": false,
+      "score": 82,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "The captured evidence is inconclusive on whether a distinct error message actually rendered after submit versus only the pre-existing static password hint being visible. Per the CRITICAL-ambiguity-graded-down rule this fails; needs a produce() capture that waits longer / asserts the error state text explicitly."
+      "notes": "RE-GRADED with a clean accessibility-tree capture (fill invalid 3-char password, submit): confirms a distinct banner-style error \"Пароль має містити щонайменше 8 символів.\" renders at the top of the form, separate from the field's always-present static hint \"Мінімум 8 символів\". Resolves the prior round's doubt — this was a capture-methodology false negative, not a real product bug. Ukrainian, exclamation-free, specific about the 8-character minimum, field values preserved (no submit). Miss: banner is page-level rather than DOM-attached to the password input, same class as memory-title-too-long."
     },
     {
       "id": "eval-auth-security-protected-route-unauthenticated",
@@ -79,11 +79,11 @@
       "dimension": "error-clarity",
       "trace": ["FR-LOST-02", "BC-BRAND-01"],
       "capability": "lost-fireflies",
-      "score": 5,
-      "pass": false,
+      "score": 92,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "Real finding: \"years\" is a free-text field with zero format/range validation. A backwards range (\"2025-1990\") is accepted verbatim with HTTP 201. No validation exists at all — scope gap, not just a UX defect."
+      "notes": "RE-GRADED after fix: submitting years=\"2025-1990\" now puts a red border on the \"Роки\" field with \"Перевірте діапазон років — кінцевий рік не може бути раніше початкового.\" beneath it; the form does not submit. A matching server-side 400 check was added for defense-in-depth against direct API calls. Ukrainian, exclamation-free, names the exact constraint. Closes the prior scope gap (years was previously fully unvalidated)."
     },
     {
       "id": "eval-empty-state-lost-requests-no-results",
@@ -101,22 +101,22 @@
       "dimension": "error-clarity",
       "trace": ["FR-LOST-02", "BC-BRAND-01"],
       "capability": "lost-fireflies",
-      "score": 45,
-      "pass": false,
+      "score": 88,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "Form is correctly blocked and the message is Ukrainian/exclamation-free, but it's a generic combined \"city, description, contact email\" banner, not inline on the description field, and is misleading (claims contactEmail is missing when it was pre-filled from the logged-in user)."
+      "notes": "RE-GRADED after per-field validation rework: the description Textarea itself gets a red border with \"Опишіть, що саме шукаєте.\" beneath it; correctly-filled city/contact-email fields show no error. Combined misleading banner is gone. Ukrainian, exclamation-free, states the requirement. Miss: phrasing reads neutral rather than emotionally warm for this feature."
     },
     {
       "id": "eval-error-clarity-memory-missing-title",
       "dimension": "error-clarity",
       "trace": ["FR-MEM-01", "FR-MEM-02", "BC-BRAND-01"],
       "capability": "memories",
-      "score": 40,
-      "pass": false,
+      "score": 90,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "Form is blocked client-side, message is Ukrainian and professional, but it's a page-level banner combining title+text, not inline on the title field, and doesn't isolate \"title is required\"."
+      "notes": "RE-GRADED after per-field validation rework: submitting blank shows a distinct \"Вкажіть назву спогаду.\" under the title field and a separate \"Додайте текст спогаду.\" under the text field — no longer a shared banner. Ukrainian, exclamation-free, professional. Miss: no additional guidance beyond stating the requirement."
     },
     {
       "id": "eval-empty-state-dashboard-no-memories",

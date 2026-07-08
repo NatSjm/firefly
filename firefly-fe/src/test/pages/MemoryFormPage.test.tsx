@@ -81,13 +81,14 @@ describe('MemoryFormPage', () => {
   });
 
   // @trace FR-MEM-02
-  it('shows a validation message on empty submit and does not call the API', async () => {
+  it('shows inline field validation messages on empty submit and does not call the API', async () => {
     const user = userEvent.setup();
     renderPage();
 
     await user.click(screen.getByRole('button', { name: 'Створити спогад' }));
 
-    expect(screen.getByText('Заповніть назву та основний текст спогаду.')).toBeInTheDocument();
+    expect(screen.getByText('Вкажіть назву спогаду.')).toBeInTheDocument();
+    expect(screen.getByText('Додайте текст спогаду.')).toBeInTheDocument();
     expect(apiMocks.createMemory).not.toHaveBeenCalled();
   });
 });

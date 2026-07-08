@@ -99,6 +99,40 @@ class LostServiceTest {
         assertEquals("1995-2000", repo.savedRequest?.years)
     }
 
+    // @trace FR-LOST-02
+    @Test
+    fun `create rejects a backwards year range with a 400 ApiException`() {
+        val author = user()
+        val req = LostRequestRequest(
+            city = "Київ",
+            type = "school",
+            years = "2025-1990",
+            description = "Опис",
+            contactEmail = "a@t.com"
+        )
+
+        val exception = assertThrows<ApiException> {
+            service.create(author, req)
+        }
+
+        assertEquals(HttpStatus.BAD_REQUEST, exception.status)
+        assertTrue(exception.message.isNotBlank())
+    }
+
+    // @trace FR-LOST-02
+    @Test
+    fun `create accepts a forward year range and non-numeric years text unchanged`() {
+        val author = user()
+        repo.saveResult = lostRequest(years = "1998-2003")
+
+        service.create(author, LostRequestRequest("Київ", "school", "1998-2003", "Опис", "a@t.com"))
+        assertEquals("1998-2003", repo.savedRequest?.years)
+
+        repo.saveResult = lostRequest(years = "приблизно 1999")
+        service.create(author, LostRequestRequest("Київ", "school", "приблизно 1999", "Опис", "a@t.com"))
+        assertEquals("приблизно 1999", repo.savedRequest?.years)
+    }
+
     // @trace FR-LOST-01, FR-LOST-03
     @Test
     fun `list with no filters returns all requests ordered newest-first`() {

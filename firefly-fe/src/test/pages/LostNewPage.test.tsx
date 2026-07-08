@@ -62,7 +62,7 @@ describe('LostNewPage', () => {
   });
 
   // @trace FR-LOST-02
-  it('blocks submission and shows an inline message when city, description, and contact email are blank', async () => {
+  it('blocks submission and shows inline per-field messages when city, description, and contact email are blank', async () => {
     const user = userEvent.setup();
     renderPage();
 
@@ -70,7 +70,9 @@ describe('LostNewPage', () => {
     await user.clear(screen.getByLabelText(/Контактний email/));
     await user.click(screen.getByRole('button', { name: 'Опублікувати запит' }));
 
-    expect(screen.getByText('Заповніть місто, опис і контактний email.')).toBeInTheDocument();
+    expect(screen.getByText('Оберіть місто.')).toBeInTheDocument();
+    expect(screen.getByText('Опишіть, що саме шукаєте.')).toBeInTheDocument();
+    expect(screen.getByText('Вкажіть контактний email.')).toBeInTheDocument();
     expect(apiMocks.createLostRequest).not.toHaveBeenCalled();
   });
 
@@ -82,7 +84,25 @@ describe('LostNewPage', () => {
     await user.selectOptions(screen.getByLabelText(/Місто/), 'Київ');
     await user.click(screen.getByRole('button', { name: 'Опублікувати запит' }));
 
-    expect(screen.getByText('Заповніть місто, опис і контактний email.')).toBeInTheDocument();
+    expect(screen.getByText('Опишіть, що саме шукаєте.')).toBeInTheDocument();
+    expect(screen.queryByText('Оберіть місто.')).not.toBeInTheDocument();
+    expect(apiMocks.createLostRequest).not.toHaveBeenCalled();
+  });
+
+  // @trace FR-LOST-02
+  it('blocks submission with an inline message when years is a backwards range', async () => {
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.selectOptions(screen.getByLabelText(/Місто/), 'Київ');
+    await user.type(screen.getByLabelText(/Роки/), '2025-1990');
+    await user.type(screen.getByLabelText(/Що саме шукаєте/), 'Шукаю однокласників');
+
+    await user.click(screen.getByRole('button', { name: 'Опублікувати запит' }));
+
+    expect(
+      screen.getByText('Перевірте діапазон років — кінцевий рік не може бути раніше початкового.'),
+    ).toBeInTheDocument();
     expect(apiMocks.createLostRequest).not.toHaveBeenCalled();
   });
 
