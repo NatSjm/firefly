@@ -1,9 +1,19 @@
 package com.firefly.fireflybe.memories
 
+import jakarta.validation.constraints.AssertTrue
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+
+/** Predefined topic list — FR-TOPIC-01. Kept as the exact Ukrainian labels since that's what the dropdown submits. */
+val ALLOWED_TOPIC_SLUGS = setOf(
+    "Океан Ельзи",
+    "Бабусині рецепти",
+    "Комп'ютерні ігри",
+    "Тамагочі",
+    "Дворові ігри",
+)
 
 data class MemoryRequest(
     @field:NotBlank
@@ -30,7 +40,11 @@ data class MemoryRequest(
     @field:Max(2100)
     val yearTo: Int? = null,
     val isPublic: Boolean = false
-)
+) {
+    @get:AssertTrue(message = "Тема має бути обрана зі списку запропонованих")
+    val topicSlugAllowed: Boolean
+        get() = topicSlug.isNullOrBlank() || topicSlug in ALLOWED_TOPIC_SLUGS
+}
 
 data class MemoryDto(
     val id: Long,

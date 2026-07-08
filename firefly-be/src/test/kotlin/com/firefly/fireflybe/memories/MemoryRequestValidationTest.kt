@@ -76,7 +76,19 @@ class MemoryRequestValidationTest {
     // @trace FR-TOPIC-02
     @Test
     fun `topic slug longer than 60 chars fails`() {
-        assertEquals(setOf("topicSlug"), violationPaths(storyRequest().copy(topicSlug = "т".repeat(61))))
+        assertEquals(setOf("topicSlug", "topicSlugAllowed"), violationPaths(storyRequest().copy(topicSlug = "т".repeat(61))))
+    }
+
+    // @trace FR-TOPIC-01
+    @Test
+    fun `topic slug outside the predefined list fails`() {
+        assertEquals(setOf("topicSlugAllowed"), violationPaths(storyRequest().copy(topicSlug = "babusini-retsepty")))
+    }
+
+    // @trace FR-TOPIC-01
+    @Test
+    fun `blank topic slug passes since topic is optional`() {
+        assertTrue(validator.validate(storyRequest().copy(topicSlug = null)).isEmpty())
     }
 
     private fun storyRequest() = MemoryRequest(

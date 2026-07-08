@@ -155,7 +155,7 @@ export const TEST_MEMORIES = {
     type: 'story' as const,
     isPublic: true,
     city: 'Київ',
-    topicSlug: 'babusini-retsepty',
+    topicSlug: 'Бабусині рецепти',
     yearFrom: 1995,
     yearTo: 2000,
   },
@@ -166,6 +166,6 @@ export const TEST_MEMORIES = {
     isPublic: false,
     ingredients: 'Буряк, капуста, картопля',
     steps: '1. Зварити бульйон\n2. Додати овочі',
-    topicSlug: 'babusini-retsepty',
+    topicSlug: 'Бабусині рецепти',
   },
 };

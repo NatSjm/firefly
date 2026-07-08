@@ -26,8 +26,8 @@ class FeedIntegrationTest : IntegrationTestBase() {
     @Test
     fun `feed filters by city and topic`() {
         val author = register()
-        val kyiv = createMemory(author, title = "Київська", city = "Київ", topicSlug = "childhood")
-        createMemory(author, title = "Львівська", city = "Львів", topicSlug = "recipes")
+        val kyiv = createMemory(author, title = "Київська", city = "Київ", topicSlug = "Дворові ігри")
+        createMemory(author, title = "Львівська", city = "Львів", topicSlug = "Бабусині рецепти")
 
         mockMvc.get("/api/feed?city=Київ").andExpect {
             status { isOk() }
@@ -35,7 +35,7 @@ class FeedIntegrationTest : IntegrationTestBase() {
             jsonPath("$.items[0].id") { value(kyiv.toInt()) }
         }
 
-        mockMvc.get("/api/feed?topic=childhood").andExpect {
+        mockMvc.get("/api/feed") { param("topic", "Дворові ігри") }.andExpect {
             status { isOk() }
             jsonPath("$.total") { value(1) }
             jsonPath("$.items[0].id") { value(kyiv.toInt()) }

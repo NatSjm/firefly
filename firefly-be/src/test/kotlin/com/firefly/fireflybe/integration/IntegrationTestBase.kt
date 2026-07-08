@@ -87,7 +87,7 @@ abstract class IntegrationTestBase {
             append("}")
         }
         val result = mockMvc.multipart("/api/memories") {
-            file(MockMultipartFile("data", "data", "application/json", json.toByteArray()))
+            file(MockMultipartFile("data", "data", "application/json", json.toByteArray(Charsets.UTF_8)))
             if (photo != null) file(photo)
             header(HttpHeaders.AUTHORIZATION, bearer(token))
         }.andExpect { status { isCreated() } }.andReturn()
