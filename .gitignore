@@ -53,3 +53,7 @@ lerna-debug.log*
 
 # Raw data
 **/raw/
+
+# Playwright
+test-results/
+playwright-report/

@@ -375,6 +375,7 @@ export function MemoryDetailPage() {
               type="button"
               onClick={handleToggleLike}
               disabled={!user || updatingLike}
+              title={user ? undefined : t('memory.comments.signInPrompt')}
               style={{
                 border: '1px solid var(--primary-soft-border)',
                 borderRadius: 'var(--radius-pill)',
@@ -576,6 +577,7 @@ export function MemoryDetailPage() {
             value={reportReason}
             onChange={(event) => setReportReason(event.target.value)}
             aria-label={t('memory.reportModal.reasonLabel')}
+            placeholder={t('memory.reportModal.reasonPlaceholder')}
             maxLength={500}
           />
         </div>
@@ -607,6 +609,7 @@ export function MemoryDetailPage() {
             value={commentReportReason}
             onChange={(event) => setCommentReportReason(event.target.value)}
             aria-label={t('memory.reportModal.reasonLabel')}
+            placeholder={t('memory.reportModal.reasonPlaceholder')}
             maxLength={500}
           />
         </div>

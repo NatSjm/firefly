@@ -26,7 +26,10 @@ class GlobalExceptionHandler {
         val details = e.bindingResult.fieldErrors.associate {
             it.field to (it.defaultMessage ?: "невірне значення")
         }
-        return ResponseEntity.badRequest().body(ErrorResponse("Перевірте заповнення полів", details))
+        // A single field violation is specific enough to surface as the headline
+        // message (the FE only renders the top-level `error`, not `details`).
+        val message = if (details.size == 1) details.values.first() else "Перевірте заповнення полів"
+        return ResponseEntity.badRequest().body(ErrorResponse(message, details))
     }
 
     @ExceptionHandler(HttpMessageNotReadableException::class, MissingServletRequestPartException::class)

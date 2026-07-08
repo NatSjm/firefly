@@ -40,7 +40,7 @@ export function Header({ loggedIn = false, userName = "", onNavigate, onLogin, o
         <span style={{ fontFamily: "var(--font-heading)", fontSize: 20, fontWeight: 600, color: "var(--text-primary)" }}>{t("app.name")}</span>
       </div>
 
-      <nav style={{ display: "flex", gap: 24, alignItems: "center" }}>
+      <nav className="ds-header-nav" style={{ gap: 24, alignItems: "center" }}>
         {NAV_KEYS.map((key) => (
           <a key={key} onClick={() => onNavigate?.(key)} style={{
             fontSize: 14, fontWeight: 500, color: "var(--text-secondary)", textDecoration: "none", cursor: "pointer",
@@ -50,7 +50,7 @@ export function Header({ loggedIn = false, userName = "", onNavigate, onLogin, o
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         {loggedIn ? (
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div className="ds-header-nav" style={{ alignItems: "center", gap: 10 }}>
             <Button size="sm" variant="primary" onClick={() => onNavigate?.("create")}>{t("nav.newMemory")}</Button>
             <div style={{
               width: 34, height: 34, borderRadius: "50%", background: "var(--accent-soft)",
@@ -61,10 +61,12 @@ export function Header({ loggedIn = false, userName = "", onNavigate, onLogin, o
             </div>
           </div>
         ) : (
-          <Button size="sm" variant="secondary" onClick={onLogin}>{t("nav.login")}</Button>
+          <div className="ds-header-nav" style={{ alignItems: "center" }}>
+            <Button size="sm" variant="secondary" onClick={onLogin}>{t("nav.login")}</Button>
+          </div>
         )}
-        <button onClick={onMenuToggle} style={{
-          display: "none", background: "none", border: "none", cursor: "pointer", padding: 6,
+        <button onClick={onMenuToggle} className="ds-header-menu-btn" style={{
+          background: "none", border: "none", cursor: "pointer", padding: 6,
         }} aria-label={t("nav.menu")}>
           <div style={{ width: 20, height: 2, background: "var(--text-primary)", marginBottom: 5 }} />
           <div style={{ width: 20, height: 2, background: "var(--text-primary)", marginBottom: 5 }} />

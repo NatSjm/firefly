@@ -9,8 +9,8 @@ data class MemoryRequest(
     @field:NotBlank
     @field:Size(max = 20)
     val type: String,
-    @field:NotBlank
-    @field:Size(max = 255)
+    @field:NotBlank(message = "Назва обов'язкова")
+    @field:Size(max = 255, message = "Назва не може перевищувати 255 символів")
     val title: String,
     @field:NotBlank
     val text: String,

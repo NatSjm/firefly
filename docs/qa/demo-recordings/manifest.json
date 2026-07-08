@@ -1,0 +1,122 @@
+{
+  "kind": "demo",
+  "results": [
+    {
+      "id": "01-auth-register",
+      "title": "User registers with email, password, and display name",
+      "proof": "FR-AUTH-01, FR-SHELL-01, FR-SHELL-04",
+      "video": "docs/qa/demo-recordings/01-auth-register.webm",
+      "screenshot": "docs/qa/demo-recordings/01-auth-register.png",
+      "explainer": "docs/qa/demo-recordings/01-auth-register.md",
+      "asserted": true
+    },
+    {
+      "id": "02-auth-login-logout",
+      "title": "User logs in and logs out",
+      "proof": "FR-AUTH-02, FR-AUTH-03, FR-AUTH-05",
+      "video": "docs/qa/demo-recordings/02-auth-login-logout.webm",
+      "screenshot": "docs/qa/demo-recordings/02-auth-login-logout.png",
+      "explainer": "docs/qa/demo-recordings/02-auth-login-logout.md",
+      "asserted": true
+    },
+    {
+      "id": "03-memory-create",
+      "title": "Create a public recipe memory with topic, city, and photo",
+      "proof": "FR-MEM-01, FR-MEM-02, FR-MEM-03, FR-TOPIC-02, FR-CITY-01",
+      "video": "docs/qa/demo-recordings/03-memory-create.webm",
+      "screenshot": "docs/qa/demo-recordings/03-memory-create.png",
+      "explainer": "docs/qa/demo-recordings/03-memory-create.md",
+      "asserted": true
+    },
+    {
+      "id": "04-memory-dashboard",
+      "title": "Dashboard with filters (all/public/private)",
+      "proof": "FR-MEM-04, FR-SHELL-03",
+      "video": "docs/qa/demo-recordings/04-memory-dashboard.webm",
+      "screenshot": "docs/qa/demo-recordings/04-memory-dashboard.png",
+      "explainer": "docs/qa/demo-recordings/04-memory-dashboard.md",
+      "asserted": true
+    },
+    {
+      "id": "05-memory-view-edit",
+      "title": "View memory detail, edit, and delete actions",
+      "proof": "FR-MEM-05, FR-MEM-06",
+      "video": "docs/qa/demo-recordings/05-memory-view-edit.webm",
+      "screenshot": "docs/qa/demo-recordings/05-memory-view-edit.png",
+      "explainer": "docs/qa/demo-recordings/05-memory-view-edit.md",
+      "asserted": true
+    },
+    {
+      "id": "06-feed-browse",
+      "title": "Public feed with filters and sort",
+      "proof": "FR-FEED-01, FR-FEED-02, FR-FEED-03, FR-FEED-04, FR-FEED-05, FR-CITY-02",
+      "video": "docs/qa/demo-recordings/06-feed-browse.webm",
+      "screenshot": "docs/qa/demo-recordings/06-feed-browse.png",
+      "explainer": "docs/qa/demo-recordings/06-feed-browse.md",
+      "asserted": true
+    },
+    {
+      "id": "07-social-like-comment",
+      "title": "Like and comment on a memory",
+      "proof": "FR-FEED-06, FR-FEED-07",
+      "video": "docs/qa/demo-recordings/07-social-like-comment.webm",
+      "screenshot": "docs/qa/demo-recordings/07-social-like-comment.png",
+      "explainer": "docs/qa/demo-recordings/07-social-like-comment.md",
+      "asserted": true
+    },
+    {
+      "id": "08-lost-browse-create",
+      "title": "Lost fireflies flow: browse and create request",
+      "proof": "FR-LOST-01, FR-LOST-02, FR-LOST-03, FR-LOST-04, FR-LOST-05",
+      "video": "docs/qa/demo-recordings/08-lost-browse-create.webm",
+      "screenshot": "docs/qa/demo-recordings/08-lost-browse-create.png",
+      "explainer": "docs/qa/demo-recordings/08-lost-browse-create.md",
+      "asserted": true
+    },
+    {
+      "id": "09-moderation-report",
+      "title": "User reports a memory",
+      "proof": "FR-MOD-02, FR-MOD-05",
+      "video": "docs/qa/demo-recordings/09-moderation-report.webm",
+      "screenshot": "docs/qa/demo-recordings/09-moderation-report.png",
+      "explainer": "docs/qa/demo-recordings/09-moderation-report.md",
+      "asserted": true
+    },
+    {
+      "id": "10-admin-moderation",
+      "title": "Admin panel: view reports, delete content, ban users",
+      "proof": "FR-MOD-03, FR-MOD-04, FR-AUTH-05",
+      "video": "docs/qa/demo-recordings/10-admin-moderation.webm",
+      "screenshot": "docs/qa/demo-recordings/10-admin-moderation.png",
+      "explainer": "docs/qa/demo-recordings/10-admin-moderation.md",
+      "asserted": true
+    },
+    {
+      "id": "11-content-pages",
+      "title": "About and Rules pages",
+      "proof": "FR-CONTENT-01, FR-CONTENT-02, FR-MOD-01",
+      "video": "docs/qa/demo-recordings/11-content-pages.webm",
+      "screenshot": "docs/qa/demo-recordings/11-content-pages.png",
+      "explainer": "docs/qa/demo-recordings/11-content-pages.md",
+      "asserted": true
+    },
+    {
+      "id": "12-responsive-mobile",
+      "title": "Mobile viewport (360px wide)",
+      "proof": "FR-SHELL-02",
+      "video": "docs/qa/demo-recordings/12-responsive-mobile.webm",
+      "screenshot": "docs/qa/demo-recordings/12-responsive-mobile.png",
+      "explainer": "docs/qa/demo-recordings/12-responsive-mobile.md",
+      "asserted": true
+    },
+    {
+      "id": "13-auth-guard-negative",
+      "title": "Security: unauthenticated redirect, non-admin blocked",
+      "proof": "FR-AUTH-05, FR-SHELL-03, FR-MOD-03",
+      "video": "docs/qa/demo-recordings/13-auth-guard-negative.webm",
+      "screenshot": "docs/qa/demo-recordings/13-auth-guard-negative.png",
+      "explainer": "docs/qa/demo-recordings/13-auth-guard-negative.md",
+      "asserted": true
+    }
+  ]
+}

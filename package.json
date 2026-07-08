@@ -8,7 +8,7 @@
         "build": "pnpm --filter firefly-fe run build",
         "test:run": "pnpm --filter firefly-fe run test:run",
         "test:coverage": "pnpm --filter firefly-fe run test:coverage",
-        "test:integration": "cd firefly-be && ..\\mvnw.cmd test -Dtest=*IntegrationTest",
+        "test:integration": "cd firefly-be && .\\mvnw.cmd test -Dtest=*IntegrationTest",
         "test:e2e": "playwright test",
         "check:trace": "node scripts/check-traceability.mjs",
         "check:trajectory": "node scripts/check-trajectory.mjs",
@@ -23,6 +23,7 @@
     },
     "devDependencies": {
         "@playwright/test": "^1.61.1",
+        "axios": "^1.18.1",
         "typescript": "^6.0.3"
     }
 }

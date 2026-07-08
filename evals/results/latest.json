@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-07-08T03:45:04Z",
+  "threshold": 70,
+  "dimensions": {
+    "error-clarity": 46.5,
+    "empty-state-usability": 83.0,
+    "copy-tone": 78.0,
+    "auth-security": 86.0
+  },
+  "cases": [
+    {
+      "id": "eval-error-clarity-login-invalid",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-02", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 80,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "The critical inline-error requirement is clearly met with a specific, Ukrainian, non-accusatory, exclamation-free message (\"Невірний email або пароль\"). The only gap is the lack of an actionable next step (e.g., a password-reset link/suggestion)."
+    },
+    {
+      "id": "eval-error-clarity-register-weak-password",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-01", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 40,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "The captured evidence is inconclusive on whether a distinct error message actually rendered after submit versus only the pre-existing static password hint being visible. Per the CRITICAL-ambiguity-graded-down rule this fails; needs a produce() capture that waits longer / asserts the error state text explicitly."
+    },
+    {
+      "id": "eval-auth-security-protected-route-unauthenticated",
+      "dimension": "auth-security",
+      "trace": ["FR-AUTH-05", "FR-SHELL-03"],
+      "capability": "authentication",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Redirect to /login with no flash of protected content is clearly evidenced. Miss: no returnTo/redirect param preserved, so the user's intended destination is lost across login."
+    },
+    {
+      "id": "eval-error-clarity-register-duplicate-email",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-01", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Inline, Ukrainian, specific, non-accusatory message (\"Email вже зареєстровано\"). Miss: no suggested next step (login/reset) alongside the message."
+    },
+    {
+      "id": "eval-empty-state-feed-no-results",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-FEED-01", "FR-FEED-02", "BC-BRAND-01"],
+      "capability": "feed",
+      "score": 84,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Clear, warm, actionable Ukrainian empty state. Miss: references \"these filters\" generically rather than naming the specific selected city/topic."
+    },
+    {
+      "id": "eval-copy-tone-like-prompt-unauthenticated",
+      "dimension": "copy-tone",
+      "trace": ["FR-FEED-06", "BC-BRAND-01"],
+      "capability": "feed",
+      "score": 78,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Warm, Ukrainian, exclamation-free tooltip + comments-section prompt explaining login is required to give warmth. Miss: no inline clickable CTA at the point of friction (only the always-present header \"Увійти\" link)."
+    },
+    {
+      "id": "eval-error-clarity-lost-request-invalid-year",
+      "dimension": "error-clarity",
+      "trace": ["FR-LOST-02", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 5,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Real finding: \"years\" is a free-text field with zero format/range validation. A backwards range (\"2025-1990\") is accepted verbatim with HTTP 201. No validation exists at all — scope gap, not just a UX defect."
+    },
+    {
+      "id": "eval-empty-state-lost-requests-no-results",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-LOST-01", "FR-LOST-03", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 80,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Dedicated, Ukrainian, actionable empty state. Misses: generic \"these filters\" wording, and tone reads procedural rather than warm for this emotionally-charged feature; no \"create a request\" CTA surfaced."
+    },
+    {
+      "id": "eval-error-clarity-lost-request-missing-description",
+      "dimension": "error-clarity",
+      "trace": ["FR-LOST-02", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 45,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Form is correctly blocked and the message is Ukrainian/exclamation-free, but it's a generic combined \"city, description, contact email\" banner, not inline on the description field, and is misleading (claims contactEmail is missing when it was pre-filled from the logged-in user)."
+    },
+    {
+      "id": "eval-error-clarity-memory-missing-title",
+      "dimension": "error-clarity",
+      "trace": ["FR-MEM-01", "FR-MEM-02", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 40,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Form is blocked client-side, message is Ukrainian and professional, but it's a page-level banner combining title+text, not inline on the title field, and doesn't isolate \"title is required\"."
+    },
+    {
+      "id": "eval-empty-state-dashboard-no-memories",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-MEM-04", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 85,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Strong on-brand empty state (\"Тут поки тихо\") with clear CTA. Miss: no icon/illustration, just typographic treatment."
+    },
+    {
+      "id": "eval-error-clarity-memory-title-too-long",
+      "dimension": "error-clarity",
+      "trace": ["FR-MEM-02", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 22,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Real bug found by this case: the field-specific validation detail was in English, and the frontend's getErrorMessage() never surfaces the `details` object at all — only a generic \"Перевірте заповнення полів\" banner reaches the user, with no constraint or count shown. A backend fix (Ukrainian @Size message + single-violation surfacing in the top-level error) is implemented in this session pending a backend restart to take effect; re-run this case after restart."
+    },
+    {
+      "id": "eval-error-clarity-report-blank-reason",
+      "dimension": "error-clarity",
+      "trace": ["FR-MOD-02", "BC-BRAND-01"],
+      "capability": "moderation",
+      "score": 58,
+      "pass": false,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Submission behavior is correct (reason is intentionally optional, no forced validation, Ukrainian success confirmation, non-punitive tone) but the reason textarea has no placeholder/helper copy encouraging the reporter to add context before submitting blank."
+    },
+    {
+      "id": "eval-auth-security-admin-panel-non-admin",
+      "dimension": "auth-security",
+      "trace": ["FR-MOD-03", "FR-AUTH-05"],
+      "capability": "moderation",
+      "score": 90,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Non-admin is silently redirected to the home page with zero flash or leakage of admin structure. Silent redirect (no explicit message) is a defensible security pattern, costing only a small deduction."
+    }
+  ]
+}

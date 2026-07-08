@@ -85,23 +85,26 @@ const CLIPS = [
     run: async (page) => {
       await page.goto(`${BASE_URL}/register`);
       await settle(page);
-      
+
       // Assert registration form is visible
       assert(await page.getByRole("heading", { level: 1 }).isVisible(), "page heading visible");
-      
-      // Fill the form (order: name, email, password based on RegisterPage.tsx)
+
+      // Fill the form (order: name, email, password based on RegisterPage.tsx).
+      // Use a unique email per run so re-running against the shared demo DB
+      // always exercises a real registration, not a collision.
+      const uniqueEmail = `demo+${Date.now()}@firefly.test`;
       const nameInput = page.locator('input').first();
       const emailInput = page.locator('input[type="email"]');
       const passwordInput = page.locator('input[type="password"]');
-      
+
       await nameInput.fill(TEST_USER.name);
-      await emailInput.fill(TEST_USER.email);
+      await emailInput.fill(uniqueEmail);
       await passwordInput.fill(TEST_USER.password);
-      
+
       // Submit
       await page.click('button[type="submit"]');
       await settle(page, 1500);
-      
+
       // Assert registration succeeded (redirects to /dashboard or /feed)
       assert(
         page.url().includes("/dashboard") || page.url().includes("/feed"),
@@ -115,18 +118,9 @@ const CLIPS = [
     title: "User logs in and logs out",
     proof: "FR-AUTH-02, FR-AUTH-03, FR-AUTH-05",
     run: async (page) => {
-      // First, ensure user exists (register if needed)
-      await page.goto(`${BASE_URL}/register`);
-      await settle(page, 800);
-      const nameInput = page.locator('input').first();
-      const emailInput = page.locator('input[type="email"]');
-      const passwordInput = page.locator('input[type="password"]');
-      await nameInput.fill(TEST_USER.name);
-      await emailInput.fill(TEST_USER.email);
-      await passwordInput.fill(TEST_USER.password);
-      await page.click('button[type="submit"]').catch(() => {});
-      await settle(page, 1000);
-      
+      // Ensure the demo user exists (idempotent register-or-login).
+      await loginUser(page, TEST_USER.email, TEST_USER.password, TEST_USER.name);
+
       // Logout if already logged in
       if (page.url().includes("/dashboard") || page.url().includes("/feed")) {
         // Click user menu / logout (look for a link or button with "logout" or similar)
@@ -172,22 +166,16 @@ const CLIPS = [
       // Assert form is visible
       assert(await page.getByRole("heading", { level: 1 }).isVisible(), "memory form heading visible");
       
-      // Fill memory form (based on MemoryFormPage.tsx structure)
-      // Type: recipe (look for radio/select with "recipe" option)
-      await page.locator('select, input[type="radio"]').first().selectOption("recipe").catch(() => {});
-      
+      // Fill memory form (based on MemoryFormPage.tsx: <select> for format/city/topic,
+      // in that DOM order — all three are native <select>, not text inputs).
+      const selects = page.locator('select');
+      await selects.nth(0).selectOption("recipe"); // format
+      await selects.nth(1).selectOption({ index: 1 }); // city (index 0 is the placeholder)
+      await selects.nth(2).selectOption({ index: 1 }); // topic
+
       // Title
       await page.fill('input[type="text"]', "Бабусині вареники");
-      
-      // Topic dropdown
-      const topicSelect = page.locator('select').first();
-      await topicSelect.selectOption({ label: /бабусині|рецепт/i }).catch(() => 
-        topicSelect.selectOption({ index: 1 })
-      );
-      
-      // City (autocomplete or text input)
-      await page.fill('input[placeholder*="місто"], input[name*="city"]', "Київ");
-      
+
       // Text/description
       await page.fill('textarea', "Рецепт вареників від моєї бабусі");
       
@@ -388,27 +376,40 @@ const CLIPS = [
         await lostCard.click();
         await settle(page, 1500);
         
-        // Assert detail shows mailto link
-        const mailtoLink = page.locator('a[href^="mailto:"]');
-        assert(await mailtoLink.isVisible(), "lost detail shows contact email");
+        // Assert detail shows the contact email and a "write to author" mailto action
+        // (LostDetailPage renders the email as text plus a button that opens mailto:,
+        // not an <a href="mailto:"> tag).
+        assert(await page.getByText(/@/).first().isVisible(), "lost detail shows contact email");
+        assert(
+          await page.getByRole("button", { name: /автор|author/i }).isVisible(),
+          "lost detail shows contact action"
+        );
       }
       
       // Now create a lost request (requires login)
       await loginUser(page, TEST_USER.email, TEST_USER.password, TEST_USER.name);
       await page.goto(`${BASE_URL}/lost/new`);
       await settle(page);
-      
-      // Fill lost request form
-      await page.fill('input[name*="city"], input[placeholder*="місто"]', "Київ");
+
+      // Fill lost request form (city and type are native <select>, city first)
+      await page.locator('select').first().selectOption({ index: 1 });
       await page.fill('textarea', "Шукаю однокласника з 1995 року");
       await page.fill('input[type="email"]', TEST_USER.email);
       await page.click('button[type="submit"]');
       await settle(page, 1500);
-      
+
       assert(
         page.url().includes("/lost"),
         "lost request created"
       );
+
+      // Open the newly created request (list is newest-first) so the settled
+      // still ends on its detail page, evidencing FR-LOST-05's contact info.
+      const newestCard = page.locator('article').first();
+      assert(await newestCard.isVisible(), "created request appears in the list");
+      await newestCard.click();
+      await settle(page, 1200);
+      assert(page.url().match(/\/lost\/\d+/), "created request detail reached");
     },
   },
 
@@ -417,38 +418,36 @@ const CLIPS = [
     title: "User reports a memory",
     proof: "FR-MOD-02, FR-MOD-05",
     run: async (page) => {
-      await loginUser(page, TEST_USER.email, TEST_USER.password, TEST_USER.name);
-      
+      // The report action only renders for non-owners (MemoryDetailPage hides it
+      // from the memory's own author), so report as the admin account rather than
+      // TEST_USER, who owns the seeded feed memory.
+      await loginUser(page, TEST_ADMIN.email, TEST_ADMIN.password, TEST_ADMIN.name);
+
       await page.goto(`${BASE_URL}/feed`);
       await settle(page);
-      
+
       // Click first memory to open detail
       const firstCard = page.locator('article').first();
-      if (await firstCard.isVisible()) {
-        await firstCard.click();
-        await settle(page, 1500);
-        
-        // Look for report button/link
-        const reportButton = page.getByText(/поскаржит|report|скарг/i);
-        if (await reportButton.isVisible()) {
-          await reportButton.click();
-          await settle(page, 800);
-          
-          // Fill report modal (if it appears)
-          const reasonInput = page.locator('textarea, input').first();
-          if (await reasonInput.isVisible()) {
-            await reasonInput.fill("Спам");
-            await page.locator('button[type="submit"]').last().click();
-            await settle(page, 1000);
-          }
-          
-          assert(true, "report flow executed");
-        } else {
-          assert(true, "memory detail accessible");
-        }
-      } else {
-        assert(true, "feed accessible");
-      }
+      assert(await firstCard.isVisible(), "feed has a memory to report");
+      await firstCard.click();
+      await settle(page, 1500);
+
+      // Open the report modal and submit a reason
+      const reportButton = page.getByText(/поскаржит|report|скарг/i);
+      assert(await reportButton.isVisible(), "report action visible to a non-owner");
+      await reportButton.click();
+      await settle(page, 800);
+
+      // The report modal's submit is a plain onClick button (not type="submit",
+      // not inside a <form>), so target it by its label to avoid matching the
+      // comment form's submit button underneath the modal overlay.
+      const reasonInput = page.locator('textarea, input').first();
+      await reasonInput.fill("Спам");
+      await page.getByRole("button", { name: /надіслати|submit/i }).click();
+      await settle(page, 1000);
+
+      // Assert the success banner rendered (memory.reportModal.sent)
+      assert(await page.getByText(/скаргу надіслано/i).isVisible(), "report success banner visible");
     },
   },
 
@@ -457,35 +456,16 @@ const CLIPS = [
     title: "Admin panel: view reports, delete content, ban users",
     proof: "FR-MOD-03, FR-MOD-04, FR-AUTH-05",
     run: async (page) => {
-      // First register/login admin
-      await page.goto(`${BASE_URL}/register`);
-      await settle(page, 800);
-      const nameInput = page.locator('input').first();
-      const emailInput = page.locator('input[type="email"]');
-      const passwordInput = page.locator('input[type="password"]');
-      await nameInput.fill(TEST_ADMIN.name);
-      await emailInput.fill(TEST_ADMIN.email);
-      await passwordInput.fill(TEST_ADMIN.password);
-      await page.click('button[type="submit"]').catch(() => {});
-      await settle(page, 1200);
-      
+      // Idempotent register-or-login as the admin test account (promoted to
+      // role=admin out-of-band before this harness runs — see docs/qa/README.md).
+      await loginUser(page, TEST_ADMIN.email, TEST_ADMIN.password, TEST_ADMIN.name);
+
       // Navigate to admin panel
       await page.goto(`${BASE_URL}/admin`);
       await settle(page);
-      
-      // Assert admin panel is visible (or redirects to login if not admin)
-      const isAdminPage = page.url().includes("/admin");
-      const isLoginPage = page.url().includes("/login");
-      
-      assert(
-        isAdminPage || isLoginPage,
-        "admin route either accessible or redirects to login"
-      );
-      
-      if (isAdminPage) {
-        // Look for reports list, delete buttons, ban buttons
-        assert(await page.getByRole("heading", { level: 1 }).isVisible(), "admin page heading visible");
-      }
+
+      assert(page.url().includes("/admin"), "admin account reaches the admin panel");
+      assert(await page.getByRole("heading", { level: 1 }).isVisible(), "admin page heading visible");
     },
   },
 
@@ -511,28 +491,22 @@ const CLIPS = [
     title: "Mobile viewport (360px wide)",
     proof: "FR-SHELL-02",
     run: async (page) => {
-      // Close current page and create a new context with mobile viewport
-      await page.close();
-      const mobileContext = await page.context().browser().newContext({
-        viewport: { width: 360, height: 800 },
-        recordVideo: { dir: join(OUT_DIR, "raw"), size: { width: 360, height: 800 } },
-      });
-      const mobilePage = await mobileContext.newPage();
-      
+      // Resize to mobile viewport once, before driving the flow (not mid-clip) —
+      // main() owns this page's lifecycle (screenshot + video), so we resize it
+      // in place rather than closing it and spinning up a separate context.
+      await page.setViewportSize({ width: 360, height: 800 });
+
       // Visit feed on mobile
-      await mobilePage.goto(`${BASE_URL}/feed`);
-      await settle(mobilePage);
-      
-      assert(await mobilePage.getByRole("heading", { level: 1 }).isVisible(), "feed visible on mobile");
-      
+      await page.goto(`${BASE_URL}/feed`);
+      await settle(page);
+
+      assert(await page.getByRole("heading", { level: 1 }).isVisible(), "feed visible on mobile");
+
       // Visit about page on mobile
-      await mobilePage.goto(`${BASE_URL}/about`);
-      await settle(mobilePage);
-      
-      assert(await mobilePage.getByRole("heading", { level: 1 }).isVisible(), "about page visible on mobile");
-      
-      await mobilePage.close();
-      await mobileContext.close();
+      await page.goto(`${BASE_URL}/about`);
+      await settle(page);
+
+      assert(await page.getByRole("heading", { level: 1 }).isVisible(), "about page visible on mobile");
     },
   },
 
@@ -541,10 +515,12 @@ const CLIPS = [
     title: "Security: unauthenticated redirect, non-admin blocked",
     proof: "FR-AUTH-05, FR-SHELL-03, FR-MOD-03",
     run: async (page) => {
-      // Clear any existing session
+      // Clear any existing session. localStorage is inaccessible on the default
+      // about:blank page, so navigate to the app first.
+      await page.goto(BASE_URL);
       await page.context().clearCookies();
       await page.evaluate(() => localStorage.clear());
-      
+
       // Try to access protected route without login
       await page.goto(`${BASE_URL}/dashboard`);
       await settle(page);
