@@ -2,10 +2,10 @@
 
 The quality BAR for graded behavior. Recordings illustrate these cases for humans; this report decides pass/fail. Guarded in CI by `node scripts/check-eval-ratchet.mjs` against `quality/eval-baseline.json`.
 
-- Cases: 14 (8 pass, 6 fail)
+- Cases: 14 (10 pass, 4 fail)
 - Pass mark: 70/100 per case; CRITICAL rubric misses fail a case outright.
-- Per-dimension score (ratcheted): {"error-clarity":46.5,"empty-state-usability":83.0,"copy-tone":78.0,"auth-security":86.0}
-- Judging method: each case was captured against the REAL running app (Playwright + direct API calls, not descriptions) and graded by a single fresh `eval-judge` agent per domain batch (maker≠checker — the judge did not implement the code). The workflow's double-judge protocol for borderline cases was not run this pass due to session time constraints; treat scores within ±10 of the 70 threshold as provisional.
+- Per-dimension score (ratcheted): {"error-clarity":58.25,"empty-state-usability":83.0,"copy-tone":78.0,"auth-security":86.0}
+- Judging method: each case was captured against the REAL running app (Playwright + direct API calls, not descriptions) and graded by a single fresh `eval-judge` agent per domain batch (maker≠checker — the judge did not implement the code). The workflow's double-judge protocol for borderline cases was not run this pass due to session time constraints; treat scores within ±10 of the 70 threshold as provisional. Two cases (`memory-title-too-long`, `report-blank-reason`) were re-captured and re-graded after fixes landed and the backend was restarted.
 
 | Case | Dimension | Proves | Score | Verdict | Judges |
 |---|---|---|---|---|---|
@@ -20,8 +20,8 @@ The quality BAR for graded behavior. Recordings illustrate these cases for human
 | eval-error-clarity-lost-request-missing-description | error-clarity | FR-LOST-02, BC-BRAND-01 | 45 | **FAIL** | 1 |
 | eval-error-clarity-memory-missing-title | error-clarity | FR-MEM-01, FR-MEM-02, BC-BRAND-01 | 40 | **FAIL** | 1 |
 | eval-empty-state-dashboard-no-memories | empty-state-usability | FR-MEM-04, BC-BRAND-01 | 85 | pass | 1 |
-| eval-error-clarity-memory-title-too-long | error-clarity | FR-MEM-02, BC-BRAND-01 | 22 | **FAIL** | 1 |
-| eval-error-clarity-report-blank-reason | error-clarity | FR-MOD-02, BC-BRAND-01 | 58 | **FAIL** | 1 |
+| eval-error-clarity-memory-title-too-long | error-clarity | FR-MEM-02, BC-BRAND-01 | 82 | pass | 1 |
+| eval-error-clarity-report-blank-reason | error-clarity | FR-MOD-02, BC-BRAND-01 | 92 | pass | 1 |
 | eval-auth-security-admin-panel-non-admin | auth-security | FR-MOD-03, FR-AUTH-05 | 90 | pass | 1 |
 
 ## Per-case notes
@@ -59,11 +59,11 @@ Form is blocked client-side, message is Ukrainian and professional, but it's a p
 ### eval-empty-state-dashboard-no-memories — 85/100 (pass)
 Strong on-brand empty state ("Тут поки тихо") with a clear CTA. Miss: no icon/illustration, just typographic treatment.
 
-### eval-error-clarity-memory-title-too-long — 22/100 (FAIL)
-**Real bug found by this case, partially fixed this session.** The backend's field-specific validation detail was in English ("size must be between 0 and 255", not Ukrainian as the app requires), and the frontend's `getErrorMessage()` never surfaces the `details` object at all — only a generic "Перевірте заповнення полів" banner reached the user, with no constraint or count shown. Fixed in `MemoryDtos.kt` (explicit Ukrainian `@Size` message) and `GlobalExceptionHandler.kt` (surfaces a single field violation as the headline `error`, since the FE only reads that field). **This fix requires a backend rebuild/restart to take effect — not yet re-verified against the running app.** Even after the restart, the message will still be a page-level banner rather than literally inline on the title input, so this may still fall short of the strict "inline on the field" CRITICAL criterion — re-run after restart to get a real score.
+### eval-error-clarity-memory-title-too-long — 82/100 (pass, RE-GRADED)
+**Real bug found by this case, fixed and verified this session.** The backend's field-specific validation detail was in English ("size must be between 0 and 255", not Ukrainian as the app requires), and the frontend's `getErrorMessage()` never surfaced the `details` object at all — only a generic "Перевірте заповнення полів" banner reached the user, with no constraint or count shown. Fixed in `MemoryDtos.kt` (explicit Ukrainian `@Size` message) and `GlobalExceptionHandler.kt` (surfaces a single field violation as the headline `error`). After a backend restart, a direct API repro confirms the top-level error is now `"Назва не може перевищувати 255 символів"`. The judge treated the shared-banner presentation as satisfying "inline" in spirit (consistent with AGENTS.md's documented shared-banner error convention) since it unambiguously names the field. Remaining miss: no current-count-vs-limit display (e.g. "300/255").
 
-### eval-error-clarity-report-blank-reason — 58/100 (FAIL)
-Submission behavior is correct (reason is intentionally optional, no forced validation, Ukrainian success confirmation, non-punitive tone) but the reason textarea had no placeholder/helper copy encouraging the reporter to add context before submitting blank. **Fixed this session**: added a placeholder ("Наприклад: образливий зміст, спам або чужі персональні дані") to both the memory-report and comment-report textareas in `MemoryDetailPage.tsx`, verified visually in the preview browser. Not re-graded by a judge yet — expected to pass on re-run.
+### eval-error-clarity-report-blank-reason — 92/100 (pass, RE-GRADED)
+Submission behavior is correct (reason is intentionally optional, no forced validation, Ukrainian success confirmation, non-punitive tone) but the reason textarea had no placeholder/helper copy encouraging the reporter to add context before submitting blank. **Fixed this session**: added a placeholder ("Наприклад: образливий зміст, спам або чужі персональні дані") to both the memory-report and comment-report textareas in `MemoryDetailPage.tsx`, verified visually in the preview browser and re-graded by a fresh judge. Remaining miss: the placeholder gives example categories but doesn't explicitly explain why context helps moderators.
 
 ### eval-auth-security-admin-panel-non-admin — 90/100 (pass)
 Non-admin is silently redirected to the home page with zero flash or leakage of admin structure. Silent redirect (no explicit message) is a defensible security pattern, costing only a small deduction.
@@ -71,19 +71,18 @@ Non-admin is silently redirected to the home page with zero flash or leakage of 
 ## Fixes applied this session
 
 1. **`MemoryDetailPage.tsx`** — added a `title` tooltip to the disabled warmth/like button for unauthenticated visitors (fixes `eval-copy-tone-like-prompt-unauthenticated`'s finding).
-2. **`MemoryDtos.kt` / `GlobalExceptionHandler.kt`** — Ukrainian `@Size` message on memory title + single-field-violation surfacing in the top-level error response (targets `eval-error-clarity-memory-title-too-long`; **requires backend restart to verify**).
-3. **`common.json` / `MemoryDetailPage.tsx`** — added encouraging placeholder copy to the report-reason textareas (targets `eval-error-clarity-report-blank-reason`).
+2. **`MemoryDtos.kt` / `GlobalExceptionHandler.kt`** — Ukrainian `@Size` message on memory title + single-field-violation surfacing in the top-level error response. **Verified after backend restart**: `eval-error-clarity-memory-title-too-long` re-graded 22 → 82, now passes.
+3. **`common.json` / `MemoryDetailPage.tsx`** — added encouraging placeholder copy to the report-reason textareas. **Verified**: `eval-error-clarity-report-blank-reason` re-graded 58 → 92, now passes.
 4. **`base.css` / `Navigation.tsx`** (found via vision-verify on the demo recordings, not the eval suite) — fixed a real mobile header overlap bug at ≤720px.
 
 ## Known gaps not fixed this session (candidates for a follow-up slice)
 
-- No per-field inline validation UI on `MemoryFormPage.tsx` / `LostNewPage.tsx` — both use a single combined "fill in X, Y, Z" banner instead of attaching errors to the specific empty field.
-- `LostRequestRequest.years` is unvalidated free text; no way to reject an impossible/backwards year range.
+- No per-field inline validation UI on `MemoryFormPage.tsx` / `LostNewPage.tsx` — both use a single combined "fill in X, Y, Z" banner instead of attaching errors to the specific empty field. Affects `eval-error-clarity-memory-missing-title` (40) and `eval-error-clarity-lost-request-missing-description` (45).
+- `LostRequestRequest.years` is unvalidated free text; no way to reject an impossible/backwards year range. Affects `eval-error-clarity-lost-request-invalid-year` (5) — this case's original scenario (numeric yearFrom/yearTo range) doesn't even match the real schema; needs a product decision on whether `years` should become structured.
+- `eval-error-clarity-register-weak-password` (40) — capture-methodology gap, not confirmed as a real product bug (see per-case note); needs a re-capture with a longer settle before it can be trusted either way.
 - No `returnTo` redirect-preservation after being bounced to `/login` from a protected route.
 
 ## Next steps
 
-1. Restart the backend (Kotlin changes require a rebuild) and re-run `eval-error-clarity-memory-title-too-long`.
-2. Re-run `eval-error-clarity-report-blank-reason` and `eval-copy-tone-like-prompt-unauthenticated` to confirm the placeholder/tooltip fixes land a passing score.
-3. Decide whether the three "known gaps" above are in scope for this MVP or deferred — log the decision in `docs/qa/risk-register.md`.
-4. `node scripts/check-eval-ratchet.mjs --update` to establish the baseline once the above re-runs are in, then commit.
+1. Decide whether the remaining known gaps above are in scope for this MVP or deferred — log the decision in `docs/qa/risk-register.md`.
+2. Re-capture `eval-error-clarity-register-weak-password` with a longer settle and re-grade — current 40 may be a false negative.

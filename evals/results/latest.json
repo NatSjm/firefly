@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-07-08T03:45:04Z",
+  "generatedAt": "2026-07-08T06:20:00Z",
   "threshold": 70,
   "dimensions": {
-    "error-clarity": 46.5,
+    "error-clarity": 58.25,
     "empty-state-usability": 83.0,
     "copy-tone": 78.0,
     "auth-security": 86.0
@@ -134,22 +134,22 @@
       "dimension": "error-clarity",
       "trace": ["FR-MEM-02", "BC-BRAND-01"],
       "capability": "memories",
-      "score": 22,
-      "pass": false,
+      "score": 82,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "Real bug found by this case: the field-specific validation detail was in English, and the frontend's getErrorMessage() never surfaces the `details` object at all — only a generic \"Перевірте заповнення полів\" banner reaches the user, with no constraint or count shown. A backend fix (Ukrainian @Size message + single-violation surfacing in the top-level error) is implemented in this session pending a backend restart to take effect; re-run this case after restart."
+      "notes": "RE-GRADED after backend restart: the field-specific message is now Ukrainian (\"Назва не може перевищувати 255 символів\") and surfaced as the top-level error. It's a page-level shared banner rather than literally DOM-attached to the title input, but it unambiguously names the field, matches AGENTS.md's documented shared-banner convention, and blocks submission. Miss: no current-count-vs-limit display (e.g. \"300/255\")."
     },
     {
       "id": "eval-error-clarity-report-blank-reason",
       "dimension": "error-clarity",
       "trace": ["FR-MOD-02", "BC-BRAND-01"],
       "capability": "moderation",
-      "score": 58,
-      "pass": false,
+      "score": 92,
+      "pass": true,
       "judges": 1,
       "disagreement": false,
-      "notes": "Submission behavior is correct (reason is intentionally optional, no forced validation, Ukrainian success confirmation, non-punitive tone) but the reason textarea has no placeholder/helper copy encouraging the reporter to add context before submitting blank."
+      "notes": "RE-GRADED after the placeholder fix: the reason textarea now shows \"Наприклад: образливий зміст, спам або чужі персональні дані\" as non-blocking guidance. Ukrainian, warm, exclamation-free, and the optional-field submission still succeeds. Miss: doesn't explicitly explain why context helps moderators, just gives category examples."
     },
     {
       "id": "eval-auth-security-admin-panel-non-admin",

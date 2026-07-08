@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T03:45:04Z",
+  "generatedAt": "2026-07-08T06:20:00Z",
   "kind": "eval",
   "results": [
     { "id": "eval-error-clarity-login-invalid", "dimension": "error-clarity", "proof": "FR-AUTH-02, BC-BRAND-01", "score": 80, "pass": true },
@@ -13,8 +13,8 @@
     { "id": "eval-error-clarity-lost-request-missing-description", "dimension": "error-clarity", "proof": "FR-LOST-02, BC-BRAND-01", "score": 45, "pass": false },
     { "id": "eval-error-clarity-memory-missing-title", "dimension": "error-clarity", "proof": "FR-MEM-01, FR-MEM-02, BC-BRAND-01", "score": 40, "pass": false },
     { "id": "eval-empty-state-dashboard-no-memories", "dimension": "empty-state-usability", "proof": "FR-MEM-04, BC-BRAND-01", "score": 85, "pass": true },
-    { "id": "eval-error-clarity-memory-title-too-long", "dimension": "error-clarity", "proof": "FR-MEM-02, BC-BRAND-01", "score": 22, "pass": false },
-    { "id": "eval-error-clarity-report-blank-reason", "dimension": "error-clarity", "proof": "FR-MOD-02, BC-BRAND-01", "score": 58, "pass": false },
+    { "id": "eval-error-clarity-memory-title-too-long", "dimension": "error-clarity", "proof": "FR-MEM-02, BC-BRAND-01", "score": 82, "pass": true },
+    { "id": "eval-error-clarity-report-blank-reason", "dimension": "error-clarity", "proof": "FR-MOD-02, BC-BRAND-01", "score": 92, "pass": true },
     { "id": "eval-auth-security-admin-panel-non-admin", "dimension": "auth-security", "proof": "FR-MOD-03, FR-AUTH-05", "score": 90, "pass": true }
   ]
 }
