@@ -44,6 +44,7 @@ export function RegisterPage() {
           {error ? <Message tone="error">{error}</Message> : null}
           <Field label={t('auth.register.name')} required>
             <TextInput
+              name="name"
               value={name}
               onChange={(event) => setName(event.target.value)}
               placeholder={t('auth.register.namePlaceholder')}
@@ -54,6 +55,7 @@ export function RegisterPage() {
           <Field label={t('auth.email')} required>
             <TextInput
               type="email"
+              name="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder={t('auth.emailPlaceholder')}
@@ -64,6 +66,7 @@ export function RegisterPage() {
           <Field label={t('auth.password')} required hint={t('auth.register.passwordHint')}>
             <TextInput
               type="password"
+              name="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               placeholder={t('auth.register.passwordPlaceholder')}

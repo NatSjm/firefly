@@ -27,11 +27,11 @@ test.describe('Responsive Design', () => {
     const hasMobileNav = await page.locator('button[aria-label*="menu"], button[aria-label*="меню"]').isVisible().catch(() => false);
     
     // Page should be functional
-    await expect(page.locator('text=/світлячок|firefly/i')).toBeVisible();
-    
+    await expect(page.locator('text=/світлячок|firefly/i').first()).toBeVisible();
+
     await context.close();
   });
-  
+
   test('should render correctly on tablet (768px)', async ({ browser }) => {
     // @trace FR-SHELL-01, FR-SHELL-02
     const context = await browser.newContext({
@@ -46,11 +46,11 @@ test.describe('Responsive Design', () => {
     expect(bodyWidth).toBeLessThanOrEqual(768 + 20);
     
     // Should be readable and functional
-    await expect(page.locator('text=/світлячок|firefly/i')).toBeVisible();
-    
+    await expect(page.locator('text=/світлячок|firefly/i').first()).toBeVisible();
+
     await context.close();
   });
-  
+
   test('should render correctly on desktop (1280px)', async ({ browser }) => {
     // @trace FR-SHELL-01, FR-SHELL-02, FR-SHELL-04
     const context = await browser.newContext({
@@ -59,9 +59,9 @@ test.describe('Responsive Design', () => {
     const page = await context.newPage();
     
     await page.goto('/');
-    
+
     // Should have full desktop layout
-    await expect(page.locator('text=/світлячок|firefly/i')).toBeVisible();
+    await expect(page.locator('text=/світлячок|firefly/i').first()).toBeVisible();
     
     // Navigation should be visible (not hamburger)
     const hasDesktopNav = await page.locator('nav a, header a').count();

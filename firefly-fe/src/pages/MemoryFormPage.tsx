@@ -173,6 +173,7 @@ export function MemoryFormPage() {
 
           <Field label={t('memory.form.format')}>
             <Select
+              name="type"
               value={form.type}
               onChange={(event) => handleChange('type', event.target.value as MemoryType)}
               options={typeOptions}
@@ -180,11 +181,11 @@ export function MemoryFormPage() {
           </Field>
 
           <Field label={t('memory.form.title')} required>
-            <TextInput value={form.title} onChange={(event) => handleChange('title', event.target.value)} />
+            <TextInput name="title" value={form.title} onChange={(event) => handleChange('title', event.target.value)} />
           </Field>
 
           <Field label={t('memory.form.text')} required>
-            <Textarea rows={8} value={form.text} onChange={(event) => handleChange('text', event.target.value)} />
+            <Textarea name="text" rows={8} value={form.text} onChange={(event) => handleChange('text', event.target.value)} />
           </Field>
 
           {form.type === 'recipe' ? (
@@ -277,6 +278,7 @@ export function MemoryFormPage() {
           >
             <input
               type="checkbox"
+              name="isPublic"
               checked={form.isPublic}
               onChange={(event) => handleChange('isPublic', event.target.checked)}
             />
