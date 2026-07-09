@@ -6,9 +6,11 @@
 
 ## Last Updated
 
-- **Date and time:** 2026-07-08 21:45:00 (UTC+02:00)
-- **Current phase:** **Phase 7 (global review, docs, release) — steps 1, 1b, and 2 (technical docs/estimation/delivery report) complete; only deploy remains**
+- **Date and time:** 2026-07-08 21:50:00 (UTC+02:00)
+- **Current phase:** **Phase 7 (global review, docs, release) — steps 1-3 complete and committed (`0f339d0`); user explicitly deferred deployment — Gate G7 (commit+push+deploy) is intentionally NOT closed**
 - **Active change:** none
+- **Progress (commit + deploy decision, this session):** User asked for all Phase 7 work in one commit (not chunked) — committed as `0f339d0 feat(phase-7): global review-gate, trajectory evals, technical docs, delivery report` (42 files, pre-commit hooks — traceability + trajectory checks — ran clean, non-release mode). **Not pushed** (no push approval requested or given). User explicitly chose to **skip deployment for now** rather than provide a target/secrets — this is a deliberate scope decision, not an oversight. Gate G7 (per `.project-factory/MASTER-PROMPT.md`: "commit + push + deploy, smoke-check the live URL") is therefore **intentionally left open**. Next session should ask the user again before assuming deploy is wanted, rather than proceeding unprompted.
+- **Local environment note:** a local Postgres container (`docker compose up -d postgres`) and a backend (`mvnw spring-boot:run`, port 8080) were started this session to run the E2E suite live — both may still be running depending on session lifecycle; check `docker ps` / port 8080 before assuming either is up, and stop them if no longer needed (`docker compose down`).
 - **Progress (Phase 7 step 2 — technical docs, estimation, delivery report, this session):** Delegated to two parallel `qa-documenter` agents (mechanical documentation work, per the framework's cost-tiering guidance), then spot-checked their factual claims myself before accepting.
   - **`docs/technical/`** (8 pages, all ≤150 lines): `architecture.md`, `data-model.md`, `auth-and-access.md`, `domain-workflows.md`, `apis-and-actions.md`, `integrations.md`, `operations.md`, `testing.md`. Two real gaps were found while writing these (verified by me, not just trusted): **no database indexes exist** on `is_public`/`city`/`topic_slug` despite `docs/qa/risk-register.md` Risk T6 previously claiming they did (corrected the stale claim in the risk register) — confirmed by grepping the actual Flyway migrations; and **no `db:seed-admin` script exists** anywhere in the repo despite being listed as a planned `package.json` script in the Project Factory template (documented as a manual-SQL workaround in `operations.md` rather than inventing a script).
   - **`docs/estimation.md`**: from-scratch engineering estimate (40.5 engineer-days) based on actual line/file/test counts, with an explicit methodology note distinguishing it from the delivery report's real, git-timestamp-derived effort log (different questions, don't conflate).
@@ -191,12 +193,12 @@ Current test expectation: `firefly-fe` test/lint/build are green locally (0 warn
 
 ## Next Task
 
-**Phase 7 steps 1, 1b, and 2 are done** — see the Phase 7 progress entries above. Remaining for **Phase 7 — Global review, docs, release**:
+**Phase 7 steps 1, 1b, and 2 are done and committed** (`0f339d0`) — see the Phase 7 progress entries above. Remaining for **Phase 7 — Global review, docs, release**:
 1. ~~Run the `review-gate` workflow once over the WHOLE codebase, security emphasis~~ — **done this session.**
 2. ~~`node scripts/check-trajectory.mjs --release` then the `trajectory-eval` workflow over all archived slices~~ — **done this session; see `docs/qa/trajectory-eval-report.md`.**
 3. ~~Write `docs/technical/`, `docs/estimation.md`, and a stakeholder delivery report~~ — **done this session; see `docs/technical/`, `docs/estimation.md`, `docs/qa/delivery-report.md`.**
-4. **Deploy — next task, needs user input first.** Needs user-provided env/secrets (`JWT_SECRET`, DB credentials for the target environment) and explicit approval for the push/deploy target — ask before any deploy or push. Then smoke-check the live URL (HTTP 200, no localhost leakage in HTML, clean startup/error logs — specifically confirm the JWT security warning is ABSENT, see `docs/qa/delivery-report.md` §8) and record deployment facts here.
-Gate G7 → commit + push (user-approved target — nothing has been committed yet this session; all changes across steps 1/1b/2 are on disk only, uncommitted).
+4. **Deploy — explicitly deferred by the user this session, not started.** When resumed: needs user-provided env/secrets (`JWT_SECRET`, DB credentials for the target environment) and explicit approval for the deploy target and for pushing. Then smoke-check the live URL (HTTP 200, no localhost leakage in HTML, clean startup/error logs — specifically confirm the JWT security warning is ABSENT, see `docs/qa/delivery-report.md` §8) and record deployment facts here. **Do not assume deploy is wanted just because this doc says "next" — ask again**, since the user deferred it once already.
+Gate G7 → commit (done, `0f339d0`) + push + deploy (both pending user decision — do not push or deploy without asking first, even though the commit itself is already made).
 
 ## Environment / Deployment
 
