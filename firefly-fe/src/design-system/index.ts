@@ -18,6 +18,8 @@ export type { BadgeProps } from "./components/badges/Badge";
 
 export { MemoryCard, LostRequestCard } from "./components/cards/Cards";
 export type { MemoryCardProps, LostRequestCardProps } from "./components/cards/Cards";
+export { LOST_TYPES } from "./components/cards/lostTypeLabels";
+export type { LostType } from "./components/cards/lostTypeLabels";
 
 export { Header, Footer, MobileMenu } from "./components/navigation/Navigation";
 export type { HeaderProps, FooterProps, MobileMenuProps } from "./components/navigation/Navigation";

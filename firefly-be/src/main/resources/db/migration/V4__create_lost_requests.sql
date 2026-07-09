@@ -1,0 +1,10 @@
+CREATE TABLE lost_requests (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  city VARCHAR(120) NOT NULL,
+  type VARCHAR(30) NOT NULL,
+  years VARCHAR(50),
+  description TEXT NOT NULL,
+  contact_email VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);

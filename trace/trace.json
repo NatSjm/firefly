@@ -1,28 +1,680 @@
 {
   "generatedBy": "scripts/check-traceability.mjs",
   "requirements": {
-    "NFR-1": "MVP",
-    "NFR-2": "MVP",
-    "NFR-3": "MVP",
-    "NFR-4": "MVP",
-    "NFR-5": "MVP",
-    "NFR-6": "MVP",
-    "NFR-7": "MVP",
-    "NFR-8": "MVP",
-    "NFR-9": "MVP",
-    "NFR-10": "MVP",
-    "TC-1": "MVP",
-    "TC-2": "MVP",
-    "TC-3": "MVP",
-    "BC-1": "MVP",
-    "BC-2": "MVP"
+    "FR-SHELL-01": "MVP",
+    "FR-SHELL-02": "MVP",
+    "FR-SHELL-03": "MVP",
+    "FR-SHELL-04": "MVP",
+    "FR-AUTH-01": "MVP",
+    "FR-AUTH-02": "MVP",
+    "FR-AUTH-03": "MVP",
+    "FR-AUTH-04": "MVP",
+    "FR-AUTH-05": "MVP",
+    "FR-MEM-01": "MVP",
+    "FR-MEM-02": "MVP",
+    "FR-MEM-03": "MVP",
+    "FR-MEM-04": "MVP",
+    "FR-MEM-05": "MVP",
+    "FR-MEM-06": "MVP",
+    "FR-FEED-01": "MVP",
+    "FR-FEED-02": "MVP",
+    "FR-FEED-03": "MVP",
+    "FR-FEED-04": "MVP",
+    "FR-FEED-05": "MVP",
+    "FR-FEED-06": "MVP",
+    "FR-FEED-07": "MVP",
+    "FR-TOPIC-01": "MVP",
+    "FR-TOPIC-02": "MVP",
+    "FR-CITY-01": "MVP",
+    "FR-CITY-02": "MVP",
+    "FR-LOST-01": "MVP",
+    "FR-LOST-02": "MVP",
+    "FR-LOST-03": "MVP",
+    "FR-LOST-04": "MVP",
+    "FR-LOST-05": "MVP",
+    "FR-MOD-01": "MVP",
+    "FR-MOD-02": "MVP",
+    "FR-MOD-03": "MVP",
+    "FR-MOD-04": "MVP",
+    "FR-MOD-05": "MVP",
+    "FR-CONTENT-01": "MVP",
+    "FR-CONTENT-02": "MVP",
+    "NFR-PERF-01": "MVP",
+    "NFR-PERF-02": "MVP",
+    "NFR-A11Y-01": "MVP",
+    "NFR-A11Y-02": "MVP",
+    "NFR-SEC-01": "MVP",
+    "NFR-SEC-02": "MVP",
+    "NFR-I18N-01": "MVP",
+    "NFR-I18N-02": "MVP",
+    "NFR-OBS-01": "MVP",
+    "NFR-DX-01": "MVP",
+    "TC-STACK-01": "MVP",
+    "TC-STACK-02": "MVP",
+    "TC-STACK-03": "MVP",
+    "TC-STACK-04": "MVP",
+    "TC-DEPLOY-01": "MVP",
+    "TC-API-01": "MVP",
+    "TC-DATA-01": "MVP",
+    "BC-BRAND-01": "MVP",
+    "BC-BRAND-02": "MVP",
+    "BC-PRIVACY-01": "MVP",
+    "BC-PRIVACY-02": "MVP",
+    "BC-PRIVACY-03": "MVP",
+    "BC-MOD-01": "MVP"
   },
-  "links": [],
-  "failures": [
+  "links": [
     {
-      "check": "requirements",
-      "msg": "no MVP FR rows parsed — check table format `| FR-n | MVP | ... |`"
+      "id": "FR-SHELL-01",
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
+      "planned": true,
+      "tests": [
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-SHELL-02",
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
+      "planned": true,
+      "tests": [
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts",
+        "e2e/responsive.spec.ts"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-SHELL-03",
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-SHELL-04",
+      "specs": [
+        "openspec/specs/slice-1-skeleton.md"
+      ],
+      "planned": true,
+      "tests": [
+        "e2e/responsive.spec.ts"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-AUTH-01",
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "e2e/auth.spec.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/RegisterPage.test.tsx",
+        "firefly-fe/src/test/pages/RegisterPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-AUTH-02",
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "e2e/auth.spec.ts",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx",
+        "firefly-fe/src/test/pages/LoginPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-AUTH-03",
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
+      "planned": true,
+      "tests": [
+        "e2e/auth.spec.ts"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-AUTH-04",
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
+      "planned": true,
+      "tests": [],
+      "recordings": []
+    },
+    {
+      "id": "FR-AUTH-05",
+      "specs": [
+        "openspec/specs/slice-2-auth.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/auth.eval.ts",
+        "evals/cases/moderation.eval.ts",
+        "e2e/auth.spec.ts",
+        "e2e/rbac.spec.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-01",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-02",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-03",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-04",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/memories.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx",
+        "firefly-fe/src/test/pages/DashboardPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-05",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MEM-06",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-01",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-02",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-03",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-04",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-05",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-06",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/feed.eval.ts",
+        "e2e/core-flow.spec.ts",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-FEED-07",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/FeedPage.test.tsx",
+        "firefly-fe/src/test/pages/FeedSocialPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-TOPIC-01",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": []
+    },
+    {
+      "id": "FR-TOPIC-02",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-CITY-01",
+      "specs": [
+        "openspec/specs/slice-3-memories.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/MemoryFormPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-CITY-02",
+      "specs": [
+        "openspec/specs/slice-4-feed.md"
+      ],
+      "planned": true,
+      "tests": [
+        "e2e/core-flow.spec.ts"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-LOST-01",
+      "specs": [
+        "openspec/specs/lost-fireflies/spec.md",
+        "openspec/specs/slice-5-lost.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-LOST-02",
+      "specs": [
+        "openspec/specs/lost-fireflies/spec.md",
+        "openspec/specs/slice-5-lost.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostNewPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-LOST-03",
+      "specs": [
+        "openspec/specs/lost-fireflies/spec.md",
+        "openspec/specs/slice-5-lost.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/lost-fireflies.eval.ts",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-LOST-04",
+      "specs": [
+        "openspec/specs/lost-fireflies/spec.md",
+        "openspec/specs/slice-5-lost.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx",
+        "firefly-fe/src/test/pages/LostPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-LOST-05",
+      "specs": [
+        "openspec/specs/lost-fireflies/spec.md",
+        "openspec/specs/slice-5-lost.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/LostDetailPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MOD-01",
+      "specs": [
+        "openspec/specs/slice-6-moderation.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/RulesPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MOD-02",
+      "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
+        "openspec/specs/slice-6-moderation.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/moderation.eval.ts",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx",
+        "firefly-fe/src/test/pages/MemoryDetailPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MOD-03",
+      "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
+        "openspec/specs/slice-6-moderation.md"
+      ],
+      "planned": true,
+      "tests": [
+        "evals/cases/moderation.eval.ts",
+        "e2e/rbac.spec.ts",
+        "e2e/rbac.spec.ts",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/components/ProtectedRoute.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MOD-04",
+      "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
+        "openspec/specs/slice-6-moderation.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx",
+        "firefly-fe/src/test/pages/AdminPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-MOD-05",
+      "specs": [
+        "openspec/specs/moderation-and-admin/spec.md",
+        "openspec/specs/slice-6-moderation.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx",
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx",
+        "firefly-fe/src/test/components/LayoutFooter.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-CONTENT-01",
+      "specs": [
+        "openspec/specs/content-pages/spec.md",
+        "openspec/specs/slice-7-content-pages.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/AboutPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
+    },
+    {
+      "id": "FR-CONTENT-02",
+      "specs": [
+        "openspec/specs/content-pages/spec.md",
+        "openspec/specs/slice-7-content-pages.md"
+      ],
+      "planned": true,
+      "tests": [
+        "firefly-fe/src/test/pages/RulesPage.test.tsx"
+      ],
+      "recordings": [
+        "docs/qa/demo-recordings/manifest.json"
+      ]
     }
   ],
-  "warnings": []
+  "failures": [],
+  "warnings": [
+    {
+      "check": "test-trace",
+      "msg": "FR-AUTH-04 has no test annotated \"@trace FR-AUTH-04\""
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-AUTH-04 is not referenced by any recording manifest under docs/qa/"
+    },
+    {
+      "check": "recording-evidence",
+      "msg": "FR-TOPIC-01 is not referenced by any recording manifest under docs/qa/"
+    }
+  ]
 }

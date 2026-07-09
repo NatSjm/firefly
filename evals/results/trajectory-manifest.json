@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-07-08T19:14:45Z",
+  "kind": "trajectory-eval",
+  "slices": [
+    "add-identity-and-access",
+    "add-personal-archive",
+    "add-public-feed-and-social",
+    "add-lost-fireflies",
+    "add-moderation-and-admin",
+    "add-content-pages"
+  ],
+  "dimensions": {
+    "process-order": 38.8,
+    "test-integrity": 79.3,
+    "in-scope": 72.3,
+    "craft": 82.7
+  }
+}

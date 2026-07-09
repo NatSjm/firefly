@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-07-08T19:14:45Z",
+  "threshold": 70,
+  "dimensions": {
+    "process-order": 38.8,
+    "test-integrity": 79.3,
+    "in-scope": 72.3,
+    "craft": 82.7
+  },
+  "sliceRollup": {
+    "add-identity-and-access": 35,
+    "add-personal-archive": 72,
+    "add-public-feed-and-social": 18,
+    "add-lost-fireflies": 38,
+    "add-moderation-and-admin": 35,
+    "add-content-pages": 35
+  },
+  "units": [
+    { "id": "add-identity-and-access:process-order", "slice": "add-identity-and-access", "dimension": "process-order", "score": 35, "pass": false, "judges": 1, "notes": "Single squashed commit (17f67e8), preceded by a retrofit-kickoff commit (9aaa89a onboard) — no red-before-green git evidence. review-findings.json present but informal (inline-review, not the structured multi-agent schema); credited as a qualified pass on the review-happened half, but the CRITICAL test-ordering criterion is unmet." },
+    { "id": "add-identity-and-access:test-integrity", "slice": "add-identity-and-access", "dimension": "test-integrity", "score": 82, "pass": true, "judges": 1, "notes": "auth.spec.ts header-name assertions were corrected to logout-button assertions after discovering Header never renders the full name — a legitimate reality-correction, not weakening. RTL + Testcontainers integration tests are substantive." },
+    { "id": "add-identity-and-access:in-scope", "slice": "add-identity-and-access", "dimension": "in-scope", "score": 72, "pass": true, "judges": 1, "notes": "Mostly confined to auth domain; fe05b5f CI/traceability wiring commit is cross-cutting infra riding along without an explicit spec citation, docked but not disqualifying." },
+    { "id": "add-identity-and-access:craft", "slice": "add-identity-and-access", "dimension": "craft", "score": 90, "pass": true, "judges": 1, "notes": "No TODO/dead code/thrash found; tasks.md fully ticked; forward-only commit sequence." },
+
+    { "id": "add-personal-archive:process-order", "slice": "add-personal-archive", "dimension": "process-order", "score": 72, "pass": true, "judges": 1, "notes": "Squashed commit obscures true red/green ordering, but tests trace to FR-MEM/TOPIC/CITY ids and review-findings.json documents 4 real confirmed-and-fixed defects before archive — substantively satisfies the review-then-archive half." },
+    { "id": "add-personal-archive:test-integrity", "slice": "add-personal-archive", "dimension": "test-integrity", "score": 78, "pass": true, "judges": 1, "notes": "Proportionate, specific FE/BE tests; but the 3 review-caught bugs (transactional replace, upload allowlist, orphaned files) have no evidenced regression test locking in the fix." },
+    { "id": "add-personal-archive:in-scope", "slice": "add-personal-archive", "dimension": "in-scope", "score": 88, "pass": true, "judges": 1, "notes": "Clean domain boundary; later cross-cutting work (service extraction, Testcontainers suite) is separate and clearly labeled, not smuggled in." },
+    { "id": "add-personal-archive:craft", "slice": "add-personal-archive", "dimension": "craft", "score": 74, "pass": true, "judges": 1, "notes": "No thrash signal, but Phase-7 fixes to this domain were uncommitted at time of writing (mild unsettled-state signal) and no positive TODO/dead-code sweep was confirmed." },
+
+    { "id": "add-public-feed-and-social:process-order", "slice": "add-public-feed-and-social", "dimension": "process-order", "score": 18, "pass": false, "judges": 1, "notes": "Archived proposal.md/design.md explicitly SELF-DISCLOSE the retrofit: \"captures the already-implemented public memory feed... so the slice can move through Phase 4 with explicit tests, review evidence, and archive history.\" Direct textual admission that implementation predated spec/tests — the opposite of red-before-green." },
+    { "id": "add-public-feed-and-social:test-integrity", "slice": "add-public-feed-and-social", "dimension": "test-integrity", "score": 80, "pass": true, "judges": 1, "notes": "Judge directly read FeedPage.test.tsx: real assertions (empty state, error state, toHaveBeenLastCalledWith), not tautological. Docked because tests were written against already-working code, so their regression-catching power is unverified." },
+    { "id": "add-public-feed-and-social:in-scope", "slice": "add-public-feed-and-social", "dimension": "in-scope", "score": 62, "pass": false, "judges": 1, "notes": "04bd2b7's service-layer extraction touches FeedService with no reference in this slice's own tasks.md/design.md — an unexplained cross-module edit not tracked back to the spec." },
+    { "id": "add-public-feed-and-social:craft", "slice": "add-public-feed-and-social", "dimension": "craft", "score": 87, "pass": true, "judges": 1, "notes": "review-findings.json discloses 2 real fixes (unbounded feed size, inaccessible filter selects) plus 2 named accepted trade-offs (N+1, like-toggle race) rather than hiding them — honest-disclosure pattern." },
+
+    { "id": "add-lost-fireflies:process-order", "slice": "add-lost-fireflies", "dimension": "process-order", "score": 38, "pass": false, "judges": 1, "notes": "Two squashed feature commits (backend + frontend) with no red-phase evidence; review-findings.json absent (review substance documented only in prose in current-state.md)." },
+    { "id": "add-lost-fireflies:test-integrity", "slice": "add-lost-fireflies", "dimension": "test-integrity", "score": 76, "pass": true, "judges": 1, "notes": "Proportionate real tests (LostServiceTest.kt 244 lines), 93/93 integration tests green; one spec scenario (malformed contact email) left unconfirmed by the spot-check." },
+    { "id": "add-lost-fireflies:in-scope", "slice": "add-lost-fireflies", "dimension": "in-scope", "score": 45, "pass": false, "judges": 1, "notes": "b9037e8's own commit message says \"UI polish + architecture refactor\" — self-admitted scope-broadening; f92925c bundles an app-wide AbortSignal adoption + full i18n catalog extraction into lost-domain history with no spec justification." },
+    { "id": "add-lost-fireflies:craft", "slice": "add-lost-fireflies", "dimension": "craft", "score": 80, "pass": true, "judges": 1, "notes": "No TODO/dead code/thrash found; tasks.md 25/25 ticked; the later year-range validation fix reads as legitimate remediation, not churn." },
+
+    { "id": "add-moderation-and-admin:process-order", "slice": "add-moderation-and-admin", "dimension": "process-order", "score": 35, "pass": false, "judges": 1, "notes": "Single squashed commit (131ccfa) is the only commit touching the archive; review-findings.json absent despite prose evidence of 5 majors + minors found and fixed by 3 parallel reviewers." },
+    { "id": "add-moderation-and-admin:test-integrity", "slice": "add-moderation-and-admin", "dimension": "test-integrity", "score": 82, "pass": true, "judges": 1, "notes": "11 behavior-specific AdminPage tests (cascade-delete sibling rows, pending guards, banner cross-clear), real Testcontainers AdminIntegrationTest; only a 3/18 scenario spot-check was possible from the evidence." },
+    { "id": "add-moderation-and-admin:in-scope", "slice": "add-moderation-and-admin", "dimension": "in-scope", "score": 85, "pass": true, "judges": 1, "notes": "Follow-on commits (service extraction, Testcontainers suite, e2e locator fix) are separate and narrowly scoped, not smuggled into the slice commit." },
+    { "id": "add-moderation-and-admin:craft", "slice": "add-moderation-and-admin", "dimension": "craft", "score": 80, "pass": true, "judges": 1, "notes": "No thrash; the only irregularity (duplicated-date folder name, fixed in Phase 7) is explicitly cosmetic, not code churn." },
+
+    { "id": "add-content-pages:process-order", "slice": "add-content-pages", "dimension": "process-order", "score": 35, "pass": false, "judges": 1, "notes": "Original archive commit shipped with NO tasks.md at all (one was authored retrospectively in Phase 7, still uncommitted) and no review-findings.json — reconstructed-after-the-fact artifacts, not evidence of spec-first process." },
+    { "id": "add-content-pages:test-integrity", "slice": "add-content-pages", "dimension": "test-integrity", "score": 78, "pass": true, "judges": 1, "notes": "Test counts (6+9=15) match documentation exactly; the BC-BRAND-01 no-exclamation-mark claim was independently re-verified by grep (0 matches), not just trusted." },
+    { "id": "add-content-pages:in-scope", "slice": "add-content-pages", "dimension": "in-scope", "score": 82, "pass": true, "judges": 1, "notes": "Frontend-only, static-content, no backend touched — clean domain confinement; the spec-file mojibake corruption is an in-domain quality gap, not scope drift." },
+    { "id": "add-content-pages:craft", "slice": "add-content-pages", "dimension": "craft", "score": 85, "pass": true, "judges": 1, "notes": "Single clean commit, no TODO/dead code/thrash reported; docked slightly since no review-findings.json means craft wasn't gate-checked." }
+  ]
+}

@@ -1,0 +1,52 @@
+# docker compose up               → DB only (local dev: IntelliJ BE + pnpm dev FE)
+# docker compose --profile full up --build  → full stack (BE + FE in Docker)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: firefly
+      POSTGRES_USER: firefly
+      POSTGRES_PASSWORD: firefly
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U firefly"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    profiles: [full]
+    build:
+      context: ./firefly-be
+      dockerfile: Dockerfile
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/firefly
+      DB_USER: firefly
+      DB_PASSWORD: firefly
+      JWT_SECRET: svitlyachok-local-dev-secret-change-in-prod
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+  frontend:
+    profiles: [full]
+    build:
+      context: ./firefly-fe
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+
+volumes:
+  postgres_data:
+  uploads_data:

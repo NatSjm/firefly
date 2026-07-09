@@ -1,0 +1,166 @@
+{
+  "generatedAt": "2026-07-08T19:35:00Z",
+  "threshold": 70,
+  "dimensions": {
+    "error-clarity": 86.0,
+    "empty-state-usability": 83.0,
+    "copy-tone": 78.0,
+    "auth-security": 86.0
+  },
+  "cases": [
+    {
+      "id": "eval-error-clarity-login-invalid",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-02", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 80,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "The critical inline-error requirement is clearly met with a specific, Ukrainian, non-accusatory, exclamation-free message (\"Невірний email або пароль\"). The only gap is the lack of an actionable next step (e.g., a password-reset link/suggestion)."
+    },
+    {
+      "id": "eval-error-clarity-register-weak-password",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-01", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED with a clean accessibility-tree capture (fill invalid 3-char password, submit): confirms a distinct banner-style error \"Пароль має містити щонайменше 8 символів.\" renders at the top of the form, separate from the field's always-present static hint \"Мінімум 8 символів\". Resolves the prior round's doubt — this was a capture-methodology false negative, not a real product bug. Ukrainian, exclamation-free, specific about the 8-character minimum, field values preserved (no submit). Miss: banner is page-level rather than DOM-attached to the password input, same class as memory-title-too-long."
+    },
+    {
+      "id": "eval-auth-security-protected-route-unauthenticated",
+      "dimension": "auth-security",
+      "trace": ["FR-AUTH-05", "FR-SHELL-03"],
+      "capability": "authentication",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Redirect to /login with no flash of protected content is clearly evidenced. Miss: no returnTo/redirect param preserved, so the user's intended destination is lost across login."
+    },
+    {
+      "id": "eval-error-clarity-register-duplicate-email",
+      "dimension": "error-clarity",
+      "trace": ["FR-AUTH-01", "BC-BRAND-01"],
+      "capability": "authentication",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Inline, Ukrainian, specific, non-accusatory message (\"Email вже зареєстровано\"). Miss: no suggested next step (login/reset) alongside the message."
+    },
+    {
+      "id": "eval-empty-state-feed-no-results",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-FEED-01", "FR-FEED-02", "BC-BRAND-01"],
+      "capability": "feed",
+      "score": 84,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Clear, warm, actionable Ukrainian empty state. Miss: references \"these filters\" generically rather than naming the specific selected city/topic."
+    },
+    {
+      "id": "eval-copy-tone-like-prompt-unauthenticated",
+      "dimension": "copy-tone",
+      "trace": ["FR-FEED-06", "BC-BRAND-01"],
+      "capability": "feed",
+      "score": 78,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Warm, Ukrainian, exclamation-free tooltip + comments-section prompt explaining login is required to give warmth. Miss: no inline clickable CTA at the point of friction (only the always-present header \"Увійти\" link)."
+    },
+    {
+      "id": "eval-error-clarity-lost-request-invalid-year",
+      "dimension": "error-clarity",
+      "trace": ["FR-LOST-02", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 92,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED after fix: submitting years=\"2025-1990\" now puts a red border on the \"Роки\" field with \"Перевірте діапазон років — кінцевий рік не може бути раніше початкового.\" beneath it; the form does not submit. A matching server-side 400 check was added for defense-in-depth against direct API calls. Ukrainian, exclamation-free, names the exact constraint. Closes the prior scope gap (years was previously fully unvalidated)."
+    },
+    {
+      "id": "eval-empty-state-lost-requests-no-results",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-LOST-01", "FR-LOST-03", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 80,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Dedicated, Ukrainian, actionable empty state. Misses: generic \"these filters\" wording, and tone reads procedural rather than warm for this emotionally-charged feature; no \"create a request\" CTA surfaced."
+    },
+    {
+      "id": "eval-error-clarity-lost-request-missing-description",
+      "dimension": "error-clarity",
+      "trace": ["FR-LOST-02", "BC-BRAND-01"],
+      "capability": "lost-fireflies",
+      "score": 88,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED after per-field validation rework: the description Textarea itself gets a red border with \"Опишіть, що саме шукаєте.\" beneath it; correctly-filled city/contact-email fields show no error. Combined misleading banner is gone. Ukrainian, exclamation-free, states the requirement. Miss: phrasing reads neutral rather than emotionally warm for this feature."
+    },
+    {
+      "id": "eval-error-clarity-memory-missing-title",
+      "dimension": "error-clarity",
+      "trace": ["FR-MEM-01", "FR-MEM-02", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 90,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED after per-field validation rework: submitting blank shows a distinct \"Вкажіть назву спогаду.\" under the title field and a separate \"Додайте текст спогаду.\" under the text field — no longer a shared banner. Ukrainian, exclamation-free, professional. Miss: no additional guidance beyond stating the requirement."
+    },
+    {
+      "id": "eval-empty-state-dashboard-no-memories",
+      "dimension": "empty-state-usability",
+      "trace": ["FR-MEM-04", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 85,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Strong on-brand empty state (\"Тут поки тихо\") with clear CTA. Miss: no icon/illustration, just typographic treatment."
+    },
+    {
+      "id": "eval-error-clarity-memory-title-too-long",
+      "dimension": "error-clarity",
+      "trace": ["FR-MEM-02", "BC-BRAND-01"],
+      "capability": "memories",
+      "score": 82,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED after backend restart: the field-specific message is now Ukrainian (\"Назва не може перевищувати 255 символів\") and surfaced as the top-level error. It's a page-level shared banner rather than literally DOM-attached to the title input, but it unambiguously names the field, matches AGENTS.md's documented shared-banner convention, and blocks submission. Miss: no current-count-vs-limit display (e.g. \"300/255\")."
+    },
+    {
+      "id": "eval-error-clarity-report-blank-reason",
+      "dimension": "error-clarity",
+      "trace": ["FR-MOD-02", "BC-BRAND-01"],
+      "capability": "moderation",
+      "score": 92,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "RE-GRADED after the placeholder fix: the reason textarea now shows \"Наприклад: образливий зміст, спам або чужі персональні дані\" as non-blocking guidance. Ukrainian, warm, exclamation-free, and the optional-field submission still succeeds. Miss: doesn't explicitly explain why context helps moderators, just gives category examples."
+    },
+    {
+      "id": "eval-auth-security-admin-panel-non-admin",
+      "dimension": "auth-security",
+      "trace": ["FR-MOD-03", "FR-AUTH-05"],
+      "capability": "moderation",
+      "score": 90,
+      "pass": true,
+      "judges": 1,
+      "disagreement": false,
+      "notes": "Non-admin is silently redirected to the home page with zero flash or leakage of admin structure. Silent redirect (no explicit message) is a defensible security pattern, costing only a small deduction."
+    }
+  ]
+}

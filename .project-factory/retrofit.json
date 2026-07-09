@@ -1,0 +1,42 @@
+{
+  "retrofitted": true,
+  "reason": "All 6 MVP slices were implemented before the project-factory gated loop was established. No red-first test history exists for these slices.",
+  "slices": [
+    {
+      "id": "slice-1-skeleton",
+      "name": "Base Architecture & Skeleton",
+      "spec": "openspec/specs/slice-1-skeleton.md",
+      "frs": ["FR-HEALTH-01"]
+    },
+    {
+      "id": "slice-2-auth",
+      "name": "Registration, Auth & Profile",
+      "spec": "openspec/specs/slice-2-auth.md",
+      "frs": ["FR-AUTH-01", "FR-AUTH-02", "FR-AUTH-03", "FR-AUTH-04", "FR-PROFILE-01", "FR-PROFILE-02"]
+    },
+    {
+      "id": "slice-3-memories",
+      "name": "Personal Memory Archive",
+      "spec": "openspec/specs/slice-3-memories.md",
+      "frs": ["FR-MEM-01", "FR-MEM-02", "FR-MEM-03", "FR-MEM-04", "FR-MEM-05", "FR-MEM-06", "FR-MEM-07", "FR-MEM-08"]
+    },
+    {
+      "id": "slice-4-feed",
+      "name": "Public Feed, Likes & Comments",
+      "spec": "openspec/specs/slice-4-feed.md",
+      "frs": ["FR-FEED-01", "FR-FEED-02", "FR-FEED-03", "FR-LIKE-01", "FR-LIKE-02", "FR-COMMENT-01", "FR-COMMENT-02"]
+    },
+    {
+      "id": "slice-5-lost",
+      "name": "Lost Fireflies",
+      "spec": "openspec/specs/slice-5-lost.md",
+      "frs": ["FR-LOST-01", "FR-LOST-02", "FR-LOST-03", "FR-LOST-04"]
+    },
+    {
+      "id": "slice-6-moderation",
+      "name": "Moderation & Admin",
+      "spec": "openspec/specs/slice-6-moderation.md",
+      "frs": ["FR-MOD-01", "FR-MOD-02", "FR-MOD-03", "FR-ADMIN-01", "FR-ADMIN-02", "FR-ADMIN-03"]
+    }
+  ]
+}

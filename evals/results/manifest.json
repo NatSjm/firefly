@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-07-08T19:35:00Z",
+  "kind": "eval",
+  "results": [
+    { "id": "eval-error-clarity-login-invalid", "dimension": "error-clarity", "proof": "FR-AUTH-02, BC-BRAND-01", "score": 80, "pass": true },
+    { "id": "eval-error-clarity-register-weak-password", "dimension": "error-clarity", "proof": "FR-AUTH-01, BC-BRAND-01", "score": 82, "pass": true },
+    { "id": "eval-auth-security-protected-route-unauthenticated", "dimension": "auth-security", "proof": "FR-AUTH-05, FR-SHELL-03", "score": 82, "pass": true },
+    { "id": "eval-error-clarity-register-duplicate-email", "dimension": "error-clarity", "proof": "FR-AUTH-01, BC-BRAND-01", "score": 82, "pass": true },
+    { "id": "eval-empty-state-feed-no-results", "dimension": "empty-state-usability", "proof": "FR-FEED-01, FR-FEED-02, BC-BRAND-01", "score": 84, "pass": true },
+    { "id": "eval-copy-tone-like-prompt-unauthenticated", "dimension": "copy-tone", "proof": "FR-FEED-06, BC-BRAND-01", "score": 78, "pass": true },
+    { "id": "eval-error-clarity-lost-request-invalid-year", "dimension": "error-clarity", "proof": "FR-LOST-02, BC-BRAND-01", "score": 92, "pass": true },
+    { "id": "eval-empty-state-lost-requests-no-results", "dimension": "empty-state-usability", "proof": "FR-LOST-01, FR-LOST-03, BC-BRAND-01", "score": 80, "pass": true },
+    { "id": "eval-error-clarity-lost-request-missing-description", "dimension": "error-clarity", "proof": "FR-LOST-02, BC-BRAND-01", "score": 88, "pass": true },
+    { "id": "eval-error-clarity-memory-missing-title", "dimension": "error-clarity", "proof": "FR-MEM-01, FR-MEM-02, BC-BRAND-01", "score": 90, "pass": true },
+    { "id": "eval-empty-state-dashboard-no-memories", "dimension": "empty-state-usability", "proof": "FR-MEM-04, BC-BRAND-01", "score": 85, "pass": true },
+    { "id": "eval-error-clarity-memory-title-too-long", "dimension": "error-clarity", "proof": "FR-MEM-02, BC-BRAND-01", "score": 82, "pass": true },
+    { "id": "eval-error-clarity-report-blank-reason", "dimension": "error-clarity", "proof": "FR-MOD-02, BC-BRAND-01", "score": 92, "pass": true },
+    { "id": "eval-auth-security-admin-panel-non-admin", "dimension": "auth-security", "proof": "FR-MOD-03, FR-AUTH-05", "score": 90, "pass": true }
+  ]
+}

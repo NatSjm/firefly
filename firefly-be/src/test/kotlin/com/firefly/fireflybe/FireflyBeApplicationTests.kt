@@ -1,13 +1,11 @@
 package com.firefly.fireflybe
 
+import com.firefly.fireflybe.integration.IntegrationTestBase
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
-class FireflyBeApplicationTests {
+class FireflyBeApplicationTests : IntegrationTestBase() {
 
     @Test
     fun contextLoads() {
     }
-
 }

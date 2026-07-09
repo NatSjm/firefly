@@ -31,7 +31,7 @@ export interface SelectOption {
   label: string;
 }
 
-export interface SelectProps {
+export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   value?: string;
   onChange?: React.ChangeEventHandler<HTMLSelectElement>;
   options: SelectOption[];
@@ -119,13 +119,14 @@ export function Textarea({ placeholder, value, onChange, rows = 5, error, disabl
 }
 
 /** Select — native dropdown styled to match text fields (city, topic, sort). */
-export function Select({ value, onChange, options = [], placeholder, error, disabled }: SelectProps) {
+export function Select({ value, onChange, options = [], placeholder, error, disabled, ...rest }: SelectProps) {
   const chrome = useFieldChrome(error);
   return (
     <select
       value={value}
       onChange={onChange}
       disabled={disabled}
+      {...rest}
       {...chrome}
       style={{ ...chrome.style, opacity: disabled ? 0.55 : 1, appearance: "none", backgroundImage: "none" }}
     >

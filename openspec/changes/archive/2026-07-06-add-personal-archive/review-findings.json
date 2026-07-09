@@ -1,0 +1,48 @@
+{
+  "reviewer": "inline-review",
+  "scope": "add-personal-archive",
+  "confirmed_issues": [
+    {
+      "id": "update-photo-derived-delete-no-transaction",
+      "severity": "high",
+      "status": "fixed",
+      "summary": "PUT /api/memories/{id} replaced the photo via the derived delete query deleteByMemoryId with no active transaction (open-in-view is disabled), so photo replacement would fail at runtime; the stale in-memory media collection could also resurrect deleted rows on merge.",
+      "fix": "Made updateMemory @Transactional and switched photo replacement to the entity's cascade + orphanRemoval collection; removed the now-unused MediaRepository."
+    },
+    {
+      "id": "uploads-accept-any-file-type",
+      "severity": "high",
+      "status": "fixed",
+      "summary": "savePhoto stored any uploaded file under /uploads with its original extension; a .html upload would be served same-origin by nginx, a stored-XSS vector with the JWT in localStorage.",
+      "fix": "savePhoto now allows only jpg/jpeg/png/gif/webp extensions and rejects anything else with HTTP 400 and a user-safe Ukrainian message."
+    },
+    {
+      "id": "deleted-memories-orphan-upload-files",
+      "severity": "medium",
+      "status": "fixed",
+      "summary": "Deleting a memory (or replacing its photo) removed media rows but left the uploaded file on disk, contradicting the retrofit spec acceptance criterion that delete removes the uploaded file.",
+      "fix": "Added MemoryService.deletePhotoFiles (path-traversal safe, logs and never throws on IO failure) and wired it into deleteMemory and photo replacement."
+    },
+    {
+      "id": "duplicate-private-view-guard",
+      "severity": "low",
+      "status": "fixed",
+      "summary": "GET /api/memories/{id} re-implemented the private-memory visibility check inline while likes and comments controllers used MemoryService.ensureViewAllowed, risking divergence.",
+      "fix": "getMemory now delegates to memoryService.ensureViewAllowed."
+    }
+  ],
+  "advisories": [
+    {
+      "id": "year-range-not-cross-validated",
+      "severity": "low",
+      "status": "accepted",
+      "summary": "yearFrom/yearTo are individually bounded (1900-2100) but yearFrom > yearTo is not rejected on either side; accepted as an MVP gap since the spec does not require it."
+    },
+    {
+      "id": "photo-content-not-sniffed",
+      "severity": "low",
+      "status": "accepted",
+      "summary": "Photo validation is extension-based; magic-byte sniffing is deferred. Extension allowlisting already prevents the same-origin HTML/SVG serving vector."
+    }
+  ]
+}

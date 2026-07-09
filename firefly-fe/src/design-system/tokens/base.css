@@ -35,3 +35,14 @@ button, input, textarea, select {
 }
 
 img { max-width: 100%; display: block; }
+
+/* Header responsive nav — collapses primary nav/auth links into the hamburger
+   menu below the breakpoint where they'd otherwise overflow and overlap the
+   wordmark (see docs/qa/demo-recordings/12-responsive-mobile.png regression). */
+.ds-header-nav { display: flex; }
+.ds-header-menu-btn { display: none; }
+
+@media (max-width: 720px) {
+  .ds-header-nav { display: none; }
+  .ds-header-menu-btn { display: block; }
+}

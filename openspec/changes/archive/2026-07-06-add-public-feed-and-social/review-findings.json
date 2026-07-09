@@ -1,0 +1,34 @@
+{
+  "reviewer": "inline-review",
+  "scope": "add-public-feed-and-social",
+  "confirmed_issues": [
+    {
+      "id": "feed-size-unbounded",
+      "severity": "medium",
+      "status": "fixed",
+      "summary": "GET /api/feed accepted any size value, so a caller could request an excessively large page and force avoidable database and DTO-enrichment work.",
+      "fix": "FeedService now clamps page to 0+ and size to 1..100 before building the PageRequest."
+    },
+    {
+      "id": "feed-filter-selects-missing-accessible-names",
+      "severity": "low",
+      "status": "fixed",
+      "summary": "The public feed filter selects had no accessible names, which made them hard to target in tests and weaker for assistive technology users.",
+      "fix": "FilterBar now passes aria-labels for the city and topic selects, and the shared Select component forwards native select attributes."
+    }
+  ],
+  "advisories": [
+    {
+      "id": "feed-enrichment-n-plus-one",
+      "severity": "medium",
+      "status": "accepted",
+      "summary": "FeedService maps each memory through MemoryService.enrichDto, which issues per-item like-count, comment-count, and liked-by-me queries. This is acceptable for MVP traffic but should move to batch aggregation before scaling the public feed."
+    },
+    {
+      "id": "like-toggle-race-on-unique-constraint",
+      "severity": "medium",
+      "status": "accepted",
+      "summary": "LikeService.toggle performs read-then-write logic around the unique (user_id, memory_id) constraint. Concurrent toggle requests can still race and surface a duplicate-key failure until the service catches and normalizes that database exception."
+    }
+  ]
+}

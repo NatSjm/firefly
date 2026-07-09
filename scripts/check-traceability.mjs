@@ -34,7 +34,7 @@ const PATHS = {
   specsDir: "openspec/specs",
   changesDir: "openspec/changes",
   qaDir: "docs/qa",
-  testDirs: ["lib", "tests", "app", "src", "components", "evals"],
+  testDirs: ["lib", "tests", "app", "src", "components", "evals", "e2e", "firefly-fe", "firefly-be"],
   reportOut: "docs/qa/traceability-report.md",
   jsonOut: "trace/trace.json",
 };
@@ -145,10 +145,14 @@ const isTestFile = (f) => /\.(test|spec|eval)\.(ts|tsx|js|mjs)$/.test(f) || /int
 for (const dir of PATHS.testDirs) {
   for (const file of walk(dir, isTestFile)) {
     const text = read(file) ?? "";
-    for (const m of text.matchAll(/@trace\s+([A-Z]+-\d+(?:\s*,\s*[A-Z]+-\d+)*)/g)) {
-      for (const id of m[1].split(/\s*,\s*/)) {
-        if (!testTraces.has(id)) testTraces.set(id, []);
-        testTraces.get(id).push(file.replaceAll("\\", "/"));
+    // Match @trace annotations with IDs (space or comma separated)
+    for (const m of text.matchAll(/@trace\s+([A-Z]+-(?:[A-Z0-9]+-)?[\d]+(?:[\s,]+[A-Z]+-(?:[A-Z0-9]+-)?[\d]+)*)/g)) {
+      // Split by both spaces and commas
+      for (const id of m[1].split(/[\s,]+/)) {
+        if (id && id.match(/^[A-Z]+-/)) { // Ensure it looks like an ID
+          if (!testTraces.has(id)) testTraces.set(id, []);
+          testTraces.get(id).push(file.replaceAll("\\", "/"));
+        }
       }
     }
   }

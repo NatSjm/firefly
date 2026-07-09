@@ -1,0 +1,23 @@
+CREATE TABLE memories (
+  id BIGSERIAL PRIMARY KEY,
+  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  text TEXT NOT NULL,
+  ingredients TEXT,
+  steps TEXT,
+  city VARCHAR(120),
+  topic_slug VARCHAR(60),
+  year_from INT,
+  year_to INT,
+  is_public BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMP
+);
+
+CREATE TABLE media (
+  id BIGSERIAL PRIMARY KEY,
+  memory_id BIGINT NOT NULL REFERENCES memories(id) ON DELETE CASCADE,
+  url VARCHAR(512) NOT NULL,
+  type VARCHAR(20) NOT NULL DEFAULT 'image'
+);

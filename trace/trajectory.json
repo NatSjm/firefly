@@ -1,0 +1,87 @@
+{
+  "generatedBy": "scripts/check-trajectory.mjs",
+  "slices": [
+    {
+      "slice": "2026-07-06-add-identity-and-access",
+      "reviewEvidence": "unclean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-06-add-lost-fireflies",
+      "reviewEvidence": "missing",
+      "trailerCommits": 3,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-06-add-personal-archive",
+      "reviewEvidence": "unclean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-06-add-public-feed-and-social",
+      "reviewEvidence": "unclean",
+      "trailerCommits": 1,
+      "libDomains": [],
+      "processComplete": true
+    },
+    {
+      "slice": "2026-07-07-add-content-pages",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": false
+    },
+    {
+      "slice": "2026-07-07-add-moderation-and-admin",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
+    }
+  ],
+  "overlaps": [],
+  "failures": [],
+  "warnings": [
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-06-add-identity-and-access: review-findings.json is unclean (review must have run clean before archive)"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-06-add-lost-fireflies: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-06-add-personal-archive: review-findings.json is unclean (review must have run clean before archive)"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-06-add-public-feed-and-social: review-findings.json is unclean (review must have run clean before archive)"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-07-add-content-pages: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "process",
+      "msg": "2026-07-07-add-content-pages: archived change is missing design.md and/or tasks.md"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-07-add-content-pages: no commit carries a \"Slice: add-content-pages\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-07-add-moderation-and-admin: no commit carries a \"Slice: add-moderation-and-admin\" trailer"
+    }
+  ]
+}

@@ -1,11 +1,17 @@
 package com.firefly.fireflybe
 
+import com.firefly.fireflybe.config.AppProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class FireflyBeApplication
-
-fun main(args: Array<String>) {
-    runApplication<FireflyBeApplication>(*args)
+@EnableConfigurationProperties(AppProperties::class)
+class FireflyBeApplication {
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            runApplication<FireflyBeApplication>(*args)
+        }
+    }
 }

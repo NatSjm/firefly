@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Select } from "../inputs/Inputs";
 
 export interface FilterBarProps {
@@ -13,9 +14,6 @@ export interface FilterBarProps {
   showSort?: boolean;
 }
 
-const DEFAULT_CITIES = ["Київ", "Львів", "Одеса", "Харків", "Маріуполь", "Дніпро"];
-const DEFAULT_TOPICS = ["Океан Ельзи", "Бабусині рецепти", "Комп'ютерні ігри", "Тамагочі", "Дворові ігри"];
-
 /**
  * FilterBar — city + topic + sort controls used atop the public feed and Lost Fireflies list.
  */
@@ -23,10 +21,14 @@ export function FilterBar({
   city, onCityChange,
   topic, onTopicChange,
   sort, onSortChange,
-  cities = DEFAULT_CITIES,
-  topics = DEFAULT_TOPICS,
+  cities,
+  topics,
   showSort = true,
 }: FilterBarProps) {
+  const { t } = useTranslation();
+  const cityList = cities ?? (t("cities", { returnObjects: true }) as string[]);
+  const topicList = topics ?? (t("topics", { returnObjects: true }) as string[]);
+
   return (
     <div style={{
       display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
@@ -36,16 +38,18 @@ export function FilterBar({
         <Select
           value={city}
           onChange={onCityChange}
-          placeholder="Усі міста"
-          options={cities.map((c) => ({ value: c, label: c }))}
+          placeholder={t("filter.allCities")}
+          options={cityList.map((c) => ({ value: c, label: c }))}
+          aria-label={t("filter.city")}
         />
       </div>
       <div style={{ minWidth: 200 }}>
         <Select
           value={topic}
           onChange={onTopicChange}
-          placeholder="Усі теми"
-          options={topics.map((t) => ({ value: t, label: t }))}
+          placeholder={t("filter.allTopics")}
+          options={topicList.map((option) => ({ value: option, label: option }))}
+          aria-label={t("filter.topic")}
         />
       </div>
       {showSort && (
@@ -57,7 +61,7 @@ export function FilterBar({
               background: sort === v ? "var(--bg-surface)" : "transparent",
               color: sort === v ? "var(--text-primary)" : "var(--text-tertiary)",
               boxShadow: sort === v ? "var(--shadow-sm)" : "none",
-            }}>{v === "new" ? "Нові" : "Популярні"}</button>
+            }}>{v === "new" ? t("filter.sortNew") : t("filter.sortPopular")}</button>
           ))}
         </div>
       )}

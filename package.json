@@ -4,24 +4,26 @@
     "version": "0.0.1",
     "type": "module",
     "scripts": {
-        "test:coverage": "echo 'test:coverage: not configured yet'",
         "lint": "pnpm --filter firefly-fe run lint",
-        "qa:verify": "node scripts/qa-verify.mjs",
+        "build": "pnpm --filter firefly-fe run build",
+        "test:run": "pnpm --filter firefly-fe run test:run",
+        "test:coverage": "pnpm --filter firefly-fe run test:coverage",
+        "test:integration": "cd firefly-be && .\\mvnw.cmd test -Dtest=*IntegrationTest",
+        "test:e2e": "playwright test",
+        "check:trace": "node scripts/check-traceability.mjs",
+        "check:trajectory": "node scripts/check-trajectory.mjs",
+        "check:coverage": "node scripts/check-coverage-ratchet.mjs",
         "check:eval": "node scripts/check-eval-ratchet.mjs",
         "check:recordings": "node scripts/check-recordings.mjs",
-        "gate:status": "node scripts/gate-status.mjs",
         "check:a11y": "node scripts/check-a11y.mjs",
-        "build": "echo 'build: not configured yet'",
-        "check:trajectory": "node scripts/check-trajectory.mjs",
-        "test:e2e": "echo 'test:e2e: not configured yet'",
-        "test:integration": "echo 'test:integration: not configured yet'",
-        "check:trace": "node scripts/check-traceability.mjs",
-        "qa:record-proof": "node scripts/record-demos.mjs --proof",
-        "test:run": "echo 'test:run: not configured yet'",
-        "check:coverage": "node scripts/check-coverage-ratchet.mjs",
-        "qa:record-demos": "node scripts/record-demos.mjs"
+        "gate:status": "node scripts/gate-status.mjs",
+        "qa:verify": "node scripts/qa-verify.mjs",
+        "qa:record-demos": "node scripts/record-demos.mjs",
+        "qa:record-proof": "node scripts/record-demos.mjs --proof"
     },
     "devDependencies": {
-        "typescript": "^6.0.3"
+        "@playwright/test": "1.61.1",
+        "axios": "1.18.1",
+        "typescript": "6.0.3"
     }
 }
