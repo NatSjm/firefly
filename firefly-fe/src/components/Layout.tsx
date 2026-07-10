@@ -31,6 +31,8 @@ export function Layout({ children }: { children: ReactNode }) {
       about: '/about',
       rules: '/rules',
       report: '/rules',
+      register: '/register',
+      login: '/login',
       dashboard: '/dashboard',
       create: '/memories/new',
       profile: '/profile',

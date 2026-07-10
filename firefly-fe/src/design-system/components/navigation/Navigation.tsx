@@ -23,7 +23,7 @@ export interface MobileMenuProps {
   onLogin?: () => void;
 }
 
-const NAV_KEYS = ["feed", "lost", "about", "rules"] as const;
+const NAV_KEYS = ["feed", "lost", "about"] as const;
 
 /**
  * Header — sticky cream bar with the firefly mark, primary nav (amber
@@ -73,8 +73,9 @@ export function Header({ loggedIn = false, userName = "", active, onNavigate, on
               </div>
             </div>
           ) : (
-            <div className="ds-header-nav" style={{ alignItems: "center" }}>
-              <Button size="sm" variant="secondary" onClick={onLogin}>{t("nav.login")}</Button>
+            <div className="ds-header-nav" style={{ alignItems: "center", gap: 10 }}>
+              <Button size="sm" variant="ghost" onClick={onLogin}>{t("nav.login")}</Button>
+              <Button size="sm" variant="secondary" onClick={() => onNavigate?.("register")}>{t("nav.register")}</Button>
             </div>
           )}
           <button onClick={onMenuToggle} className="ds-header-menu-btn" style={{
@@ -107,9 +108,9 @@ export function Footer({ onNavigate }: FooterProps) {
       <div style={{
         maxWidth: "var(--content-max)", margin: "0 auto",
         padding: "var(--space-10) var(--gutter)",
-        display: "flex", flexWrap: "wrap", gap: 24, alignItems: "center", justifyContent: "space-between",
+        display: "flex", flexWrap: "wrap", gap: "var(--space-10)", alignItems: "flex-start",
       }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 320 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", maxWidth: 320 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <img src="/design-system/assets/logo-mark-dark.svg" width="28" height="28" alt="" />
             <span style={{ fontFamily: "var(--font-heading)", fontSize: 16, fontWeight: 600, color: "var(--text-on-dark)" }}>{t("app.name")}</span>
@@ -118,12 +119,16 @@ export function Footer({ onNavigate }: FooterProps) {
             {t("footer.tagline")}
           </span>
         </div>
-        <div style={{ display: "flex", gap: 20, fontSize: "var(--text-sm)" }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", fontSize: "var(--text-sm)" }}>
+          <a style={linkStyle} onClick={() => onNavigate?.("feed")}>{t("nav.feed")}</a>
+          <a style={linkStyle} onClick={() => onNavigate?.("lost")}>{t("nav.lost")}</a>
           <a style={linkStyle} onClick={() => onNavigate?.("about")}>{t("nav.about")}</a>
+        </nav>
+        <nav style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)", fontSize: "var(--text-sm)" }}>
           <a style={linkStyle} onClick={() => onNavigate?.("rules")}>{t("nav.rules")}</a>
           <a style={linkStyle} onClick={() => onNavigate?.("report")}>{t("nav.report")}</a>
-        </div>
-        <span style={{ fontSize: "var(--text-xs)", color: "rgba(245, 239, 223, 0.5)" }}>{t("nav.copyright")}</span>
+        </nav>
+        <span style={{ marginLeft: "auto", fontSize: "var(--text-xs)", color: "rgba(245, 239, 223, 0.5)" }}>{t("nav.copyright")}</span>
       </div>
     </footer>
   );

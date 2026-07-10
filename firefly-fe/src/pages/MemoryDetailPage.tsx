@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { adminDeleteComment } from '@/api/admin';
 import { deleteMemory, getMemory, type Memory } from '@/api/memories';
 import { addComment, createReport, deleteComment, getComments, toggleLike, type Comment } from '@/api/social';
-import { Badge, Button, Message, Modal, Textarea } from '@/design-system';
+import { Badge, Button, Message, Modal, Textarea, WarmthIcon } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAsyncData } from '@/hooks/useAsyncData';
 import {
@@ -229,7 +229,7 @@ export function MemoryDetailPage() {
   }
 
   return (
-    <div style={PAGE_WRAPPER_STYLE}>
+    <div style={{ ...PAGE_WRAPPER_STYLE, maxWidth: 720 }}>
       <button
         type="button"
         onClick={() => navigate(-1)}
@@ -247,7 +247,7 @@ export function MemoryDetailPage() {
         {t('memory.back')}
       </button>
 
-      <div style={{ ...SURFACE_STYLE, marginBottom: 'var(--space-6)' }}>
+      <article>
         {feedback ? (
           <div style={{ marginBottom: 'var(--space-5)' }}>
             <Message tone="success" onDismiss={() => setFeedback('')}>
@@ -263,14 +263,14 @@ export function MemoryDetailPage() {
           </div>
         ) : null}
 
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', marginBottom: 'var(--space-5)' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
           {memory.topicSlug ? (
-            <Badge variant="topic" tone="amber">
+            <Badge variant="topic">
               {memory.topicSlug}
             </Badge>
           ) : null}
           {memory.city ? (
-            <Badge variant="topic" tone="moss">
+            <Badge variant="city">
               {memory.city}
             </Badge>
           ) : null}
@@ -279,9 +279,11 @@ export function MemoryDetailPage() {
 
         <h1
           style={{
-            margin: '0 0 var(--space-4)',
+            margin: 'var(--space-4) 0 var(--space-2)',
             fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-h1)',
+            fontSize: 'var(--text-3xl)',
+            fontWeight: 600,
+            lineHeight: 'var(--leading-tight)',
             color: 'var(--text-primary)',
           }}
         >
@@ -291,12 +293,13 @@ export function MemoryDetailPage() {
           style={{
             margin: '0 0 var(--space-6)',
             fontFamily: 'var(--font-ui)',
-            color: 'var(--text-secondary)',
+            fontSize: 'var(--text-sm)',
+            color: 'var(--text-muted)',
           }}
         >
-          {memory.authorName}
-          {years ? ` • ${years}` : ''}
-          {` • ${formatDate(memory.createdAt)}`}
+          <b style={{ color: 'var(--text-secondary)' }}>{memory.authorName}</b>
+          {years ? ` · ${years}` : ''}
+          {` · ${formatDate(memory.createdAt)}`}
         </p>
 
         {memory.mediaUrls[0] ? (
@@ -305,9 +308,9 @@ export function MemoryDetailPage() {
             alt={memory.title}
             style={{
               width: '100%',
-              maxHeight: '520px',
+              height: '300px',
               objectFit: 'cover',
-              borderRadius: 'var(--radius-lg)',
+              borderRadius: 'var(--radius-md)',
               marginBottom: 'var(--space-6)',
             }}
           />
@@ -316,9 +319,10 @@ export function MemoryDetailPage() {
         <div
           style={{
             whiteSpace: 'pre-wrap',
-            fontFamily: 'var(--font-ui)',
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'var(--text-lg)',
             color: 'var(--text-primary)',
-            lineHeight: 'var(--lh-body)',
+            lineHeight: 'var(--leading-loose)',
             marginBottom: 'var(--space-6)',
           }}
         >
@@ -367,105 +371,90 @@ export function MemoryDetailPage() {
             gap: 'var(--space-4)',
             flexWrap: 'wrap',
             alignItems: 'center',
-            justifyContent: 'space-between',
+            marginTop: 'var(--space-8)',
+            paddingTop: 'var(--space-5)',
+            borderTop: '1px solid var(--border-default)',
           }}
         >
-          <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', alignItems: 'center' }}>
-            <button
-              type="button"
-              onClick={handleToggleLike}
-              disabled={!user || updatingLike}
-              title={user ? undefined : t('memory.warmthSignInPrompt')}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 'var(--space-2)',
-                border: `1px solid ${memory.likedByMe ? 'var(--accent)' : 'var(--border-strong)'}`,
-                borderRadius: 'var(--radius-pill)',
-                background: memory.likedByMe ? 'var(--accent-soft)' : 'transparent',
-                color: memory.likedByMe ? 'var(--accent-text)' : 'var(--text-secondary)',
-                boxShadow: memory.likedByMe ? 'var(--shadow-glow-sm)' : 'none',
-                padding: 'var(--space-3) var(--space-5)',
-                fontFamily: 'var(--font-ui)',
-                fontWeight: 700,
-                cursor: user ? 'pointer' : 'not-allowed',
-              }}
-            >
-              <span
-                aria-hidden="true"
-                style={{
-                  width: 9,
-                  height: 9,
-                  borderRadius: '50%',
-                  background: memory.likedByMe ? 'var(--accent)' : 'var(--text-muted)',
-                }}
-              />
-              {t('memory.warmth', { total: memory.likesCount })}
-            </button>
-            {!user ? (
-              <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)', fontSize: 'var(--text-body-sm)' }}>
-                {t('memory.warmthSignInPrompt')}
-              </span>
-            ) : null}
-            <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
+          <button
+            type="button"
+            onClick={handleToggleLike}
+            disabled={!user || updatingLike}
+            aria-pressed={memory.likedByMe}
+            title={user ? undefined : t('memory.warmthSignInPrompt')}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 7,
+              border: `1px solid ${memory.likedByMe ? 'var(--accent)' : 'var(--border-strong)'}`,
+              borderRadius: 'var(--radius-pill)',
+              background: memory.likedByMe ? 'var(--accent-soft)' : 'transparent',
+              color: memory.likedByMe ? 'var(--accent-text)' : 'var(--text-secondary)',
+              boxShadow: memory.likedByMe ? 'var(--shadow-glow-sm)' : 'none',
+              padding: '5px 14px',
+              fontFamily: 'var(--font-ui)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 700,
+              cursor: user ? 'pointer' : 'not-allowed',
+            }}
+          >
+            <WarmthIcon size={15} color={memory.likedByMe ? 'var(--accent)' : 'var(--text-muted)'} />
+            {t('memory.warmth', { total: memory.likesCount })}
+          </button>
+          <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
+            {user ? t('memory.warmthHint') : t('memory.warmthSignInPrompt')}
+          </span>
+
+          <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span style={{ fontFamily: 'var(--font-ui)', color: 'var(--text-muted)', fontSize: 'var(--text-xs)' }}>
               {t('memory.commentsCount', { total: memory.commentsCount })}
             </span>
-          </div>
-
-          <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap' }}>
             {isOwner ? (
               <>
-                <Button variant="secondary" onClick={() => navigate(`/memories/${memory.id}/edit`)}>
+                <Button size="sm" variant="secondary" onClick={() => navigate(`/memories/${memory.id}/edit`)}>
                   {t('memory.edit')}
                 </Button>
-                <Button variant="danger" onClick={() => setDeleteOpen(true)}>
+                <Button size="sm" variant="danger" onClick={() => setDeleteOpen(true)}>
                   {t('memory.delete')}
                 </Button>
               </>
             ) : null}
             {!isOwner && user ? (
-              <Button variant="ghost" onClick={() => setReportOpen(true)}>
+              <button
+                type="button"
+                onClick={() => setReportOpen(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--text-muted)',
+                  fontFamily: 'var(--font-ui)',
+                  textDecoration: 'underline',
+                  padding: 0,
+                }}
+              >
                 {t('memory.report')}
-              </Button>
+              </button>
             ) : null}
           </div>
         </div>
-      </div>
+      </article>
 
-      <section style={SURFACE_STYLE}>
+      <section style={{ marginTop: 'var(--space-10)' }}>
         <h2
           style={{
             margin: '0 0 var(--space-5)',
             fontFamily: 'var(--font-heading)',
-            fontSize: 'var(--text-h3)',
+            fontSize: 'var(--text-xl)',
+            fontWeight: 600,
             color: 'var(--text-primary)',
           }}
         >
           {t('memory.comments.heading')}
         </h2>
 
-        {user ? (
-          <form style={{ display: 'grid', gap: 'var(--space-4)', marginBottom: 'var(--space-6)' }} onSubmit={handleAddComment}>
-            <Textarea
-              rows={4}
-              value={commentText}
-              onChange={(event) => setCommentText(event.target.value)}
-              placeholder={t('memory.comments.placeholder')}
-              disabled={submittingComment}
-            />
-            <div>
-              <Button type="submit" disabled={submittingComment || !commentText.trim()}>
-                {submittingComment ? t('memory.comments.submitting') : t('memory.comments.submit')}
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <p style={{ margin: '0 0 var(--space-6)', color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>
-            {t('memory.comments.signInPrompt')}
-          </p>
-        )}
-
-        <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           {comments.length ? (
             comments.map((comment) => {
               const canDelete = Boolean(user && (user.id === comment.userId || user.role === 'admin'));
@@ -474,10 +463,12 @@ export function MemoryDetailPage() {
                 <article
                   key={comment.id}
                   style={{
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-5)',
-                    background: 'var(--bg-surface-alt)',
+                    background: 'var(--surface-card)',
+                    border: '1px solid var(--border-default)',
+                    borderRadius: 'var(--radius-lg)',
+                    boxShadow: 'var(--shadow-card)',
+                    padding: 'var(--space-4) var(--space-5)',
+                    fontFamily: 'var(--font-ui)',
                   }}
                 >
                   <div
@@ -486,57 +477,60 @@ export function MemoryDetailPage() {
                       justifyContent: 'space-between',
                       gap: 'var(--space-4)',
                       flexWrap: 'wrap',
-                      marginBottom: 'var(--space-3)',
+                      marginBottom: 4,
+                      fontSize: 'var(--text-xs)',
+                      color: 'var(--text-muted)',
                     }}
                   >
-                    <div>
-                      <strong style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-ui)' }}>{comment.authorName}</strong>
-                      <div style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-ui)', fontSize: 'var(--text-caption)' }}>
-                        {formatDate(comment.createdAt)}
-                      </div>
-                    </div>
-                    {canDelete ? (
-                      <button
-                        type="button"
-                        onClick={() => void handleDeleteComment(comment)}
-                        style={{
-                          border: 'none',
-                          background: 'none',
-                          color: 'var(--error-strong)',
-                          cursor: 'pointer',
-                          fontFamily: 'var(--font-ui)',
-                          fontWeight: 600,
-                          padding: 0,
-                        }}
-                      >
-                        {t('memory.comments.delete')}
-                      </button>
-                    ) : null}
-                    {user && user.id !== comment.userId && user.role !== 'admin' ? (
-                      <button
-                        type="button"
-                        onClick={() => setCommentReportTarget(comment.id)}
-                        style={{
-                          border: 'none',
-                          background: 'none',
-                          color: 'var(--text-tertiary)',
-                          cursor: 'pointer',
-                          fontFamily: 'var(--font-ui)',
-                          fontSize: 'var(--text-caption)',
-                          padding: 0,
-                        }}
-                      >
-                        {t('memory.comments.report')}
-                      </button>
-                    ) : null}
+                    <span>
+                      <b style={{ color: 'var(--text-secondary)' }}>{comment.authorName}</b> · {formatDate(comment.createdAt)}
+                    </span>
+                    <span style={{ display: 'flex', gap: 'var(--space-3)' }}>
+                      {canDelete ? (
+                        <button
+                          type="button"
+                          onClick={() => void handleDeleteComment(comment)}
+                          style={{
+                            border: 'none',
+                            background: 'none',
+                            color: 'var(--danger-text)',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-ui)',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 700,
+                            padding: 0,
+                          }}
+                        >
+                          {t('memory.comments.delete')}
+                        </button>
+                      ) : null}
+                      {user && user.id !== comment.userId && user.role !== 'admin' ? (
+                        <button
+                          type="button"
+                          onClick={() => setCommentReportTarget(comment.id)}
+                          style={{
+                            border: 'none',
+                            background: 'none',
+                            color: 'var(--text-muted)',
+                            cursor: 'pointer',
+                            fontFamily: 'var(--font-ui)',
+                            fontSize: 'var(--text-xs)',
+                            textDecoration: 'underline',
+                            padding: 0,
+                          }}
+                        >
+                          {t('memory.comments.report')}
+                        </button>
+                      ) : null}
+                    </span>
                   </div>
                   <p
                     style={{
                       margin: 0,
                       whiteSpace: 'pre-wrap',
-                      color: 'var(--text-secondary)',
-                      lineHeight: 'var(--lh-body)',
-                      fontFamily: 'var(--font-ui)',
+                      fontSize: 'var(--text-sm)',
+                      color: 'var(--text-primary)',
+                      lineHeight: 'var(--leading-normal)',
                     }}
                   >
                     {comment.text}
@@ -546,6 +540,38 @@ export function MemoryDetailPage() {
             })
           ) : (
             <div style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>{t('memory.comments.empty')}</div>
+          )}
+        </div>
+
+        <div style={{ marginTop: 'var(--space-5)' }}>
+          {user ? (
+            <form style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }} onSubmit={handleAddComment}>
+              <Textarea
+                rows={3}
+                value={commentText}
+                onChange={(event) => setCommentText(event.target.value)}
+                placeholder={t('memory.comments.placeholder')}
+                disabled={submittingComment}
+              />
+              <div>
+                <Button type="submit" disabled={submittingComment || !commentText.trim()}>
+                  {submittingComment ? t('memory.comments.submitting') : t('memory.comments.submit')}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <div
+              style={{
+                padding: 'var(--space-4) var(--space-5)',
+                background: 'var(--surface-sunken)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-secondary)',
+                fontFamily: 'var(--font-ui)',
+              }}
+            >
+              {t('memory.comments.signInPrompt')}
+            </div>
           )}
         </div>
       </section>

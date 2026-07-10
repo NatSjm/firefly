@@ -2,18 +2,12 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 export interface BadgeProps {
-  variant?: "topic" | "privacy-public" | "privacy-private" | "warmth";
-  /** Color family for a topic badge: "amber" for topics, "moss" (legacy name) renders the indigo city chip. */
+  variant?: "topic" | "city" | "neutral" | "privacy-public" | "privacy-private" | "warmth";
+  /** Legacy color family for a topic badge: "moss" renders the indigo city chip (same as variant="city"). */
   tone?: "amber" | "moss";
   icon?: React.ReactNode;
   children?: React.ReactNode;
 }
-
-const TOPIC_COLORS: Record<"amber" | "moss", { bg: string; fg: string }> = {
-  amber: { bg: "var(--accent-soft)", fg: "var(--accent-text)" },
-  /* legacy "moss" tone is the city chip — night-indigo family in the rebrand */
-  moss: { bg: "var(--indigo-100)", fg: "var(--indigo-800)" },
-};
 
 const badgeBase: React.CSSProperties = {
   display: "inline-flex",
@@ -28,8 +22,9 @@ const badgeBase: React.CSSProperties = {
 };
 
 /**
- * Badge — small pill label used for topics, cities, privacy state, and the
- * "Warmth" count (the only badge allowed to glow).
+ * Badge — small pill label used for topics (amber), cities (indigo), neutral
+ * chips (kind/type), privacy state, and the "Warmth" count (the only badge
+ * allowed to glow).
  */
 export function Badge({ variant = "topic", tone = "amber", children, icon = null }: BadgeProps) {
   const { t } = useTranslation();
@@ -63,9 +58,27 @@ export function Badge({ variant = "topic", tone = "amber", children, icon = null
     );
   }
 
-  const c = TOPIC_COLORS[tone ?? "amber"] ?? TOPIC_COLORS.amber;
+  if (variant === "neutral") {
+    return (
+      <span style={{
+        ...badgeBase,
+        background: "var(--surface-sunken)",
+        color: "var(--text-secondary)",
+        borderColor: "var(--border-default)",
+      }}>
+        {icon}
+        {children}
+      </span>
+    );
+  }
+
+  const isCity = variant === "city" || tone === "moss";
   return (
-    <span style={{ ...badgeBase, background: c.bg, color: c.fg }}>
+    <span style={{
+      ...badgeBase,
+      background: isCity ? "var(--indigo-100)" : "var(--accent-soft)",
+      color: isCity ? "var(--indigo-800)" : "var(--accent-text)",
+    }}>
       {icon}
       {children}
     </span>
