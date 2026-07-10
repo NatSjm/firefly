@@ -42,6 +42,13 @@
       "trailerCommits": 0,
       "libDomains": [],
       "processComplete": true
+    },
+    {
+      "slice": "2026-07-10-update-design-system-rebrand",
+      "reviewEvidence": "missing",
+      "trailerCommits": 0,
+      "libDomains": [],
+      "processComplete": true
     }
   ],
   "overlaps": [],
@@ -82,6 +89,14 @@
     {
       "check": "trailer",
       "msg": "2026-07-07-add-moderation-and-admin: no commit carries a \"Slice: add-moderation-and-admin\" trailer"
+    },
+    {
+      "check": "review-evidence",
+      "msg": "2026-07-10-update-design-system-rebrand: review-findings.json is missing (review must have run clean before archive)"
+    },
+    {
+      "check": "trailer",
+      "msg": "2026-07-10-update-design-system-rebrand: no commit carries a \"Slice: update-design-system-rebrand\" trailer"
     }
   ]
 }

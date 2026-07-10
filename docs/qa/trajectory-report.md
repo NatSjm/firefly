@@ -5,8 +5,8 @@ archived slice took: review evidence, `Slice:` trailers, and module scope.
 It does NOT verify test-first ordering or test integrity (not derivable from
 one-commit-per-slice history) — those are graded by the trajectory-eval workflow.
 
-Scope: 6 archived slice(s).
-Result: PASS, 9 warning(s)
+Scope: 7 archived slice(s).
+Result: PASS, 11 warning(s)
 
 | Slice | Review evidence | Trailer commits | design+tasks | lib domains touched |
 |---|---|---|---|---|
@@ -16,6 +16,7 @@ Result: PASS, 9 warning(s)
 | 2026-07-06-add-public-feed-and-social | **unclean** | 1 | yes | - |
 | 2026-07-07-add-content-pages | **missing** | **0** | **no** | - |
 | 2026-07-07-add-moderation-and-admin | **missing** | **0** | yes | - |
+| 2026-07-10-update-design-system-rebrand | **missing** | **0** | yes | - |
 
 ## Cross-slice module overlap
 
@@ -36,3 +37,5 @@ None.
 - **trailer**: 2026-07-07-add-content-pages: no commit carries a "Slice: add-content-pages" trailer
 - **review-evidence**: 2026-07-07-add-moderation-and-admin: review-findings.json is missing (review must have run clean before archive)
 - **trailer**: 2026-07-07-add-moderation-and-admin: no commit carries a "Slice: add-moderation-and-admin" trailer
+- **review-evidence**: 2026-07-10-update-design-system-rebrand: review-findings.json is missing (review must have run clean before archive)
+- **trailer**: 2026-07-10-update-design-system-rebrand: no commit carries a "Slice: update-design-system-rebrand" trailer

@@ -1,146 +1,187 @@
-/* Svitlyachok — color tokens
-   Warm, calm palette: paper-cream light theme + a "night" (dark) theme that
-   makes the amber "firefly" accent glow. All accents share chroma/lightness
-   families and vary by hue. Built in oklch for perceptual consistency.
-   Contrast targets: body text ≥ 4.5:1, large text / UI ≥ 3:1 (WCAG AA). */
+/* Svitlyachok — color tokens («Політ світлячка» rebrand)
+   Metaphor: a small light in the dark. Warm cream "paper" pages, ink text,
+   night-indigo primary action, firefly-amber accent. One night-indigo surface
+   per page (hero or footer) is where the amber firefly glows.
+   Contrast targets: body text ≥ 4.5:1, large text / UI ≥ 3:1 (WCAG AA).
+   Canonical names come from the delivered design system; the legacy alias
+   names below them are kept so pre-rebrand call sites re-skin in place. */
 
 :root {
-  /* ---- neutrals (warm, low-chroma) ---- */
-  --neutral-0:   oklch(99% 0.004 90);   /* paper white */
-  --neutral-25:  oklch(97.5% 0.008 85);
-  --neutral-50:  oklch(95.5% 0.012 82);
-  --neutral-100: oklch(92% 0.014 80);
-  --neutral-200: oklch(87% 0.016 78);
-  --neutral-300: oklch(78% 0.018 75);
-  --neutral-400: oklch(65% 0.02 70);
-  --neutral-500: oklch(52% 0.02 65);
-  --neutral-600: oklch(42% 0.02 60);
-  --neutral-700: oklch(32% 0.02 58);
-  --neutral-800: oklch(24% 0.018 55);
-  --neutral-900: oklch(17% 0.014 50);
+  /* ---- base: cream (warm paper) ---- */
+  --cream-50: #FFFDF8;   /* card surface */
+  --cream-100: #FAF6EE;  /* page background */
+  --cream-200: #F3EDDF;  /* sunken / hover surface */
+  --sand-300: #E3DCCB;   /* default border */
+  --sand-400: #CFC6AE;   /* strong border */
 
-  /* ---- primary: firefly amber/gold glow ---- */
-  --amber-50:  oklch(96% 0.03 85);
-  --amber-100: oklch(91% 0.06 85);
-  --amber-200: oklch(85% 0.09 83);
-  --amber-300: oklch(78% 0.12 82);
-  --amber-400: oklch(72% 0.15 80);
-  --amber-500: oklch(66% 0.17 78);   /* primary base */
-  --amber-600: oklch(58% 0.16 72);   /* primary — AA on white */
-  --amber-700: oklch(48% 0.14 66);
-  --amber-800: oklch(38% 0.11 62);
+  /* ---- base: ink (warm near-black) ---- */
+  --ink-900: #2A2723;
+  --ink-600: #5C564A;
+  --ink-400: #8B8577;    /* muted; large text / meta only */
 
-  /* ---- accent: moss / meadow green (nature, yard, garden) ---- */
-  --moss-50:  oklch(95% 0.025 150);
-  --moss-100: oklch(89% 0.045 148);
-  --moss-300: oklch(74% 0.08 148);
-  --moss-500: oklch(58% 0.1 148);
-  --moss-600: oklch(49% 0.095 148);
-  --moss-700: oklch(40% 0.08 148);
+  /* ---- base: night indigo (primary) ---- */
+  --indigo-900: #1C2140;
+  --indigo-800: #232946;
+  --indigo-700: #333B66;
+  --indigo-200: #D4D8EA;
+  --indigo-100: #E8EAF3;
 
-  /* ---- accent: dusk indigo (night sky, used mostly in night theme) ---- */
-  --dusk-100: oklch(90% 0.03 275);
-  --dusk-300: oklch(72% 0.07 272);
-  --dusk-500: oklch(50% 0.09 270);
-  --dusk-700: oklch(30% 0.07 268);
-  --dusk-900: oklch(16% 0.035 265);
+  /* ---- base: firefly amber (accent) ---- */
+  --amber-700: #8A6D2F;  /* amber that passes AA on cream as text */
+  --amber-500: #DE9A18;  /* icon / decorative amber on light */
+  --amber-300: #FFD97A;  /* glow on dark */
+  --amber-100: #FBEFD3;  /* soft amber wash */
 
-  /* ---- semantic states (share amber's lightness/chroma family, vary hue) ---- */
-  --success-500: oklch(58% 0.1 148);
-  --success-700: oklch(38% 0.08 148);
-  --success-bg:  oklch(95% 0.03 148);
-
-  --warning-500: oklch(66% 0.15 68);
-  --warning-700: oklch(45% 0.12 60);
-  --warning-bg:  oklch(95% 0.04 78);
-
-  --error-500: oklch(56% 0.16 27);
-  --error-700: oklch(42% 0.15 27);
-  --error-bg:  oklch(95% 0.03 30);
+  /* ---- base: semantic hues (calm, desaturated) ---- */
+  --green-700: #3E6B44;
+  --green-100: #E7EFE4;
+  --gold-700: #7A5A0E;
+  --gold-100: #F7ECD2;
+  --red-700: #A33A31;
+  --red-800: #86302A;
+  --red-200: #F0D2CD;
+  --red-100: #F7E4E1;
 
   /* =========================================================
-     Semantic aliases — LIGHT theme (default)
+     Canonical semantic aliases (delivered design system)
      ========================================================= */
-  --bg-page:        var(--neutral-0);
-  --bg-surface:     var(--neutral-0);
-  --bg-surface-alt: var(--neutral-25);
-  --bg-sunken:      var(--neutral-50);
-  --bg-inverse:     var(--neutral-900);
+  --surface-card: var(--cream-50);
+  --surface-sunken: var(--cream-200);
+  --surface-night: var(--indigo-800);
 
-  --text-primary:   var(--neutral-800);
-  --text-secondary: var(--neutral-600);
-  --text-tertiary:  var(--neutral-400);
-  --text-on-primary: var(--neutral-0);
-  --text-on-inverse: var(--neutral-25);
+  --text-muted: var(--ink-400);
+  --text-on-dark: #F5EFDF;
+
+  --action-primary: var(--indigo-800);
+  --action-primary-hover: var(--indigo-700);
+  --accent-text: var(--amber-700);
+  --accent-glow: var(--amber-300);
+
+  --success-text: var(--green-700);
+  --warning-text: var(--gold-700);
+  --danger-text: var(--red-700);
+  --danger-bg: var(--red-100);
+  --danger-bg-hover: var(--red-200);
+  --danger: var(--red-700);
+
+  /* =========================================================
+     Legacy semantic aliases — LIGHT theme (default)
+     ========================================================= */
+  --bg-page:        var(--cream-100);
+  --bg-surface:     var(--cream-50);
+  --bg-surface-alt: var(--cream-200);
+  --bg-sunken:      var(--cream-200);
+  --bg-inverse:     var(--indigo-800);
+
+  --text-primary:   var(--ink-900);
+  --text-secondary: var(--ink-600);
+  --text-tertiary:  var(--ink-400);
+  --text-on-primary: #FFFDF8;
+  --text-on-inverse: #F5EFDF;
   --text-link:      var(--amber-700);
 
-  --border-subtle:  var(--neutral-100);
-  --border-default: var(--neutral-200);
-  --border-strong:  var(--neutral-300);
+  --border-subtle:  var(--sand-300);
+  --border-default: var(--sand-300);
+  --border-strong:  var(--sand-400);
 
-  --primary:        var(--amber-600);
-  --primary-hover:  var(--amber-700);
-  --primary-active: var(--amber-800);
-  --primary-soft:   var(--amber-50);
-  --primary-soft-border: var(--amber-200);
+  /* primary ACTION is night indigo (was amber pre-rebrand) */
+  --primary:        var(--indigo-800);
+  --primary-hover:  var(--indigo-700);
+  --primary-active: var(--indigo-900);
+  --primary-soft:   var(--indigo-100);
+  --primary-soft-border: var(--indigo-200);
 
-  --accent:         var(--moss-600);
-  --accent-soft:    var(--moss-50);
-  --accent-soft-border: var(--moss-100);
+  /* accent is firefly amber (was moss green pre-rebrand) */
+  --accent:         var(--amber-500);
+  --accent-soft:    var(--amber-100);
+  --accent-soft-border: var(--sand-300);
 
-  --focus-ring:     var(--dusk-500);
+  --focus-ring:     var(--amber-500);
 
-  --success: var(--success-500);
-  --success-strong: var(--success-700);
-  --warning: var(--warning-500);
-  --warning-strong: var(--warning-700);
-  --error: var(--error-500);
-  --error-strong: var(--error-700);
+  --success: var(--green-700);
+  --success-strong: var(--green-700);
+  --success-bg: var(--green-100);
+  --warning: var(--gold-700);
+  --warning-strong: var(--gold-700);
+  --warning-bg: var(--gold-100);
+  --error: var(--red-700);
+  --error-strong: var(--red-700);
+  --error-bg: var(--red-100);
+  --error-500: var(--red-700);
+  --error-700: var(--red-800);
 
-  /* firefly glow — used sparingly for warmth/likes */
-  --glow-color: oklch(78% 0.16 82 / 55%);
+  --neutral-0: var(--cream-50);
+
+  /* firefly glow — reserved for the Warmth action and the brand mark */
+  --glow-color: rgba(255, 217, 122, 0.45);
 }
 
 /* =========================================================
-   NIGHT theme (secondary) — opt-in via [data-theme="night"]
-   Same tokens, dusk-charcoal ground; amber glows brighter.
+   NIGHT theme — opt-in via [data-theme="night"].
+   The delivered system is light-first; this derives its night
+   variant from the same palette: indigo ground, cream text,
+   amber-300 as the glowing action/accent.
    ========================================================= */
 [data-theme="night"] {
-  --bg-page:        var(--dusk-900);
-  --bg-surface:     oklch(20% 0.02 265);
-  --bg-surface-alt: oklch(23% 0.022 265);
-  --bg-sunken:      oklch(15% 0.018 265);
-  --bg-inverse:     var(--neutral-0);
+  --surface-card: #232946;
+  --surface-sunken: #1C2140;
+  --surface-night: #161A33;
 
-  --text-primary:   oklch(93% 0.012 85);
-  --text-secondary: oklch(76% 0.016 82);
-  --text-tertiary:  oklch(58% 0.018 80);
-  --text-on-primary: oklch(15% 0.02 60);
-  --text-on-inverse: var(--neutral-800);
+  --text-muted: rgba(245, 239, 223, 0.55);
+
+  --action-primary: var(--amber-300);
+  --action-primary-hover: #FFE39A;
+  --accent-text: var(--amber-300);
+
+  --success-text: #8FBF95;
+  --warning-text: #E5C878;
+  --danger-text: #E8938A;
+  --danger-bg: rgba(163, 58, 49, 0.30);
+  --danger-bg-hover: rgba(163, 58, 49, 0.45);
+  --danger: #E8938A;
+
+  --bg-page:        #161A33;
+  --bg-surface:     #232946;
+  --bg-surface-alt: #2A3153;
+  --bg-sunken:      #1C2140;
+  --bg-inverse:     var(--cream-50);
+
+  --text-primary:   #F5EFDF;
+  --text-secondary: rgba(245, 239, 223, 0.75);
+  --text-tertiary:  rgba(245, 239, 223, 0.55);
+  --text-on-primary: #232946;
+  --text-on-inverse: var(--ink-900);
   --text-link:      var(--amber-300);
 
-  --border-subtle:  oklch(27% 0.02 265);
-  --border-default: oklch(32% 0.022 265);
-  --border-strong:  oklch(40% 0.026 265);
+  --border-subtle:  #2E3560;
+  --border-default: #333B66;
+  --border-strong:  #454E80;
 
-  --primary:        var(--amber-400);
-  --primary-hover:  var(--amber-300);
-  --primary-active: var(--amber-200);
-  --primary-soft:   oklch(27% 0.05 80);
-  --primary-soft-border: oklch(38% 0.07 78);
+  --primary:        var(--amber-300);
+  --primary-hover:  #FFE39A;
+  --primary-active: #F2C95C;
+  --primary-soft:   rgba(255, 217, 122, 0.12);
+  --primary-soft-border: rgba(255, 217, 122, 0.30);
 
-  --accent:         var(--moss-300);
-  --accent-soft:    oklch(26% 0.04 148);
-  --accent-soft-border: oklch(35% 0.06 148);
+  --accent:         var(--amber-300);
+  --accent-soft:    rgba(255, 217, 122, 0.12);
+  --accent-soft-border: rgba(255, 217, 122, 0.30);
 
   --focus-ring:     var(--amber-300);
 
-  --success: oklch(70% 0.11 150);
-  --success-strong: oklch(85% 0.09 150);
-  --warning: oklch(75% 0.13 75);
-  --warning-strong: oklch(85% 0.11 78);
-  --error: oklch(72% 0.15 25);
-  --error-strong: oklch(85% 0.12 22);
+  --success: #8FBF95;
+  --success-strong: #A9D4AE;
+  --success-bg: rgba(62, 107, 68, 0.35);
+  --warning: #E5C878;
+  --warning-strong: #F0DA9E;
+  --warning-bg: rgba(122, 90, 14, 0.35);
+  --error: #E8938A;
+  --error-strong: #F2B3AC;
+  --error-bg: rgba(163, 58, 49, 0.30);
+  --error-500: #E8938A;
+  --error-700: #F2B3AC;
 
-  --glow-color: oklch(80% 0.17 82 / 70%);
+  --neutral-0: #232946;
+
+  --glow-color: rgba(255, 217, 122, 0.55);
 }

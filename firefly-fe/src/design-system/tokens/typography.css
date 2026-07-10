@@ -1,8 +1,11 @@
-/* Svitlyachok — typography tokens */
+/* Svitlyachok — typography tokens («Політ світлячка» rebrand)
+   Canonical scale is 13→46px in 8 steps; legacy role names are kept as
+   aliases so pre-rebrand call sites re-skin in place. */
 
 :root {
-  --font-serif: "Literata", ui-serif, Georgia, serif;
-  --font-sans: "Manrope", -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Alegreya", ui-serif, Georgia, serif;
+  --font-sans: "Alegreya Sans", "Helvetica Neue", -apple-system, "Segoe UI", sans-serif;
+  --font-logo: "Comfortaa", sans-serif;
 
   /* families by role */
   --font-display: var(--font-serif);
@@ -10,23 +13,37 @@
   --font-body: var(--font-sans);
   --font-ui: var(--font-sans);
 
-  /* sizes — desktop; components can clamp down for mobile */
-  --text-display: 56px;
-  --text-h1: 40px;
-  --text-h2: 32px;
-  --text-h3: 24px;
-  --text-h4: 20px;
-  --text-body-lg: 18px;
-  --text-body: 16px;
-  --text-body-sm: 14px;
-  --text-caption: 13px;
+  /* canonical scale */
+  --text-xs: 13px;   /* meta, captions */
+  --text-sm: 15px;   /* secondary UI */
+  --text-md: 17px;   /* body */
+  --text-lg: 19px;   /* memory text, leads */
+  --text-xl: 22px;   /* h3 / card titles */
+  --text-2xl: 28px;  /* h2 */
+  --text-3xl: 36px;  /* h1 */
+  --text-4xl: 46px;  /* hero */
+
+  /* legacy size aliases */
+  --text-display: var(--text-4xl);
+  --text-h1: var(--text-3xl);
+  --text-h2: var(--text-2xl);
+  --text-h3: var(--text-xl);
+  --text-h4: var(--text-lg);
+  --text-body-lg: var(--text-lg);
+  --text-body: var(--text-md);
+  --text-body-sm: var(--text-sm);
+  --text-caption: var(--text-xs);
   --text-button: 16px;
-  --text-button-sm: 14px;
+  --text-button-sm: var(--text-sm);
 
   /* line-heights */
-  --lh-display: 1.12;
-  --lh-heading: 1.2;
-  --lh-body: 1.6;
+  --leading-tight: 1.2;
+  --leading-normal: 1.5;
+  --leading-loose: 1.65; /* long memory text */
+
+  --lh-display: var(--leading-tight);
+  --lh-heading: var(--leading-tight);
+  --lh-body: var(--leading-loose);
   --lh-tight: 1.35;
 
   /* weights */

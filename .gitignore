@@ -57,3 +57,8 @@ lerna-debug.log*
 # Playwright
 test-results/
 playwright-report/
+
+# Video recordings (demo takes live on GitHub's CDN via the PR, not in git)
+*.webm
+*.mp4
+*.mov

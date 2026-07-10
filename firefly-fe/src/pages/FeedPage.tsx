@@ -6,12 +6,15 @@ import { Button, FilterBar, MemoryCard, Message } from '@/design-system';
 import { useAsyncData } from '@/hooks/useAsyncData';
 import {
   CARD_GRID_STYLE,
+  EMPTY_STATE_STYLE,
   PAGE_HEADING_STYLE,
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
+  formatYears,
   getCities,
   getMemoryExcerpt,
   getTopics,
+  toPhotoUrl,
 } from '@/pages/pageShared';
 
 export function FeedPage() {
@@ -45,7 +48,10 @@ export function FeedPage() {
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
-      <h1 style={PAGE_HEADING_STYLE}>{t('feed.title')}</h1>
+      <h1 style={{ ...PAGE_HEADING_STYLE, margin: '0 0 var(--space-2)' }}>{t('feed.title')}</h1>
+      <p style={{ margin: '0 0 var(--space-6)', fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
+        {t('feed.subtitle')}
+      </p>
       <div style={{ marginBottom: 'var(--space-6)' }}>
         <FilterBar
           city={city}
@@ -84,6 +90,9 @@ export function FeedPage() {
                 city={memory.city}
                 topic={memory.topicSlug}
                 photo={memory.mediaUrls.length > 0}
+                photoUrl={memory.mediaUrls[0] ? toPhotoUrl(memory.mediaUrls[0]) : undefined}
+                years={formatYears(memory.yearFrom, memory.yearTo)}
+                kind={memory.type}
                 warmth={memory.likesCount}
                 comments={memory.commentsCount}
                 onClick={() => navigate(`/memories/${memory.id}`)}
@@ -121,7 +130,7 @@ export function FeedPage() {
           ) : null}
         </>
       ) : (
-        <div style={SURFACE_STYLE}>{t('feed.empty')}</div>
+        <div style={EMPTY_STATE_STYLE}>{t('feed.empty')}</div>
       )}
     </div>
   );

@@ -6,7 +6,7 @@ import { Button, FilterBar, LostRequestCard, Message } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAsyncData } from '@/hooks/useAsyncData';
 import {
-  CARD_GRID_STYLE,
+  EMPTY_STATE_STYLE,
   PAGE_HEADING_STYLE,
   PAGE_WRAPPER_STYLE,
   SURFACE_STYLE,
@@ -47,7 +47,7 @@ export function LostPage() {
   const requests = data ?? [];
 
   return (
-    <div style={PAGE_WRAPPER_STYLE}>
+    <div style={{ ...PAGE_WRAPPER_STYLE, maxWidth: 840 }}>
       <div
         style={{
           display: 'flex',
@@ -58,9 +58,9 @@ export function LostPage() {
           marginBottom: 'var(--space-6)',
         }}
       >
-        <div>
-          <h1 style={PAGE_HEADING_STYLE}>{t('lost.title')}</h1>
-          <p style={{ margin: '-var(--space-3) 0 0', fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)' }}>
+        <div style={{ flex: '1 1 400px' }}>
+          <h1 style={{ ...PAGE_HEADING_STYLE, margin: 0 }}>{t('lost.title')}</h1>
+          <p style={{ margin: 'var(--space-2) 0 0', fontFamily: 'var(--font-ui)', color: 'var(--text-secondary)', lineHeight: 'var(--leading-normal)' }}>
             {t('lost.subtitle')}
           </p>
         </div>
@@ -86,7 +86,7 @@ export function LostPage() {
       {loading ? (
         <div style={SURFACE_STYLE}>{t('lost.loading')}</div>
       ) : requests.length ? (
-        <div style={CARD_GRID_STYLE}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
           {requests.map((request) => (
             <LostRequestCard
               key={request.id}
@@ -101,7 +101,7 @@ export function LostPage() {
           ))}
         </div>
       ) : (
-        <div style={SURFACE_STYLE}>{t('lost.empty')}</div>
+        <div style={EMPTY_STATE_STYLE}>{t('lost.empty')}</div>
       )}
     </div>
   );

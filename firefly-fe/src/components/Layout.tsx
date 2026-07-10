@@ -1,14 +1,23 @@
 import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Footer, Header, MobileMenu } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
+
+function activeNavKey(pathname: string): string {
+  if (pathname.startsWith('/feed')) return 'feed';
+  if (pathname.startsWith('/lost')) return 'lost';
+  if (pathname.startsWith('/about')) return 'about';
+  if (pathname.startsWith('/rules')) return 'rules';
+  return '';
+}
 
 const ACCOUNT_LINK_KEYS = ['dashboard', 'profile'] as const;
 
 export function Layout({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -22,6 +31,8 @@ export function Layout({ children }: { children: ReactNode }) {
       about: '/about',
       rules: '/rules',
       report: '/rules',
+      register: '/register',
+      login: '/login',
       dashboard: '/dashboard',
       create: '/memories/new',
       profile: '/profile',
@@ -45,6 +56,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <Header
         loggedIn={Boolean(user)}
         userName={user?.name}
+        active={activeNavKey(pathname)}
         onNavigate={handleNavigate}
         onLogin={() => navigate('/login')}
         onMenuToggle={() => setMenuOpen(true)}

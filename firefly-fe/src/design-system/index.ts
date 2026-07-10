@@ -16,7 +16,7 @@ export type { FieldProps, TextInputProps, TextareaProps, SelectProps, SelectOpti
 export { Badge } from "./components/badges/Badge";
 export type { BadgeProps } from "./components/badges/Badge";
 
-export { MemoryCard, LostRequestCard } from "./components/cards/Cards";
+export { MemoryCard, LostRequestCard, WarmthIcon } from "./components/cards/Cards";
 export type { MemoryCardProps, LostRequestCardProps } from "./components/cards/Cards";
 export { LOST_TYPES } from "./components/cards/lostTypeLabels";
 export type { LostType } from "./components/cards/lostTypeLabels";

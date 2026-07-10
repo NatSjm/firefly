@@ -42,10 +42,10 @@ export interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElemen
 
 const baseFieldStyle: React.CSSProperties = {
   fontFamily: "var(--font-ui)",
-  fontSize: "var(--text-body)",
+  fontSize: 16,
   color: "var(--text-primary)",
-  background: "var(--bg-surface)",
-  border: "1px solid var(--border-default)",
+  background: "var(--surface-card)",
+  border: "1px solid var(--border-strong)",
   borderRadius: "var(--radius-md)",
   padding: "10px 14px",
   width: "100%",
@@ -57,8 +57,8 @@ function useFieldChrome(error?: string) {
   const [focused, setFocused] = React.useState(false);
   const style: React.CSSProperties = {
     ...baseFieldStyle,
-    borderColor: error ? "var(--error-500)" : focused ? "var(--focus-ring)" : "var(--border-default)",
-    boxShadow: focused ? `0 0 0 3px ${error ? "var(--error-bg)" : "var(--primary-soft)"}` : "none",
+    borderColor: error ? "var(--danger-text)" : focused ? "var(--focus-ring)" : "var(--border-strong)",
+    boxShadow: focused ? `0 0 0 3px ${error ? "var(--danger-bg)" : "var(--accent-soft)"}` : "none",
   };
   return { style, onFocus: () => setFocused(true), onBlur: () => setFocused(false) };
 }
@@ -70,15 +70,15 @@ export function Field({ label, hint, error, required, children }: FieldProps) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6, fontFamily: "var(--font-ui)", width: "100%" }}>
       {label && (
-        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>
-          {label}{required && <span style={{ color: "var(--error-500)" }}> *</span>}
+        <span style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "var(--text-secondary)" }}>
+          {label}{required && <span style={{ color: "var(--danger-text)" }}> *</span>}
         </span>
       )}
       {children}
       {error ? (
-        <span style={{ fontSize: 13, color: "var(--error-strong)" }}>{error}</span>
+        <span style={{ fontSize: 13, color: "var(--danger-text)" }}>{error}</span>
       ) : hint ? (
-        <span style={{ fontSize: 13, color: "var(--text-tertiary)" }}>{hint}</span>
+        <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{hint}</span>
       ) : null}
     </label>
   );

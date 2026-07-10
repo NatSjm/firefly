@@ -1,7 +1,7 @@
 import React from "react";
 
 export interface ButtonProps {
-  /** Visual style. "danger" is outlined warning tone; "danger-solid" is the committed destructive action. */
+  /** Visual style. "danger" is a calm outlined red; "danger-solid" is the committed destructive confirm (red wash, never an alarm-red fill). */
   variant?: "primary" | "secondary" | "ghost" | "danger" | "danger-solid";
   size?: "md" | "sm";
   /** Optional leading icon element. */
@@ -14,40 +14,40 @@ export interface ButtonProps {
 }
 
 const SIZE: Record<"md" | "sm", { padding: string; fontSize: string; gap: number }> = {
-  md: { padding: "10px 20px", fontSize: "var(--text-button)", gap: 8 },
-  sm: { padding: "7px 14px", fontSize: "var(--text-button-sm)", gap: 6 },
+  md: { padding: "9px 22px", fontSize: "var(--text-button)", gap: 8 },
+  sm: { padding: "5px 14px", fontSize: "var(--text-button-sm)", gap: 6 },
 };
 
 function variantStyle(variant: ButtonProps["variant"], _disabled: boolean): React.CSSProperties {
   switch (variant) {
     case "secondary":
       return {
-        background: "var(--bg-surface)",
-        color: "var(--text-primary)",
+        background: "transparent",
+        color: "var(--action-primary)",
         border: "1px solid var(--border-strong)",
       };
     case "ghost":
       return {
         background: "transparent",
-        color: "var(--text-primary)",
+        color: "var(--text-secondary)",
         border: "1px solid transparent",
       };
     case "danger":
       return {
-        background: "var(--error-bg)",
-        color: "var(--error-strong)",
-        border: "1px solid var(--error-strong)",
+        background: "transparent",
+        color: "var(--danger-text)",
+        border: "1px solid var(--danger-text)",
       };
     case "danger-solid":
       return {
-        background: "var(--error-500)",
-        color: "var(--neutral-0)",
-        border: "1px solid transparent",
+        background: "var(--danger-bg)",
+        color: "var(--danger-text)",
+        border: "1px solid var(--danger-text)",
       };
     case "primary":
     default:
       return {
-        background: "var(--primary)",
+        background: "var(--action-primary)",
         color: "var(--text-on-primary)",
         border: "1px solid transparent",
       };
@@ -55,8 +55,8 @@ function variantStyle(variant: ButtonProps["variant"], _disabled: boolean): Reac
 }
 
 /**
- * Button — primary call to action, secondary, ghost, and danger variants.
- * Calm, no-hype tone: no uppercase, no heavy shadows, gentle hover darken.
+ * Button — pill-shaped action. Primary is night indigo; danger is a calm
+ * outlined red. Calm, no-hype tone: no uppercase, no heavy shadows.
  */
 export function Button({
   variant = "primary",
@@ -76,12 +76,13 @@ export function Button({
   const [active, setActive] = React.useState(false);
 
   let background = vs.background as string;
+  let color = vs.color as string;
   if (!disabled && hover) {
-    if (variant === "primary") background = "var(--primary-hover)";
-    else if (variant === "secondary") background = "var(--bg-surface-alt)";
-    else if (variant === "ghost") background = "var(--bg-surface-alt)";
-    else if (variant === "danger") background = "var(--error-bg)";
-    else if (variant === "danger-solid") background = "var(--error-700)";
+    if (variant === "primary") background = "var(--action-primary-hover)";
+    else if (variant === "secondary") background = "var(--bg-sunken)";
+    else if (variant === "ghost") { background = "var(--bg-sunken)"; color = "var(--text-primary)"; }
+    else if (variant === "danger") background = "var(--danger-bg)";
+    else if (variant === "danger-solid") background = "var(--danger-bg-hover)";
   }
   if (!disabled && active && variant === "primary") background = "var(--primary-active)";
 
@@ -103,14 +104,16 @@ export function Button({
         padding: sz.padding,
         fontSize: sz.fontSize,
         fontFamily: "var(--font-ui)",
-        fontWeight: 600,
+        fontWeight: 700,
         borderRadius: "var(--radius-pill)",
+        whiteSpace: "nowrap",
         cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.5 : 1,
-        transition: "background var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard)",
+        opacity: disabled ? 0.45 : 1,
+        transition: "background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard), transform var(--duration-fast) var(--ease-standard)",
         transform: !disabled && active ? "scale(0.98)" : "scale(1)",
         ...vs,
         background,
+        color,
       }}
       {...rest}
     >

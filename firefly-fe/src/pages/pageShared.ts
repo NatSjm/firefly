@@ -12,16 +12,25 @@ export const PAGE_WRAPPER_STYLE: CSSProperties = {
 
 export const PAGE_HEADING_STYLE: CSSProperties = {
   fontFamily: 'var(--font-heading)',
-  fontSize: 'var(--text-h2)',
-  fontWeight: 700,
+  fontSize: 'var(--text-3xl)',
+  fontWeight: 600,
   color: 'var(--text-primary)',
   margin: '0 0 var(--space-6)',
 };
 
 export const CARD_GRID_STYLE: CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
   gap: 'var(--space-5)',
+};
+
+export const EMPTY_STATE_STYLE: CSSProperties = {
+  padding: 'var(--space-10)',
+  textAlign: 'center',
+  color: 'var(--text-muted)',
+  background: 'var(--surface-sunken)',
+  borderRadius: 'var(--radius-lg)',
+  fontFamily: 'var(--font-ui)',
 };
 
 export const FORM_STYLE: CSSProperties = {

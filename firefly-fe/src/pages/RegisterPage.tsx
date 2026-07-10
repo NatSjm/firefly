@@ -88,7 +88,7 @@ export function RegisterPage() {
               }}
             >
               {t('auth.register.haveProfile')}{' '}
-              <Link to="/login" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+              <Link to="/login" style={{ color: 'var(--text-link)', fontWeight: 600 }}>
                 {t('auth.register.loginLink')}
               </Link>
             </p>

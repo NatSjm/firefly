@@ -1,0 +1,103 @@
+1
+00:00:00,005 --> 00:00:10,229
+Svitlyachok — a Ukrainian platform for preserving childhood memories
+
+2
+00:00:10,279 --> 00:00:15,933
+The public feed is open to everyone — no account needed
+
+3
+00:00:15,983 --> 00:00:21,532
+Filtering memories by topic and city, sorting by new or popular
+
+4
+00:00:21,582 --> 00:00:32,916
+A full memory page — likes and comments ask visitors to sign in first
+
+5
+00:00:32,966 --> 00:00:39,218
+Creating an account — name, email, password
+
+6
+00:00:39,268 --> 00:00:43,787
+The personal archive — empty for a brand-new user
+
+7
+00:00:43,837 --> 00:00:48,258
+Creating a recipe memory: type, city, topic, title, story, ingredients, steps
+
+8
+00:00:48,308 --> 00:00:51,919
+Uploading a photo and saving — the memory is published
+
+9
+00:00:51,969 --> 00:00:56,399
+The saved memory: photo, story, ingredients and cooking steps
+
+10
+00:00:56,449 --> 00:01:00,932
+Memories can be edited — changing the title
+
+11
+00:01:00,982 --> 00:01:07,340
+Dashboard filters: all / public / private memories
+
+12
+00:01:07,390 --> 00:01:12,685
+Community: opening another member's memory
+
+13
+00:01:12,735 --> 00:01:14,160
+Sending Warmth — the platform's gentle take on a like
+
+14
+00:01:14,210 --> 00:01:20,041
+Leaving a comment
+
+15
+00:01:20,091 --> 00:01:25,161
+Reporting content to the moderators
+
+16
+00:01:25,211 --> 00:01:29,365
+Lost Fireflies — requests to find lost photos, classmates, places
+
+17
+00:01:29,415 --> 00:01:32,645
+Posting a request: city, place type, years, what to look for, contact email
+
+18
+00:01:32,695 --> 00:01:36,644
+The published request — full description and a contact button
+
+19
+00:01:36,694 --> 00:01:41,608
+Editing the profile — name, bio, avatar
+
+20
+00:01:41,658 --> 00:01:47,423
+Logging out — and switching to the admin's side of the story
+
+21
+00:01:47,473 --> 00:01:53,980
+The admin panel — the report we just sent is in the queue
+
+22
+00:01:54,030 --> 00:01:56,066
+Admins can remove reported content
+
+23
+00:01:56,116 --> 00:02:00,499
+User management — ban and unban
+
+24
+00:02:00,549 --> 00:02:04,010
+Community rules — kind, calm, Ukrainian-first
+
+25
+00:02:04,060 --> 00:02:09,031
+About the project
+
+26
+00:02:09,081 --> 00:02:13,081
+Svitlyachok — keep the light of your childhood
