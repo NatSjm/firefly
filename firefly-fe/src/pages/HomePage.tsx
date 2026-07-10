@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/design-system';
 import { useAuth } from '@/contexts/AuthContext';
 import { PAGE_WRAPPER_STYLE } from '@/pages/pageShared';
 
@@ -17,109 +16,125 @@ export function HomePage() {
 
   return (
     <div style={PAGE_WRAPPER_STYLE}>
+      {/* Hero — the page's one night-indigo surface, where the firefly glows */}
+      <section
+        style={{
+          background: 'var(--surface-night)',
+          color: 'var(--text-on-dark)',
+          borderRadius: 'var(--radius-lg)',
+          padding: 'var(--space-12) var(--space-6)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          gap: 'var(--space-5)',
+          marginBottom: 'var(--space-10)',
+        }}
+      >
+        <img src="/design-system/assets/logo-mark-dark.svg" width="84" height="84" alt="" />
+        <h1
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'var(--text-4xl)',
+            fontWeight: 600,
+            lineHeight: 'var(--leading-tight)',
+            color: 'inherit',
+            margin: 0,
+          }}
+        >
+          {t('home.title')}
+        </h1>
+        <p
+          style={{
+            margin: 0,
+            color: 'rgba(245, 239, 223, 0.8)',
+            fontFamily: 'var(--font-ui)',
+            fontSize: 'var(--text-lg)',
+            lineHeight: 'var(--leading-normal)',
+            maxWidth: 560,
+          }}
+        >
+          {t('home.subtitle')}
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-3)', justifyContent: 'center' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/feed')}
+            style={{
+              border: '1px solid transparent',
+              borderRadius: 'var(--radius-pill)',
+              background: 'var(--amber-300)',
+              color: 'var(--indigo-900)',
+              padding: '12px 28px',
+              fontFamily: 'var(--font-ui)',
+              fontSize: 'var(--text-md)',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            {t('home.viewFeed')}
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate(user ? '/memories/new' : '/register')}
+            style={{
+              border: '1px solid rgba(245, 239, 223, 0.4)',
+              borderRadius: 'var(--radius-pill)',
+              background: 'transparent',
+              color: 'var(--text-on-dark)',
+              padding: '12px 28px',
+              fontFamily: 'var(--font-ui)',
+              fontSize: 'var(--text-md)',
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            {user ? t('nav.newMemory') : t('home.join')}
+          </button>
+        </div>
+      </section>
+
       <section
         style={{
           display: 'grid',
-          gap: 'var(--space-8)',
-          alignItems: 'center',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 'var(--space-5)',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
           marginBottom: 'var(--space-8)',
         }}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-          <span
+        {features.map((item) => (
+          <div
+            key={item.title}
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              width: 'fit-content',
-              padding: 'var(--space-2) var(--space-4)',
-              borderRadius: 'var(--radius-pill)',
-              background: 'var(--accent-soft)',
-              color: 'var(--accent)',
-              fontFamily: 'var(--font-ui)',
-              fontSize: 'var(--text-caption)',
-              fontWeight: 600,
+              background: 'var(--surface-card)',
+              borderRadius: 'var(--radius-lg)',
+              padding: 'var(--space-6)',
+              border: '1px solid var(--border-default)',
+              boxShadow: 'var(--shadow-card)',
             }}
           >
-            {t('app.name')}
-          </span>
-          <div>
-            <h1
+            <h2
               style={{
+                margin: '0 0 var(--space-3)',
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-display)',
-                fontWeight: 700,
+                fontSize: 'var(--text-h3)',
                 color: 'var(--text-primary)',
-                margin: '0 0 var(--space-4)',
               }}
             >
-              {t('home.title')}
-            </h1>
+              {item.title}
+            </h2>
             <p
               style={{
                 margin: 0,
-                color: 'var(--text-secondary)',
                 fontFamily: 'var(--font-ui)',
-                fontSize: 'var(--text-body)',
-                lineHeight: 'var(--lh-body)',
-                maxWidth: '56ch',
+                color: 'var(--text-secondary)',
+                lineHeight: 'var(--leading-normal)',
               }}
             >
-              {t('home.subtitle')}
+              {item.text}
             </p>
           </div>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
-            <Button onClick={() => navigate('/feed')}>{t('home.viewFeed')}</Button>
-            <Button variant="secondary" onClick={() => navigate(user ? '/memories/new' : '/register')}>
-              {user ? t('nav.newMemory') : t('home.join')}
-            </Button>
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: 'var(--bg-surface)',
-            border: '1px solid var(--border-default)',
-            borderRadius: 'var(--radius-lg)',
-            boxShadow: 'var(--shadow-md)',
-            padding: 'var(--space-6)',
-            display: 'grid',
-            gap: 'var(--space-4)',
-          }}
-        >
-          {features.map((item) => (
-            <div
-              key={item.title}
-              style={{
-                background: 'var(--bg-surface-alt)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-5)',
-                border: '1px solid var(--border-subtle)',
-              }}
-            >
-              <h2
-                style={{
-                  margin: '0 0 var(--space-3)',
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-h3)',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                {item.title}
-              </h2>
-              <p
-                style={{
-                  margin: 0,
-                  fontFamily: 'var(--font-ui)',
-                  color: 'var(--text-secondary)',
-                  lineHeight: 'var(--lh-body)',
-                }}
-              >
-                {item.text}
-              </p>
-            </div>
-          ))}
-        </div>
+        ))}
       </section>
     </div>
   );

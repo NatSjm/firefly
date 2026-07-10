@@ -1,4 +1,4 @@
-/* Svitlyachok — spacing scale (4px base unit) */
+/* Svitlyachok — spacing scale (4px base unit, named by multiplier) */
 
 :root {
   --space-1: 4px;
@@ -16,7 +16,7 @@
   --space-32: 128px;
 
   /* layout */
-  --content-max: 1200px;
+  --content-max: 1120px;
   --content-narrow: 720px;
   --gutter: var(--space-6);
 }

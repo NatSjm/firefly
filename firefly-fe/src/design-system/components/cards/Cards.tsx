@@ -71,10 +71,10 @@ export function MemoryCard({
           {city && <Badge variant="topic" tone="moss">{city}</Badge>}
           {privacy && <Badge variant={privacy === "public" ? "privacy-public" : "privacy-private"} />}
         </div>
-        <h3 style={{ fontFamily: "var(--font-heading)", fontSize: 20, fontWeight: 600, color: "var(--text-primary)" }}>
+        <h3 style={{ fontFamily: "var(--font-heading)", fontSize: "var(--text-xl)", fontWeight: 600, lineHeight: "var(--leading-tight)", color: "var(--text-primary)" }}>
           {title}
         </h3>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: "var(--lh-body)", margin: 0 }}>
+        <p style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)", lineHeight: "var(--leading-normal)", margin: 0 }}>
           {excerpt}
         </p>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4, fontSize: 13, color: "var(--text-tertiary)" }}>
@@ -128,7 +128,7 @@ export function LostRequestCard({ city, type = "other", years, description, auth
         <Badge variant="topic" tone="amber">{t(`lost.types.${type}`, { defaultValue: type })}</Badge>
         {years && <span style={{ fontSize: 12, color: "var(--text-tertiary)", alignSelf: "center" }}>{years}</span>}
       </div>
-      <p style={{ fontSize: 15, color: "var(--text-primary)", lineHeight: "var(--lh-body)", margin: 0 }}>
+      <p style={{ fontSize: "var(--text-sm)", color: "var(--text-primary)", lineHeight: "var(--leading-normal)", margin: 0 }}>
         {description}
       </p>
       <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "var(--text-tertiary)" }}>

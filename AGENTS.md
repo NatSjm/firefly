@@ -66,11 +66,15 @@ The project has a first-party design system. Before writing any UI, read
 - **Night theme:** toggle via `document.documentElement.setAttribute('data-theme', 'night')`.
   All token aliases remap automatically; no separate component variants needed.
 - **Assets** are served from `public/design-system/assets/` at paths
-  `/design-system/assets/firefly-mark.svg` and
+  `/design-system/assets/logo-mark.svg` (light surfaces),
+  `/design-system/assets/logo-mark-dark.svg` (night-indigo surfaces), and
   `/design-system/assets/placeholder-pattern.svg`.
-- **Icon system:** not yet adopted. Structural marks are CSS circles. Two emoji
-  stand-ins (💬, 🔥) are flagged placeholders — swap for Lucide/Heroicons
+- **Primary action is night indigo; amber is accent only** («Політ світлячка»
+  rebrand). Amber text on light surfaces must be `--amber-700` (AA).
+- **Icon system:** not yet adopted. Structural marks are CSS circles. One emoji
+  stand-in (💬 comments) is a flagged placeholder — swap for Lucide/Heroicons
   before build.
+- **No war references** in UI copy or design docs.
 
 ## Module conventions
 

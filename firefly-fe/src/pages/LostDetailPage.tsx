@@ -55,7 +55,7 @@ export function LostDetailPage() {
           padding: 0,
           marginBottom: 'var(--space-6)',
           fontFamily: 'var(--font-ui)',
-          color: 'var(--primary)',
+          color: 'var(--text-link)',
           cursor: 'pointer',
           fontWeight: 600,
         }}

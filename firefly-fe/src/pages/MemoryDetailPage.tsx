@@ -239,7 +239,7 @@ export function MemoryDetailPage() {
           padding: 0,
           marginBottom: 'var(--space-6)',
           fontFamily: 'var(--font-ui)',
-          color: 'var(--primary)',
+          color: 'var(--text-link)',
           cursor: 'pointer',
           fontWeight: 600,
         }}
@@ -377,17 +377,29 @@ export function MemoryDetailPage() {
               disabled={!user || updatingLike}
               title={user ? undefined : t('memory.warmthSignInPrompt')}
               style={{
-                border: '1px solid var(--primary-soft-border)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 'var(--space-2)',
+                border: `1px solid ${memory.likedByMe ? 'var(--accent)' : 'var(--border-strong)'}`,
                 borderRadius: 'var(--radius-pill)',
-                background: memory.likedByMe ? 'var(--primary-soft)' : 'var(--bg-surface)',
-                color: 'var(--text-primary)',
-                boxShadow: memory.likedByMe ? 'var(--shadow-glow-sm)' : 'var(--shadow-sm)',
+                background: memory.likedByMe ? 'var(--accent-soft)' : 'transparent',
+                color: memory.likedByMe ? 'var(--accent-text)' : 'var(--text-secondary)',
+                boxShadow: memory.likedByMe ? 'var(--shadow-glow-sm)' : 'none',
                 padding: 'var(--space-3) var(--space-5)',
                 fontFamily: 'var(--font-ui)',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: user ? 'pointer' : 'not-allowed',
               }}
             >
+              <span
+                aria-hidden="true"
+                style={{
+                  width: 9,
+                  height: 9,
+                  borderRadius: '50%',
+                  background: memory.likedByMe ? 'var(--accent)' : 'var(--text-muted)',
+                }}
+              />
               {t('memory.warmth', { total: memory.likesCount })}
             </button>
             {!user ? (
